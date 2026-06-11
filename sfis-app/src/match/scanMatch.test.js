@@ -104,6 +104,10 @@ check('PAL distributes to egg', hasKind(r, 'Eggs', 'may'), JSON.stringify(r));
 check('PAL distributes to soy', hasKind(r, 'Soy', 'may'), JSON.stringify(r));
 check('PAL distributes to generic tree nuts', hasKind(r, 'Tree nuts', 'may'), JSON.stringify(r));
 
+r = matchScan('Ingredients: honey, gelatin, salt.', ['diet.vegan'], data);
+check('diet result stays in Diet category', !!bar(r, 'diet'), JSON.stringify(r));
+check('diet result is not grouped under Goals', !bar(r, 'goal'), JSON.stringify(r));
+
 // Wave 4 — negation safety (adversarial review): a free-from / "no X" claim must
 // never swallow a co-located REAL allergen in the same comma list.
 r = matchScan('contains no artificial flavors, milk powder', ['milk'], data);
@@ -131,6 +135,17 @@ check('multi-allergen PAL still distributes across commas (almond may)', hasKind
 
 // DB hostile challenge corpus: production matcher should resolve MATCH rows and
 // surface OPAQUE rows under Could not verify.
+// STRICT (adversarial review): a MATCH row must surface the EXPECTED allergen by
+// name — "some finding exists" is not enough to prove the right one fired.
+const GROUPED = { almond: 'Tree nuts', walnut: 'Tree nuts', cashew: 'Tree nuts', pecan: 'Tree nuts',
+  pistachio: 'Tree nuts', hazelnut: 'Tree nuts', brazil_nut: 'Tree nuts', macadamia: 'Tree nuts',
+  pine_nut: 'Tree nuts', crustacean: 'Shellfish', mollusc: 'Shellfish' };
+const PRETTY_TEST = { 'Milk and Dairy': 'Milk', Soybeans: 'Soy', 'Tree Nuts': 'Tree nuts',
+  'Crustacean Shellfish': 'Shellfish', 'Mollusc Shellfish': 'Shellfish' };
+function expectedCommons(parent) {
+  const c = data.parents[parent]?.common;
+  return new Set([c, PRETTY_TEST[c], GROUPED[parent]].filter(Boolean));
+}
 console.log('=== DB challenge_corpus.sql ===');
 let corpusTotal = 0;
 try {
@@ -143,7 +158,9 @@ try {
     corpusTotal++;
     const result = matchScan(raw, parent ? [parent] : ALL, data);
     if (type === 'MATCH') {
-      check(`corpus MATCH ${raw} -> ${parent}`, result.findings.length > 0, JSON.stringify(result));
+      const want = expectedCommons(parent);
+      const got = items(result).some((i) => want.has(i.common));
+      check(`corpus MATCH ${raw} -> ${parent}`, got, `wanted one of ${[...want].join('/')} — ${JSON.stringify(result)}`);
     } else if (type === 'OPAQUE') {
       check(`corpus OPAQUE ${raw}`, hasUnverified(result, raw), JSON.stringify(result));
     } else {
