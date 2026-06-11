@@ -77,6 +77,16 @@ check('plant-word dairy/pea guards prevent allergen false positives', noAllergen
 r = matchScan('dairy-free cheese, vegan butter', ['milk'], data);
 check('non-dairy cheese/butter guard prevents milk false positives', noAllergen(r), JSON.stringify(r));
 
+r = matchScan('milk-free. contains milk powder', ['milk'], data);
+check('free-from sentence does not suppress later milk finding', hasKind(r, 'Milk', 'contains'), JSON.stringify(r));
+
+r = matchScan('peanut-free. made in a facility with peanuts', ['peanut'], data);
+check('free-from sentence does not suppress later peanut PAL', hasKind(r, 'Peanuts', 'may'), JSON.stringify(r));
+
+r = matchScan('may contain peanuts. milk', ['peanut', 'milk'], data);
+check('PAL context does not leak across sentences to milk', hasKind(r, 'Milk', 'contains'), JSON.stringify(r));
+check('PAL context remains on peanut sentence', hasKind(r, 'Peanuts', 'may'), JSON.stringify(r));
+
 r = matchScan('cheese, butter, cream', ['milk', 'lactose'], data);
 check('DB gap cheese/butter/cream -> Milk allergen', hasKind(r, 'Milk', 'contains'), JSON.stringify(r));
 check('cheese/butter/cream still supports lactose intolerance', hasKind(r, 'Lactose', 'contains') || hasKind(r, 'Lactose', 'may'), JSON.stringify(r));
@@ -104,6 +114,20 @@ r = matchScan('no artificial colors, peanut flour', ['peanut'], data);
 check('negation: "no artificial colors, peanut flour" -> Peanuts', hasKind(r, 'Peanuts', 'contains'), JSON.stringify(r));
 r = matchScan('contains no peanuts', ['peanut'], data);
 check('negation: "contains no peanuts" -> no peanut finding', !item(r, 'Peanuts'), JSON.stringify(r));
+
+// Wave 5 — free-from / PAL safety (adversarial review): free-from must not create
+// false positives, must not hide PAL, and PAL must not leak across sentences.
+r = matchScan('dairy-free', ['milk'], data);
+check('free-from: "dairy-free" -> no Milk false positive', !item(r, 'Milk'), JSON.stringify(r));
+r = matchScan('dairy-free cheese', ['milk'], data);
+check('free-from: "dairy-free cheese" -> no Milk false positive', !item(r, 'Milk'), JSON.stringify(r));
+r = matchScan('peanut-free. made in a facility with peanuts', ['peanut'], data);
+check('free-from never hides PAL: still May contain Peanuts', hasKind(r, 'Peanuts', 'may'), JSON.stringify(r));
+r = matchScan('may contain peanuts. milk', ['peanut', 'milk'], data);
+check('PAL does not leak past a sentence: milk -> Contains', hasKind(r, 'Milk', 'contains'), JSON.stringify(r));
+check('PAL still applies in its own sentence: peanuts -> May contain', hasKind(r, 'Peanuts', 'may'), JSON.stringify(r));
+r = matchScan('may contain peanuts, almonds and milk', ['peanut', 'almond', 'milk'], data);
+check('multi-allergen PAL still distributes across commas (almond may)', hasKind(r, 'Almond', 'may'), JSON.stringify(r));
 
 // DB hostile challenge corpus: production matcher should resolve MATCH rows and
 // surface OPAQUE rows under Could not verify.

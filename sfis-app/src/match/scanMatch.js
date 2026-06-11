@@ -337,16 +337,17 @@ function matchScan(rawText, profile, data) {
   const text0 = (' ' + String(rawText || '') + ' ')
     .replace(/-\s*[\r\n]+\s*/g, '')
     .replace(/\b(?:[a-z]\.){2,}[a-z]?\b/gi, (m) => m.replace(/\./g, ''));
-  const segs = text0.split(/[,;\n]+|(?<!\d)\.(?!\d)| but /i).map((s) => s.trim()).filter(Boolean);
+  // Sentences (period / newline) bound PAL context: "may contain peanuts. milk"
+  // must NOT mark milk as 'may'. Within a sentence, commas/semicolons are list items.
+  const sentences = text0.split(/(?<!\d)\.(?!\d)|\n+/).map((s) => s.trim()).filter(Boolean);
 
   const recs = [];
-  const freeGroups = new Set();
   const unverified = new Set();
-  let ctx = 'CONTAINS';
 
-  const record = (tok, contextMay) => {
+  const record = (tok, contextMay, segFree) => {
     let identified = false;
     graphMatches(tok, index).forEach((m) => {
+      if (segFree && segFree.has(m.groupId)) { identified = true; return; } // freed by a claim in THIS segment ("dairy-free cheese")
       identified = true;
       const may = contextMay || m.matchClass === 'POSSIBLE' || m.matchClass === 'AMBIGUOUS';
       recs.push({
@@ -381,45 +382,42 @@ function matchScan(rawText, profile, data) {
     return identified || isKnown(tok, index);
   };
 
-  segs.forEach((seg) => {
-    let s = seg;
-    s = s.replace(ZERO_RE, (m, w) => { markFree(w, freeGroups, index); return ' '; });
-    s = s.replace(INLINE_FREE_RE, (m, w) => {
-      markFree(w, freeGroups, index);
-      return /^(?:dairy|milk)$/i.test(w) ? ' non dairy ' : ' ';
-    });
+  sentences.forEach((sentence) => {
+    let ctx = 'CONTAINS'; // resets per sentence — PAL/MAY never leaks past a period/newline
+    sentence.split(/[,;]+| but /i).map((p) => p.trim()).filter(Boolean).forEach((seg) => {
+      let s = seg;
+      const segFree = new Set(); // groups freed by a claim in THIS segment (e.g. "dairy-free cheese")
+      s = s.replace(ZERO_RE, (m, w) => { markFree(w, segFree, index); return ' '; });
+      s = s.replace(INLINE_FREE_RE, (m, w) => { markFree(w, segFree, index); return ' '; });
 
-    const advisory = ADVISORY_RE.test(s);
-    const freeOpen = !advisory && FREE_OPEN_RE.test(s);
-    // Free-from is SEGMENT-SCOPED (never propagates across commas): a free claim
-    // frees only the allergens it names, so "contains no artificial flavors, milk
-    // powder" still flags milk. MAY/PAL DOES propagate so "may contain a, b, c"
-    // distributes across the list. A free claim ends the clause → next is CONTAINS.
-    if (advisory) ctx = 'MAY';
-    else if (freeOpen) ctx = 'CONTAINS';
-    else if (CONTAINS_RE.test(s)) ctx = 'CONTAINS';
-    const segCtx = freeOpen ? 'FREE' : ctx;
+      const advisory = ADVISORY_RE.test(s);
+      const freeOpen = !advisory && FREE_OPEN_RE.test(s);
+      // Free-from is SEGMENT-SCOPED. MAY/PAL propagates across commas WITHIN a sentence
+      // ("may contain a, b, c") but not across sentences. A free claim → next is CONTAINS.
+      if (advisory) ctx = 'MAY';
+      else if (freeOpen) ctx = 'CONTAINS';
+      else if (CONTAINS_RE.test(s)) ctx = 'CONTAINS';
+      const segCtx = freeOpen ? 'FREE' : ctx;
 
-    const cleaned = s
-      .replace(ADVISORY_RE, ' ')
-      .replace(FREE_OPEN_RE, ' ')
-      .replace(CONTAINS_RE, ' ')
-      .replace(/\b(?:the following|those|traces?|an?|of|that|with|present|sufferers|allergy|advice)\b/ig, ' ');
+      const cleaned = s
+        .replace(ADVISORY_RE, ' ')
+        .replace(FREE_OPEN_RE, ' ')
+        .replace(CONTAINS_RE, ' ')
+        .replace(/\b(?:the following|those|traces?|an?|of|that|with|present|sufferers|allergy|advice)\b/ig, ' ');
 
-    expandTokens(cleaned).forEach((tok) => {
-      if (segCtx === 'FREE') { markFree(tok, freeGroups, index); return; }
-      const identified = record(tok, segCtx === 'MAY');
-      const n = norm(tok);
-      if (index.opaque.has(n)) unverified.add(n);
-      else if (segCtx === 'CONTAINS' && !identified && /[a-z]{2,}/i.test(tok)) unverified.add(n);
+      expandTokens(cleaned).forEach((tok) => {
+        if (segCtx === 'FREE') { markFree(tok, segFree, index); return; }
+        const identified = record(tok, segCtx === 'MAY', segFree);
+        const n = norm(tok);
+        if (index.opaque.has(n)) unverified.add(n);
+        else if (segCtx === 'CONTAINS' && !identified && /[a-z]{2,}/i.test(tok)) unverified.add(n);
+      });
     });
   });
 
   const byGroup = {};
   recs.forEach((r) => {
     if (!watched(r, watch)) return;
-    const definite = (r.matchClass === 'DIRECT' || r.matchClass === 'DERIVED') && !r.pal && !r.may;
-    if (freeGroups.has(r.groupId) && !definite) return;
     (byGroup[r.groupId] = byGroup[r.groupId] || { groupId: r.groupId, groupLabel: r.groupLabel, cat: r.cat, matches: [] }).matches.push(r);
   });
 
