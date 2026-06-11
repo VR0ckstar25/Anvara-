@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fullscreen-ish, no action bar; status bar tinted to the Blossom theme. -->
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">#D6398A</item>
+        <item name="android:colorPrimaryDark">#FCEDF3</item>
+        <item name="android:colorAccent">#D6398A</item>
+        <item name="android:statusBarColor">#FCEDF3</item>
+        <item name="android:windowBackground">#FCEDF3</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

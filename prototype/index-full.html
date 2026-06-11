@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smart Food Ingredients Scanner — Full Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{background:radial-gradient(135% 105% at 50% -12%, #EAF4FC 0%, #DEEAF4 45%, #D3E0EC 100%);
+    font-family:'Hanken Grotesk',system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+  .phone{width:392px;height:850px;border-radius:46px;background:#fff;overflow:hidden;position:relative;
+    box-shadow:0 2px 4px rgba(40,30,20,.08),0 30px 80px rgba(40,30,20,.22),0 0 0 1px rgba(40,30,20,.05)}
+  .scroll{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  .tag{font-family:'Spline Sans Mono',monospace}
+  .nudge{position:fixed;left:18px;bottom:14px;font-family:'Spline Sans Mono',monospace;font-size:11px;color:#5c6471}
+  @keyframes spin{to{transform:rotate(360deg)}} .spin{animation:spin 1s linear infinite}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="nudge">Full prototype · tab bar · Camera → Processing → Result · Patterns · Profiles · Settings</div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="data.js"></script>
+<script src="engine.js"></script>
+<script type="text/babel">
+const { useState, useMemo, useEffect } = React;
+const D = window.SFIS_DATA;
+
+/* THEME (ported from tokens.js) */
+const BACKGROUNDS = {
+  sky:{label:'Sky',bg:'#E9F3FB',bgDeep:'#D6E8F6',surfaceWarm:'#F4FAFE'},
+  mint:{label:'Mint',bg:'#E6F5EE',bgDeep:'#D2EBDF',surfaceWarm:'#F2FBF7'},
+  lemon:{label:'Lemon',bg:'#FBF6DD',bgDeep:'#F3EAC2',surfaceWarm:'#FEFBEC'},
+  lavender:{label:'Lavender',bg:'#F1ECFB',bgDeep:'#E2D8F4',surfaceWarm:'#F8F4FD'},
+  blossom:{label:'Blossom',bg:'#FCEDF3',bgDeep:'#F6DCE7',surfaceWarm:'#FEF5F8'},
+};
+const ACCENTS = {
+  cobalt:{label:'Cobalt',accent:'#3360CE',accentDeep:'#284BA0',accentSoft:'#DFE7F7',accentTint:'#F0F4FC'},
+  turquoise:{label:'Turquoise',accent:'#0EA5A2',accentDeep:'#0B8280',accentSoft:'#D5F0EF',accentTint:'#EBF8F7'},
+  fuchsia:{label:'Fuchsia',accent:'#D6398A',accentDeep:'#AC2C6E',accentSoft:'#FAE0EE',accentTint:'#FDF0F7'},
+  grape:{label:'Grape',accent:'#8139C2',accentDeep:'#66299E',accentSoft:'#EFE0F8',accentTint:'#F7F0FB'},
+};
+const FIXED = {
+  surface:'#FFFFFF', onAccent:'#FBF7EF', ink:'#222932', ink2:'#5C6471', ink3:'#97A1AE',
+  line:'#E2E8EF', lineSoft:'#EDF1F6', amber:'#E89318',
+  allergen:{tint:'#FDEBC9',edge:'#F4CE83',strong:'#D2870F',ink:'#7E5410',label:'#96640F'},
+  intolerance:{tint:'#FBE2CC',edge:'#F1C198',strong:'#CA6A2C',ink:'#7E3E1A',label:'#A1531F'},
+  serif:"'Source Serif 4',serif", sans:"'Hanken Grotesk',sans-serif", mono:"'Spline Sans Mono',monospace", radius:18,
+};
+function buildTheme(bg,ac){const b=BACKGROUNDS[bg]||BACKGROUNDS.sky,a=ACCENTS[ac]||ACCENTS.cobalt; return {...FIXED,...b,...a};}
+const { runMatch, subLabel } = window.SFIS_ENGINE;
+
+function useStored(key, init){
+  const [v,setV] = useState(()=>{ try{const s=localStorage.getItem(key); return s?JSON.parse(s):init;}catch(e){return init;} });
+  useEffect(()=>{ try{localStorage.setItem(key, JSON.stringify(v));}catch(e){} },[key,v]);
+  return [v,setV];
+}
+
+const DEMOS = [
+  {name:'Sunshine Oat Cookies', date:'Today', text:'Whole grain oats, cane sugar, palm oil, soy lecithin, natural flavors, sea salt, baking soda.\nMay contain peanuts and tree nuts.'},
+  {name:'Trail Power Bar', date:'Today', text:'Peanuts, almonds, honey, sesame seeds, crisp rice, dark chocolate (cocoa, sugar, soy lecithin).'},
+  {name:'Stir-Fry Sauce', date:'Today', text:'Water, soy sauce (water, wheat, soybeans, salt), toasted sesame oil, garlic, sugar, modified food starch.'},
+  {name:'Mystery Crackers', date:'Today', text:'Enriched wheat flour, vegetable oil, spices, natural flavoring, salt, yeast.\nMade in a facility that also processes milk and sesame.'},
+];
+
+/* UI atoms */
+const Btn = ({t,onClick,children,kind='primary'}) => (
+  <button onClick={onClick} style={{width:'100%',height:50,borderRadius:14,
+    background:kind==='primary'?t.accent:t.surface, color:kind==='primary'?t.onAccent:t.ink,
+    border:kind==='primary'?'none':`1px solid ${t.line}`, fontFamily:t.sans, fontSize:16, fontWeight:600}}>{children}</button>
+);
+const Section = ({t,children}) => <div className="tag" style={{fontSize:11,letterSpacing:1.4,textTransform:'uppercase',
+  color:t.ink3,margin:'20px 0 10px'}}>{children}</div>;
+
+function MatchBar({t,data}){
+  const pal=t[data.cat], V={contains:'Contains',may:'May contain'};
+  return (<div style={{display:'flex',borderRadius:t.radius,background:t.surface,border:`1px solid ${t.line}`,overflow:'hidden',marginBottom:14}}>
+    <div style={{width:5,background:pal.strong}}/>
+    <div style={{flex:1}}>
+      <div style={{display:'flex',alignItems:'center',gap:10,padding:'13px 14px 5px'}}>
+        <div style={{width:13,height:13,borderRadius:7,background:t.amber}}/>
+        <div style={{fontFamily:t.sans,fontWeight:800,fontSize:13,letterSpacing:.4,textTransform:'uppercase',color:pal.label}}>{data.label}</div>
+      </div>
+      {data.items.map((it,i)=>(
+        <div key={i} style={{padding:'12px 14px',borderTop:`1px solid ${t.lineSoft}`}}>
+          <div className="tag" style={{fontSize:10.5,letterSpacing:1,textTransform:'uppercase',color:pal.label,marginBottom:3}}>{V[it.kind]||'Contains'}</div>
+          <div style={{fontFamily:t.sans,fontWeight:700,fontSize:18,color:t.ink,letterSpacing:-.2}}>{it.common}</div>
+          {it.technical && <div style={{fontFamily:t.sans,fontSize:13.5,color:t.ink2,marginTop:2}}>(found as “{it.technical}”)</div>}
+          {it.note && <div style={{fontFamily:t.sans,fontSize:13,color:t.ink2,marginTop:3,lineHeight:'18px'}}>{it.note}</div>}
+        </div>
+      ))}
+    </div>
+  </div>);
+}
+
+/* ── Onboarding (now with severity prompts) ── */
+function Onboarding({t,profile,setProfile,done}){
+  const [sev,setSev]=useStored('sfis.proto.severity',{});
+  const allergens=D.subGroups.filter(s=>s.domain==='ALLERGEN'), intol=D.subGroups.filter(s=>s.domain==='INTOLERANCE');
+  const toggle=id=>setProfile(p=>p.includes(id)?p.filter(x=>x!==id):[...p,id]);
+  const Tile=({s,beta})=>{const on=profile.includes(s.id);return(
+    <button onClick={()=>toggle(s.id)} style={{padding:'12px 14px',borderRadius:12,textAlign:'left',
+      border:`${on?2:1}px solid ${on?t.accent:t.line}`,background:on?t.accentTint:t.surface,position:'relative'}}>
+      <span style={{fontFamily:t.sans,fontWeight:600,fontSize:14,color:t.ink}}>{s.label}</span>
+      {beta&&<span className="tag" style={{position:'absolute',top:8,right:8,fontSize:8.5,letterSpacing:.6,color:t.intolerance.label,
+        background:t.intolerance.tint,borderRadius:6,padding:'2px 5px'}}>BETA</span>}
+    </button>);};
+  const sevOpts=dom=>dom==='ALLERGEN'
+    ? [['mild','I get uncomfortable'],['mod','Quite unwell'],['severe','Serious — I carry medication']]
+    : [['mild','A little'],['mod','Unpleasant'],['severe','I avoid it completely']];
+  return(<div style={{background:t.bg,padding:22,minHeight:'100%'}}>
+    <div style={{fontFamily:t.serif,fontSize:26,color:t.ink,marginTop:8}}>Your ingredients. Your rules.</div>
+    <div style={{fontFamily:t.sans,fontSize:14.5,color:t.ink2,lineHeight:'21px',margin:'6px 0 4px'}}>
+      Pick what you want us to watch for. We’ll reflect what a label contains against your list — we never tell you what’s “safe.”</div>
+    <Section t={t}>Allergies</Section>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>{allergens.map(s=><Tile key={s.id} s={s}/>)}</div>
+    <Section t={t}>Intolerances · beta</Section>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>{intol.map(s=><Tile key={s.id} s={s} beta/>)}</div>
+    {profile.length>0 && <>
+      <Section t={t}>How each one affects you</Section>
+      {profile.map(id=>{const s=D.subGroups.find(x=>x.id===id); if(!s) return null;
+        return(<div key={id} style={{marginBottom:13}}>
+          <div style={{fontFamily:t.sans,fontSize:13.5,fontWeight:700,color:t.ink,marginBottom:6}}>{s.label}</div>
+          <div style={{display:'flex',gap:7,flexWrap:'wrap'}}>
+            {sevOpts(s.domain).map(([k,lbl])=>{const on=(sev[id]||'')===k;return(
+              <button key={k} onClick={()=>setSev(v=>({...v,[id]:k}))} style={{fontFamily:t.sans,fontSize:12,fontWeight:600,
+                padding:'7px 11px',borderRadius:999,border:`1px solid ${on?t.accent:t.line}`,
+                background:on?t.accentTint:t.surface,color:on?t.accentDeep:t.ink2}}>{lbl}</button>);})}
+          </div>
+        </div>);})}
+    </>}
+    <div style={{height:18}}/>
+    <Btn t={t} onClick={done}>{profile.length?`Continue with ${profile.length} selected`:'Skip for now'}</Btn>
+    <div style={{height:30}}/>
+  </div>);
+}
+
+/* ── Diary / Home ── */
+function Home({t,profile,go}){
+  return(<div style={{background:t.bg,padding:22,minHeight:'100%'}}>
+    <div style={{fontFamily:t.serif,fontSize:24,color:t.ink,marginTop:8}}>Your Diary</div>
+    <div style={{fontFamily:t.sans,fontSize:13.5,color:t.ink2,marginTop:4}}>Watching {profile.length} item{profile.length!==1?'s':''} on your profile.</div>
+    <div style={{display:'flex',flexWrap:'wrap',gap:7,margin:'12px 0 20px'}}>
+      {profile.map(id=><span key={id} style={{fontFamily:t.sans,fontSize:12.5,fontWeight:600,color:t.ink2,
+        background:t.surfaceWarm,border:`1px solid ${t.line}`,borderRadius:999,padding:'5px 11px'}}>{subLabel(id)}</span>)}
+      {!profile.length&&<span style={{fontFamily:t.sans,fontSize:13,color:t.ink3}}>Nothing selected — <button onClick={()=>go('onboarding')} style={{color:t.accent,fontWeight:600}}>add some</button></span>}
+    </div>
+    <div style={{background:t.surface,borderRadius:t.radius,border:`1px solid ${t.line}`,padding:20,textAlign:'center'}}>
+      <div style={{fontFamily:t.serif,fontSize:19,color:t.ink}}>Ready when you are</div>
+      <div style={{fontFamily:t.sans,fontSize:13.5,color:t.ink2,margin:'6px 0 16px',lineHeight:'20px'}}>Scan a label and we’ll check it against your profile.</div>
+      <Btn t={t} onClick={()=>go('camera')}>Scan a label</Btn>
+    </div>
+    <div style={{height:90}}/>
+  </div>);
+}
+
+/* ── Camera (simulated capture) ── */
+function Camera({t,go,startScan}){
+  return(<div style={{position:'absolute',inset:0,background:'#11151c'}}>
+    <button onClick={()=>go('home')} style={{position:'absolute',top:16,left:16,fontFamily:t.sans,fontSize:14,color:'#fff',zIndex:2}}>‹ Back</button>
+    <div style={{position:'absolute',top:74,left:24,right:24,bottom:150,borderRadius:20,border:'2px dashed rgba(255,255,255,.5)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+      <div style={{fontFamily:t.sans,fontSize:13.5,color:'rgba(255,255,255,.85)',textAlign:'center',padding:24,lineHeight:'20px'}}>
+        Point at the ingredients panel.<br/>Hold steady — we’ll read it for you.</div>
+    </div>
+    <div style={{position:'absolute',left:0,right:0,bottom:34,textAlign:'center'}}>
+      <button onClick={startScan} aria-label="Capture" style={{width:76,height:76,borderRadius:999,background:'#fff',border:'5px solid rgba(255,255,255,.45)'}}/>
+      <div style={{marginTop:14}}><button onClick={()=>go('scan')} style={{fontFamily:t.sans,fontSize:14,fontWeight:600,color:'#fff'}}>Type it in instead</button></div>
+    </div>
+  </div>);
+}
+
+/* ── Processing ── */
+function Processing({t,go,profile}){
+  const names=profile.slice(0,3).map(id=>subLabel(id));
+  useEffect(()=>{const id=setTimeout(()=>go('result'),1500);return()=>clearTimeout(id);},[]);
+  return(<div style={{background:t.bg,minHeight:'100%',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:22}}>
+    <div className="spin" style={{width:52,height:52,borderRadius:999,border:`4px solid ${t.accentSoft}`,borderTopColor:t.accent}}/>
+    <div style={{fontFamily:t.serif,fontSize:20,color:t.ink,marginTop:22}}>Reading the label…</div>
+    <div style={{fontFamily:t.sans,fontSize:13.5,color:t.ink2,marginTop:6,textAlign:'center',lineHeight:'20px'}}>
+      Checking against {names.join(', ')||'your profile'}.</div>
+  </div>);
+}
+
+/* ── Result ── */
+function Result({t,go,result}){
+  const {findings,unverified,product}=result;
+  const FOOTER="Based on the label as we read it. Always check the original packaging. Scan may not capture all ingredients — we show what we could read. Precautionary allergen statements such as “may contain” may not always be captured.";
+  return(<div style={{background:t.bg,padding:18,minHeight:'100%'}}>
+    <button onClick={()=>go('camera')} style={{fontFamily:t.sans,fontSize:14,color:t.ink2,marginTop:6}}>‹ Scan again</button>
+    <div style={{fontFamily:t.serif,fontSize:23,color:t.ink,margin:'8px 0 1px'}}>{product.name}</div>
+    <div className="tag" style={{fontSize:12,color:t.ink3,marginBottom:16}}>{product.date}</div>
+    {findings.map((f,i)=><MatchBar key={i} t={t} data={f}/>)}
+    {!findings.length&&<div style={{background:t.surfaceWarm,border:`1px solid ${t.line}`,borderRadius:t.radius,padding:16,marginBottom:14}}>
+      <div style={{fontFamily:t.sans,fontSize:15,color:t.ink}}>Nothing from your profile in what we could read.</div>
+      <div style={{fontFamily:t.sans,fontSize:13,color:t.ink2,marginTop:4}}>Always check the original packaging.</div></div>}
+    {unverified.length>0&&<div style={{marginTop:4,marginBottom:14}}>
+      <div style={{fontFamily:t.sans,fontWeight:700,fontSize:13,color:t.ink2,marginBottom:8}}>Could not verify</div>
+      {unverified.map((u,i)=><div key={i} style={{marginBottom:6}}>
+        <span style={{fontFamily:t.sans,fontSize:14,color:'#8E857A'}}>{u.term}</span>
+        {u.note&&<span style={{fontFamily:t.sans,fontSize:12.5,color:t.ink3}}> — {u.note}</span>}</div>)}
+      <div style={{fontFamily:t.sans,fontSize:12.5,color:t.ink3,marginTop:6,lineHeight:'18px'}}>Not confirmed in our database. Connect to the internet or check the original label.</div>
+    </div>}
+    <div style={{borderTop:`1px solid ${t.lineSoft}`,paddingTop:13,marginTop:6}}>
+      <div style={{fontFamily:t.sans,fontSize:11.5,color:t.ink3,lineHeight:'17px'}}>{FOOTER}</div></div>
+    <div style={{height:24}}/>
+  </div>);
+}
+
+/* ── Patterns (V1 frequency list) ── */
+function Patterns({t,log}){
+  const counts={}; log.forEach(e=>(e.items||[]).forEach(n=>{counts[n]=(counts[n]||0)+1;}));
+  const ranked=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  return(<div style={{background:t.bg,padding:22,minHeight:'100%'}}>
+    <div style={{fontFamily:t.serif,fontSize:24,color:t.ink,marginTop:8}}>Your Patterns</div>
+    <div style={{fontFamily:t.sans,fontSize:13.5,color:t.ink2,marginTop:4,marginBottom:18}}>What shows up most across your scans.</div>
+    {ranked.length===0
+      ? <div style={{background:t.surface,border:`1px solid ${t.line}`,borderRadius:t.radius,padding:18}}>
+          <div style={{fontFamily:t.sans,fontSize:14.5,color:t.ink}}>Scan a few products to see your patterns.</div>
+          <div style={{fontFamily:t.sans,fontSize:13,color:t.ink2,marginTop:6}}>{log.length} of 15 scans logged.</div></div>
+      : <div style={{background:t.surface,border:`1px solid ${t.line}`,borderRadius:t.radius,overflow:'hidden'}}>
+          {ranked.map(([name,n],i)=><div key={i} style={{display:'flex',justifyContent:'space-between',padding:'13px 16px',borderTop:i?`1px solid ${t.lineSoft}`:'none'}}>
+            <span style={{fontFamily:t.sans,fontSize:15,color:t.ink}}>{i+1}. {name}</span>
+            <span style={{fontFamily:t.sans,fontSize:13.5,color:t.ink2}}>{n} scan{n>1?'s':''}</span></div>)}</div>}
+    <div style={{height:90}}/>
+  </div>);
+}
+
+/* ── Profiles / Family ── */
+function ProfileCard({t,name,tag,items,active,child}){
+  return(<div style={{background:active?t.accentTint:t.surface,border:`1px solid ${active?t.accent:t.line}`,borderRadius:t.radius,padding:16,marginBottom:12}}>
+    <div style={{display:'flex',alignItems:'center',gap:10}}>
+      <div style={{width:34,height:34,borderRadius:999,background:child?'#E7D9C4':t.accentSoft,display:'grid',placeItems:'center',fontFamily:t.sans,fontWeight:800,color:child?'#8A6B3D':t.accentDeep}}>{name[0]}</div>
+      <div><div style={{fontFamily:t.sans,fontWeight:700,fontSize:15.5,color:t.ink}}>{name}</div>
+        <div style={{fontFamily:t.sans,fontSize:12,color:t.ink2}}>{tag}</div></div>
+    </div>
+    <div style={{display:'flex',flexWrap:'wrap',gap:6,marginTop:10}}>
+      {items.map((n,i)=><span key={i} style={{fontFamily:t.sans,fontSize:12,fontWeight:600,color:t.ink2,background:'#fff',border:`1px solid ${t.line}`,borderRadius:999,padding:'4px 9px'}}>{n}</span>)}
+    </div>
+  </div>);
+}
+function Profiles({t,profile,go}){
+  const me=profile.map(id=>subLabel(id));
+  return(<div style={{background:t.bg,padding:22,minHeight:'100%'}}>
+    <div style={{fontFamily:t.serif,fontSize:24,color:t.ink,marginTop:8}}>Profiles</div>
+    <div style={{fontFamily:t.sans,fontSize:13.5,color:t.ink2,marginTop:4,marginBottom:18}}>Switch profiles or add family. Each person’s list stays private to them.</div>
+    <ProfileCard t={t} name="You" tag="Primary" items={me.length?me:['No items yet']} active/>
+    <ProfileCard t={t} name="Mia" tag="Child · age 8" items={['Peanuts','Eggs']} child/>
+    <button style={{width:'100%',marginTop:2,padding:16,borderRadius:t.radius,border:`1px dashed ${t.line}`,background:t.surface,fontFamily:t.sans,fontSize:14.5,fontWeight:600,color:t.accent}}>+ Add a family member</button>
+    <button onClick={()=>go('onboarding')} style={{fontFamily:t.sans,fontSize:13,fontWeight:600,color:t.accent,marginTop:16}}>Edit my profile</button>
+    <div style={{height:90}}/>
+  </div>);
+}
+
+/* ── Settings (hierarchy, §11.3) ── */
+function Settings({t,go}){
+  const rows=[['My Allergen Profile',()=>go('onboarding')],['Family & Profiles',()=>go('profiles')],['Appearance',()=>go('appearance')],
+    ['Scan Settings',null],['Subscription',null],['Data & Privacy',null],['About & Database',null],['Account',null]];
+  return(<div style={{background:t.bg,padding:22,minHeight:'100%'}}>
+    <div style={{fontFamily:t.serif,fontSize:24,color:t.ink,marginTop:8,marginBottom:16}}>Settings</div>
+    <div style={{background:t.surface,border:`1px solid ${t.line}`,borderRadius:t.radius,overflow:'hidden'}}>
+      {rows.map(([label,fn],i)=><button key={i} onClick={fn||(()=>{})} style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'15px 16px',borderTop:i?`1px solid ${t.lineSoft}`:'none',textAlign:'left'}}>
+        <span style={{fontFamily:t.sans,fontSize:15,color:fn?t.ink:t.ink3}}>{label}</span>
+        <span style={{color:t.ink3}}>›</span></button>)}
+    </div>
+    <div style={{height:90}}/>
+  </div>);
+}
+
+/* ── Appearance ── */
+function Appearance({t,keys,setKeys,go}){
+  const Sw=({p,colors,sel,on})=>(
+    <button onClick={on} style={{width:'31%',marginBottom:14}}>
+      <div style={{height:52,borderRadius:13,overflow:'hidden',display:'flex',border:`${sel?2.5:1}px solid ${sel?t.accent:t.line}`}}>
+        <div style={{flex:2,background:colors[0]}}/><div style={{flex:1,display:'flex',flexDirection:'column'}}>
+          {colors.slice(1).map((c,i)=><div key={i} style={{flex:1,background:c}}/>)}</div></div>
+      <div style={{fontFamily:t.sans,fontSize:12,fontWeight:600,color:sel?t.ink:t.ink2,textAlign:'center',marginTop:5}}>{p.label}</div>
+    </button>);
+  return(<div style={{background:t.bg,padding:22,minHeight:'100%'}}>
+    <button onClick={()=>go('settings')} style={{fontFamily:t.sans,fontSize:14,color:t.ink2,marginTop:6}}>‹ Back</button>
+    <div style={{fontFamily:t.serif,fontSize:24,color:t.ink,margin:'8px 0 4px'}}>Appearance</div>
+    <div style={{fontFamily:t.sans,fontSize:14,color:t.ink2,lineHeight:'21px'}}>Make it yours. Your allergen colors stay fixed so findings always read the same.</div>
+    <div style={{background:t.surface,borderRadius:t.radius,border:`1px solid ${t.line}`,padding:14,margin:'16px 0 4px'}}>
+      <div className="tag" style={{fontSize:10,letterSpacing:1,textTransform:'uppercase',color:t.ink3,marginBottom:10}}>Preview</div>
+      <MatchBar t={t} data={{cat:'allergen',label:'Allergen Match',items:[{common:'Peanuts',kind:'contains'}]}}/>
+      <Btn t={t}>Scan a label</Btn>
+    </div>
+    <Section t={t}>Background</Section>
+    <div style={{display:'flex',flexWrap:'wrap',justifyContent:'space-between'}}>
+      {Object.entries(BACKGROUNDS).map(([k,p])=><Sw key={k} p={p} colors={[p.bg,p.bgDeep,p.surfaceWarm]}
+        sel={keys.background===k} on={()=>setKeys(v=>({...v,background:k}))}/>)}</div>
+    <Section t={t}>Accent</Section>
+    <div style={{display:'flex',flexWrap:'wrap',justifyContent:'space-between'}}>
+      {Object.entries(ACCENTS).map(([k,p])=><Sw key={k} p={p} colors={[p.accent,p.accentDeep,p.accentSoft]}
+        sel={keys.accent===k} on={()=>setKeys(v=>({...v,accent:k}))}/>)}</div>
+    <div style={{height:24}}/>
+  </div>);
+}
+
+/* ── Bottom tab bar ── */
+function NavBar({t,screen,go}){
+  const tabs=[['home','Diary'],['camera','Scan'],['patterns','Patterns'],['profiles','Profiles'],['settings','Settings']];
+  return(<div style={{position:'absolute',left:0,right:0,bottom:0,height:62,background:t.surface,borderTop:`1px solid ${t.line}`,display:'flex',zIndex:10}}>
+    {tabs.map(([s,label])=>{const on=screen===s;return(
+      <button key={s} onClick={()=>go(s)} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:4}}>
+        <div style={{width:6,height:6,borderRadius:3,background:on?t.accent:'transparent'}}/>
+        <span style={{fontFamily:t.sans,fontSize:11,fontWeight:on?'800':'600',color:on?t.accent:t.ink3}}>{label}</span>
+      </button>);})}
+  </div>);
+}
+
+/* ── APP ── */
+function App(){
+  const [keys,setKeys]=useStored('sfis.proto2.theme',{background:'sky',accent:'cobalt'});
+  const [profile,setProfile]=useStored('sfis.proto2.profile',['allergen.peanut','allergen.treenut','allergen.sesame']);
+  const [screen,setScreen]=useStored('sfis.proto2.screen','home');
+  const [log,setLog]=useStored('sfis.proto2.log',[]);
+  const [result,setResult]=useState(null);
+  const t=useMemo(()=>buildTheme(keys.background,keys.accent),[keys]);
+  const go=s=>setScreen(s);
+  const runScan=(text,name)=>{
+    const r=runMatch(text,profile);
+    const items=r.findings.flatMap(f=>f.items.map(i=>i.common));
+    setLog(l=>[...l,{name,items}].slice(-60));
+    setResult({...r,product:{name:name||'Unnamed Product',date:'Today'}});
+    go('processing');
+  };
+  let view, nav=false;
+  if(screen==='onboarding') view=<Onboarding t={t} profile={profile} setProfile={setProfile} done={()=>go('home')}/>;
+  else if(screen==='camera') view=<Camera t={t} go={go} startScan={()=>runScan(DEMOS[0].text,DEMOS[0].name)}/>;
+  else if(screen==='scan') view=<Scan t={t} go={go} onScan={runScan}/>;
+  else if(screen==='processing') view=<Processing t={t} go={go} profile={profile}/>;
+  else if(screen==='result'&&result) view=<Result t={t} go={go} result={result}/>;
+  else if(screen==='appearance') view=<Appearance t={t} keys={keys} setKeys={setKeys} go={go}/>;
+  else if(screen==='patterns'){view=<Patterns t={t} log={log}/>;nav=true;}
+  else if(screen==='profiles'){view=<Profiles t={t} profile={profile} go={go}/>;nav=true;}
+  else if(screen==='settings'){view=<Settings t={t} go={go}/>;nav=true;}
+  else {view=<Home t={t} profile={profile} go={go}/>;nav=true;}
+  return <div className="phone">
+    <div className="scroll" style={{bottom:nav?62:0}}>{view}</div>
+    {nav&&<NavBar t={t} screen={screen} go={go}/>}
+  </div>;
+}
+
+/* manual text-entry scan (reachable from Camera → "Type it in instead") */
+function Scan({t,go,onScan}){
+  const [text,setText]=useState(DEMOS[0].text); const [name,setName]=useState(DEMOS[0].name);
+  return(<div style={{background:t.bg,padding:22,minHeight:'100%'}}>
+    <button onClick={()=>go('camera')} style={{fontFamily:t.sans,fontSize:14,color:t.ink2,marginTop:6}}>‹ Camera</button>
+    <div style={{fontFamily:t.serif,fontSize:23,color:t.ink,margin:'10px 0 2px'}}>Type the label</div>
+    <div style={{fontFamily:t.sans,fontSize:13.5,color:t.ink2,lineHeight:'20px'}}>Pick a demo product, then edit the text as if you’d corrected the camera read.</div>
+    <Section t={t}>Demo products</Section>
+    <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+      {DEMOS.map(d=><button key={d.name} onClick={()=>{setText(d.text);setName(d.name);}}
+        style={{fontFamily:t.sans,fontSize:12.5,fontWeight:600,color:t.ink,background:t.surface,border:`1px solid ${t.line}`,borderRadius:999,padding:'7px 12px'}}>{d.name}</button>)}
+    </div>
+    <Section t={t}>What we read · edit if needed</Section>
+    <textarea value={text} onChange={e=>setText(e.target.value)} rows={7} style={{width:'100%',borderRadius:14,
+      border:`1px solid ${t.line}`,padding:13,fontFamily:t.mono,fontSize:13,color:t.ink,lineHeight:'19px',resize:'vertical',background:t.surface}}/>
+    <div style={{height:14}}/>
+    <Btn t={t} onClick={()=>onScan(text,name)}>Check these ingredients</Btn>
+    <div style={{height:24}}/>
+  </div>);
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

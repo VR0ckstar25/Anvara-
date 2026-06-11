@@ -1,0 +1,27 @@
+# ── OS / editor junk ──
+.DS_Store
+*.swp
+.idea/
+*.iml
+.vscode/
+
+# ── Node ──
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ── Android (sfis-android) build outputs & local config ──
+sfis-android/.gradle/
+sfis-android/build/
+sfis-android/app/build/
+sfis-android/local.properties
+sfis-android/captures/
+*.apk
+*.keystore
+
+# ── Expo / RN (sfis-app) ──
+sfis-app/.expo/
+sfis-app/dist/
+sfis-app/web-build/
+
+# Keep: spec docs (.docx/.pdf/.mhtml), database/, replica/, design_handoff/, source.

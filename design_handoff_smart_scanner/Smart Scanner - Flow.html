@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smart Scanner — Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; height: 100%; background: #E7E1D6; }
+  body { font-family: 'Hanken Grotesk', system-ui, sans-serif; }
+  #root { height: 100vh; }
+  .stage { height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center;
+    background:
+      radial-gradient(135% 105% at 50% -12%, #EAF4FC 0%, #DEEAF4 45%, #D3E0EC 100%); overflow: hidden; }
+  .phone { width: 390px; height: 844px; border-radius: 46px; background: #F4EEE4; overflow: hidden;
+    position: relative; box-shadow: 0 2px 4px rgba(40,30,20,.08), 0 30px 80px rgba(40,30,20,.22), 0 0 0 1px rgba(40,30,20,.04); }
+  .phone-inner { position: absolute; inset: 0; }
+  .home-ind { position: absolute; left: 50%; bottom: 9px; transform: translateX(-50%); width: 128px; height: 5px;
+    border-radius: 3px; background: rgba(40,30,20,.22); z-index: 60; pointer-events: none; }
+  .view-fade { position: absolute; inset: 0; animation: vfade .4s cubic-bezier(.2,.7,.3,1) both; }
+  @keyframes vfade { from { transform: translateY(9px); } to { transform: none; } }
+  .canvas-link { position: fixed; right: 18px; top: 16px; z-index: 100; display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 15px; border-radius: 999px; background: rgba(255,255,255,.85); backdrop-filter: blur(10px);
+    box-shadow: 0 2px 12px rgba(40,30,20,.12); font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; font-size: 13.5px;
+    color: #2A2620; text-decoration: none; }
+  .nudge { position: fixed; left: 18px; bottom: 16px; z-index: 100; font-family: 'Spline Sans Mono', monospace;
+    font-size: 11px; color: #8C8479; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<a class="canvas-link" href="Smart Scanner — Canvas.html">Design canvas
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2E5F5B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h7M7 3.5l3 3-3 3"/></svg>
+</a>
+<div class="nudge">opens on your Diary &middot; tap Scan to run a scan &middot; toggle Tweaks to customize</div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="app/theme.jsx"></script>
+<script type="text/babel" src="app/result.jsx"></script>
+<script type="text/babel" src="app/onboarding.jsx"></script>
+<script type="text/babel" src="app/screens-result.jsx"></script>
+<script type="text/babel" src="app/screens-app.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+function PhoneStage({ children }) {
+  const wrapRef = React.useRef(null);
+  const [scale, setScale] = React.useState(1);
+  React.useEffect(() => {
+    const fit = () => {
+      const pad = 28;
+      const s = Math.min(1, (window.innerHeight - pad) / 844, (window.innerWidth - pad) / 390);
+      setScale(s);
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, []);
+  return (
+    <div className="stage">
+      <div style={{ transform: `scale(${scale})`, transformOrigin: 'center center' }}>
+        <div className="phone" ref={wrapRef}>
+          <div className="phone-inner">{children}</div>
+          <div className="home-ind" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "startScreen": "log",
+  "accent": [
+    "#D6398A",
+    "#AC2C6E",
+    "#FAE0EE",
+    "#FDF0F7"
+  ],
+  "background": [
+    "#FCEDF3",
+    "#F6DCE7",
+    "#FEF5F8"
+  ],
+  "barVariant": "minimal",
+  "trackingDays": 30,
+  "scansSaved": 32,
+  "autoEntries": true,
+  "calendarActivity": 55
+}/*EDITMODE-END*/;
+
+const START_OPTS = {
+  'Diary (home)': 'log',
+  'Welcome': 'welcome',
+  'Scanner': 'camera',
+  'Result': 'result',
+  'Patterns': 'patterns',
+  'Profiles': 'profile-home',
+};
+const START_LABEL = Object.fromEntries(Object.entries(START_OPTS).map(([k, v]) => [v, k]));
+
+function FlowApp() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [view, setView] = React.useState(t.startScreen || 'log');
+  const [child, setChild] = React.useState(false);
+  const touched = React.useRef(false);
+
+  const go = (v) => { touched.current = true; setView(v); };
+  const onNav = (k) => go(k === 'scan' ? 'camera' : k === 'profile' ? 'profile-home' : k);
+
+  // Open on the chosen start screen — follows the tweak until the user navigates.
+  React.useEffect(() => { if (!touched.current) setView(t.startScreen); }, [t.startScreen]);
+
+  // Live theme swaps (mutate shared tokens, then this render cascades).
+  Object.assign(T, { accent: t.accent[0], accentDeep: t.accent[1], accentSoft: t.accent[2], accentTint: t.accent[3] });
+  Object.assign(T, { bg: t.background[0], bgDeep: t.background[1], surfaceWarm: t.background[2] });
+
+  // Tweaking a Diary control should reveal the Diary so the change is visible.
+  const setDiary = (k, v) => { setTweak(k, v); setView('log'); touched.current = true; };
+  const setStart = (v) => { setTweak('startScreen', v); setView(v); touched.current = true; };
+
+  let screen;
+  switch (view) {
+    case 'welcome':   screen = <WelcomeScreen onNext={() => go('profile')} />; break;
+    case 'profile':   screen = <ProfileScreen onNext={() => go('email')} onBack={() => go('welcome')} />; break;
+    case 'email':     screen = <EmailScreen onNext={() => go('camera')} onBack={() => go('profile')} />; break;
+    case 'camera':    screen = <CameraScreen onCapture={() => go('processing')} onBack={() => go('log')} />; break;
+    case 'processing':screen = <ProcessingScreen onDone={() => go('result')} />; break;
+    case 'result':    screen = <ResultScreen child={child} setChild={setChild} variant={t.barVariant} onBack={() => go('log')} />; break;
+    case 'log':       screen = <DiaryScreen onNav={onNav} trackingDays={t.trackingDays} scansSaved={t.scansSaved} autoEntries={t.autoEntries} calendarActivity={t.calendarActivity} />; break;
+    case 'patterns':  screen = <PatternsScreen onNav={onNav} />; break;
+    case 'profile-home': screen = <ProfileHomeScreen onNav={onNav} />; break;
+    default:          screen = <DiaryScreen onNav={onNav} trackingDays={t.trackingDays} scansSaved={t.scansSaved} autoEntries={t.autoEntries} calendarActivity={t.calendarActivity} />;
+  }
+
+  return (
+    <React.Fragment>
+      <PhoneStage>
+        <div className="view-fade" key={view} style={{ width: '100%', height: '100%' }}>
+          {screen}
+        </div>
+      </PhoneStage>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Opening" />
+        <TweakSelect label="App opens on" value={START_LABEL[t.startScreen] || 'Diary (home)'}
+          options={Object.keys(START_OPTS)} onChange={(lbl) => setStart(START_OPTS[lbl])} />
+
+        <TweakSection label="Jump to a screen" />
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[['Diary', 'log'], ['Scan', 'camera'], ['Result', 'result']].map(([lbl, v]) => (
+            <button key={v} onClick={() => go(v)} style={{ flex: 1, minHeight: 28, borderRadius: 7, border: '.5px solid rgba(0,0,0,.12)',
+              background: view === v ? 'rgba(46,95,91,.14)' : 'rgba(255,255,255,.6)', color: '#234A47', fontWeight: 600, font: 'inherit', cursor: 'default' }}>{lbl}</button>
+          ))}
+        </div>
+
+        <TweakSection label="Your record (Diary)" />
+        <TweakToggle label="Auto-generated scan logs" value={t.autoEntries} onChange={(v) => setDiary('autoEntries', v)} />
+        <TweakSlider label="Days tracked" value={t.trackingDays} min={1} max={90} unit=" days" onChange={(v) => setDiary('trackingDays', v)} />
+        <TweakSlider label="Scans saved" value={t.scansSaved} min={0} max={300} onChange={(v) => setDiary('scansSaved', v)} />
+        <TweakSlider label="Calendar activity" value={t.calendarActivity} min={0} max={100} unit="%" onChange={(v) => setDiary('calendarActivity', v)} />
+
+        <TweakSection label="Look & feel" />
+        <TweakColor label="Background" value={t.background}
+          options={[["#E9F3FB", "#D6E8F6", "#F4FAFE"], ["#E6F5EE", "#D2EBDF", "#F2FBF7"], ["#FBF6DD", "#F3EAC2", "#FEFBEC"], ["#F1ECFB", "#E2D8F4", "#F8F4FD"], ["#FCEDF3", "#F6DCE7", "#FEF5F8"]]}
+          onChange={(v) => setTweak('background', v)} />
+        <TweakColor label="Primary accent" value={t.accent}
+          options={[["#3360CE", "#284BA0", "#DFE7F7", "#F0F4FC"], ["#0EA5A2", "#0B8280", "#D5F0EF", "#EBF8F7"], ["#D6398A", "#AC2C6E", "#FAE0EE", "#FDF0F7"], ["#8139C2", "#66299E", "#EFE0F8", "#F7F0FB"]]}
+          onChange={(v) => setTweak('accent', v)} />
+        <TweakRadio label="Result match bars" value={t.barVariant}
+          options={['tint', 'edge', 'minimal']} onChange={(v) => { setTweak('barVariant', v); setView('result'); touched.current = true; }} />
+      </TweaksPanel>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<FlowApp />);
+</script>
+</body>
+</html>
