@@ -2,21 +2,23 @@ import React, { useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { MatchBar } from '../components/MatchBar';
-import { Card, Pill } from '../components/DesignPrimitives';
+import { Card, Pill, PrimaryButton } from '../components/DesignPrimitives';
+import data from '../data/allergens.json';
 
-// DB currency is distinct from the scan date and the sample date. Placeholder
-// until wired from the data export's build date.
-const DB_AS_OF = '28 May 2026';
+// DB currency = the date the bundled export was generated from the database —
+// distinct from the scan date and the sample date.
+const DB_AS_OF = data.generatedAt || data.version || 'unknown';
 const FOOTER =
   'Based on the label as we read it. Always check the original packaging. ' +
   'Ingredient data current as of {DATE}. Scan may not capture all ingredients - ' +
   'we show what we could read. ' +
   "Precautionary allergen statements such as 'may contain' may not always be captured.";
 
-export function ResultScreen({ findings = [], unverified = [], product = {} }) {
+export function ResultScreen({ findings = [], unverified = [], product = {}, onFeedback, nextLabel, onNext }) {
   const { theme: t } = useTheme();
   const [childMode, setChildMode] = useState(false);
   const [detail, setDetail] = useState(null);
+  const [feedback, setFeedback] = useState(null);
   const nothing = findings.length === 0;
 
   return (
@@ -70,6 +72,16 @@ export function ResultScreen({ findings = [], unverified = [], product = {} }) {
           </View>
         </View>
 
+        <View style={{ borderRadius: 14, backgroundColor: t.surfaceWarm, borderWidth: 1,
+          borderColor: t.line, padding: 13, marginBottom: 14 }}>
+          <Text style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: '800', color: t.ink }}>
+            Draft data
+          </Text>
+          <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink2, lineHeight: 18, marginTop: 3 }}>
+            The ingredient database is not independently validated yet. Check the original package before acting on a result.
+          </Text>
+        </View>
+
         {findings.map((f, i) => (
           <MatchBar key={`${f.label}-${i}`} data={f} child={childMode} onOpen={(finding, item) => setDetail({ finding, item })} />
         ))}
@@ -110,17 +122,34 @@ export function ResultScreen({ findings = [], unverified = [], product = {} }) {
             Was this result useful?
           </Text>
           <View style={{ flexDirection: 'row', gap: 10 }}>
-            {['Clear', 'Unsure', 'Wrong'].map((label) => (
-              <Pressable key={label} style={{ flex: 1, minHeight: 40, borderRadius: 12,
-                backgroundColor: t.surfaceWarm, borderWidth: 1, borderColor: t.line,
-                alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ fontFamily: t.sans, fontSize: 13, fontWeight: '800', color: t.ink2 }}>
-                  {label}
-                </Text>
-              </Pressable>
-            ))}
+            {['Clear', 'Unsure', 'Wrong'].map((label) => {
+              const selected = feedback === label;
+              return (
+                <Pressable key={label} onPress={() => { setFeedback(label); onFeedback?.(label); }}
+                  accessibilityRole="button" accessibilityState={{ selected }}
+                  style={{ flex: 1, minHeight: 40, borderRadius: 12,
+                    backgroundColor: selected ? t.accent : t.surfaceWarm, borderWidth: 1,
+                    borderColor: selected ? t.accent : t.line, alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ fontFamily: t.sans, fontSize: 13, fontWeight: '800',
+                    color: selected ? t.onAccent : t.ink2 }}>
+                    {label}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
+          {feedback ? (
+            <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink3, marginTop: 8 }}>
+              Saved locally as {feedback.toLowerCase()}.
+            </Text>
+          ) : null}
         </Card>
+
+        {nextLabel && onNext ? (
+          <PrimaryButton onPress={onNext} t={t} style={{ marginBottom: 16 }}>
+            {nextLabel}
+          </PrimaryButton>
+        ) : null}
 
         <View style={{ borderTopWidth: 1, borderTopColor: t.lineSoft, paddingTop: 14, marginTop: 2 }}>
           {childMode ? (
@@ -173,6 +202,12 @@ function DetailSheet({ detail, onClose, t }) {
               </View>
 
               <DetailLine label="Read as" value={item.technical || item.common} t={t} />
+              <DetailLine label="What it is" value={item.info || 'Info to be added.'} t={t} />
+              {item.info ? (
+                <Text style={{ fontFamily: t.sans, fontSize: 11.5, color: t.ink3, marginTop: 4, lineHeight: 16 }}>
+                  Auto-generated from our ingredient database — full descriptions are being reviewed.
+                </Text>
+              ) : null}
               <DetailLine label="Why it matched" value={item.correlation || item.derivative || item.note} t={t} />
               {item.derivative ? <DetailLine label="Label evidence" value={item.derivative} t={t} /> : null}
               {item.note ? <DetailLine label="Note" value={item.note} t={t} /> : null}

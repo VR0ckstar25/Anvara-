@@ -239,7 +239,11 @@ function buildIndex(data) {
     if (!t.synthetic) (byParentTerms[t.parent] = byParentTerms[t.parent] || []).push(t.display);
   });
 
-  return { terms, opaque: new Set((data.opaque || []).map(norm)), byParentTerms };
+  // template "what it is" text per parent, generated at export time from DB fields
+  const parentInfo = {};
+  Object.entries(data.parents || {}).forEach(([id, p]) => { if (p.info) parentInfo[id] = p.info; });
+
+  return { terms, opaque: new Set((data.opaque || []).map(norm)), byParentTerms, parentInfo };
 }
 
 function plantDairyFalsePositive(token, term, parent) {
@@ -320,6 +324,8 @@ function buildItem(entry, index) {
     correlation: `Matches ${entry.groupLabel} on your profile.`,
     confidence: CONF[first.confidence] || 'Medium',
     aka,
+    // template-generated "what it is" text from the DB export (pending content library)
+    info: index.parentInfo[first.parent] || undefined,
   };
 }
 
@@ -427,7 +433,7 @@ function matchScan(rawText, profile, data) {
   });
 
   const findings = DOMAIN_ORDER.filter((cat) => byCat[cat] && byCat[cat].length).map((cat) => ({
-    cat: cat === 'dietary' ? 'goal' : cat,
+    cat: cat === 'dietary' ? 'diet' : cat,
     label: CAT_LABEL[cat],
     items: byCat[cat].sort((a, b) => (a.kind === b.kind ? a.common.localeCompare(b.common) : a.kind === 'contains' ? -1 : 1)),
   }));
