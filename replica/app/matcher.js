@@ -87,17 +87,25 @@
     return Object.values(hits).sort((a, b) => a.rank - b.rank).slice(0, 8);
   }
 
-  // ── label tokenizer: returns ingredient tokens + PAL ("may contain") items ──
+  // ── label tokenizer ──
+  // Classifies each comma/period/semicolon segment as:
+  //   • FREE-from claim  → dropped (never an ingredient, never a finding)
+  //   • PRECAUTIONARY (PAL / "made in a facility…") → palItems → "May contain"
+  //   • ingredient       → tokens (parentheticals expanded)
+  // Also joins OCR hyphen-at-linebreak ("pea-\nnut" → "peanut").
+  const FREE_RE = /[a-z][- ]free\b|\bfree (?:from|of)\b|\bwithout\b|\bcontains no\b/i;
+  const ADVISORY_RE = /\b(?:may (?:also )?contain|contains traces|traces of|made (?:in|on)|manufactured (?:in|on)|processed (?:in|on)|produced (?:in|on)|packa?ged (?:in|on)|in a facility|on (?:shared )?equipment|shared (?:equipment|line|facility)|also (?:handles|processes|makes))\b/i;
   function tokenize(label) {
-    const palItems = [];
-    let text = ' ' + label + ' ';
-    text = text.replace(/(?:may contain(?: traces of)?|contains traces of|traces of|made (?:in|on)[^.,;]*?(?:processes|handles))\s+([^.;\n]+)/gi,
-      (m, grp) => { grp.split(/,| and | & /).forEach((g) => { const r = g.trim().replace(/\.$/, ''); if (r) palItems.push(r); }); return ' '; });
-    const tokens = [];
-    text.split(/[,;\n]/).forEach((part) => {
+    const text = (' ' + label + ' ').replace(/-\s*[\r\n]+\s*/g, ''); // join hyphenated line breaks
+    const palItems = [], tokens = [];
+    text.split(/[,;.\n]+/).forEach((seg) => {
+      const s = seg.trim();
+      if (!s) return;
+      if (FREE_RE.test(s)) return;                       // "peanut free" / "contains no peanuts" → ignore
+      if (ADVISORY_RE.test(s)) { palItems.push(s); return; } // cross-contact → May contain
       const inner = [];
-      part = part.replace(/\(([^)]*)\)/g, (m, g) => { inner.push(g); return ' '; });
-      [part].concat(inner).forEach((s) => { const r = s.trim().replace(/\.$/, ''); if (r) tokens.push(r); });
+      const base = s.replace(/\(([^)]*)\)/g, (m, g) => { inner.push(g); return ' '; });
+      [base].concat(inner).forEach((x) => { const r = x.trim(); if (r) tokens.push(r); });
     });
     return { tokens, palItems };
   }
@@ -121,7 +129,7 @@
     const seenIdentified = []; // tokens we recognized at all
     const unverifiedNames = [];
 
-    const addItem = (sgid, domain, rawToken, wording, conf, viaCommon) => {
+    const addItem = (sgid, domain, rawToken, wording, conf, viaCommon, pal) => {
       const sg = subGroupById[sgid]; if (!sg) return;
       const g = (groups[domain] = groups[domain] || {});
       const isMay = wording === 'May contain';
@@ -129,14 +137,16 @@
       // prefer a "Contains" over a previously-recorded "May contain"
       if (existing && existing._may && !isMay) { /* upgrade below */ } else if (existing) return;
       const aka = (byParentTerms[sgFirstParent(sgid)] || []).filter((x) => norm(x) !== norm(rawToken)).slice(0, 4);
+      const dietNote = domain === 'GOAL' ? 'Relates to your goal.' : 'Doesn’t fit your selection.';
       g[sgid] = {
         common: pretty(viaCommon || sg.label),
-        technical: rawToken,
-        note: domain === 'ALLERGEN' || domain === 'INTOLERANCE'
-          ? (isMay ? '“May contain” — depends on source' : null)
-          : (domain === 'GOAL' ? 'Relates to your goal.' : 'Doesn’t fit your selection.'),
-        derivative: isMay ? `Appears here as “${rawToken}” — may be present depending on source or manufacture.`
-                          : `Found on this label as “${rawToken}.”`,
+        technical: pal ? null : rawToken, // PAL rows have no ingredient name to quote
+        note: (domain === 'ALLERGEN' || domain === 'INTOLERANCE')
+          ? (pal ? '“May contain” — precautionary note on the label' : (isMay ? '“May contain” — depends on source' : null))
+          : dietNote,
+        derivative: pal ? 'Listed as a precautionary “may contain” statement on the packaging.'
+          : (isMay ? `Appears here as “${rawToken}” — may be present depending on source or manufacture.`
+                   : `Found on this label as “${rawToken}.”`),
         correlation: `Matches ${sg.label} on your profile.`,
         confidence: CONF[conf] || 'Medium',
         aka, _may: isMay,
@@ -152,7 +162,7 @@
         identified = true;
         if (!watch.has(m.sgid)) return;
         const isMay = forcePal || m.mc === 'POSSIBLE' || m.mc === 'AMBIGUOUS';
-        addItem(m.sgid, m.domain, raw, isMay ? 'May contain' : 'Contains', m.conf, m.common);
+        addItem(m.sgid, m.domain, raw, isMay ? 'May contain' : 'Contains', m.conf, m.common, forcePal);
       });
       const tw = norm(raw).split(' ');
       // goal keywords
