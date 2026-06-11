@@ -65,12 +65,21 @@
     { sgid: 'diet.vegetarian', common: 'Meat or fish',   kws: ['gelatin', 'gelatine', 'lard', 'fish', 'anchovy', 'meat', 'beef', 'chicken', 'pork', 'rennet'] },
   ];
 
-  // does termWords appear as a contiguous run inside tokenWords?
+  // simple plural fold so label "mussels/anchovies/cods" matches DB "mussel/anchovy/cod"
+  function stem(w) {
+    if (w.length > 4 && w.endsWith('ies')) return w.slice(0, -3) + 'y';
+    if (w.length > 4 && w.endsWith('ses')) return w.slice(0, -2);
+    if (w.length > 4 && w.endsWith('es') && /(x|s|ch|sh)es$/.test(w)) return w.slice(0, -2);
+    if (w.length > 3 && w.endsWith('s') && !w.endsWith('ss')) return w.slice(0, -1);
+    return w;
+  }
+  const wEq = (a, b) => a === b || stem(a) === stem(b);
+  // does termWords appear as a contiguous run inside tokenWords? (stem-aware)
   function contains(tokenWords, termWords) {
     if (termWords.length > tokenWords.length) return false;
     for (let i = 0; i + termWords.length <= tokenWords.length; i++) {
       let ok = true;
-      for (let j = 0; j < termWords.length; j++) if (tokenWords[i + j] !== termWords[j]) { ok = false; break; }
+      for (let j = 0; j < termWords.length; j++) if (!wEq(tokenWords[i + j], termWords[j])) { ok = false; break; }
       if (ok) return true;
     }
     return false;
@@ -87,27 +96,39 @@
     return Object.values(hits).sort((a, b) => a.rank - b.rank).slice(0, 8);
   }
 
-  // ── label tokenizer ──
-  // Classifies each comma/period/semicolon segment as:
-  //   • FREE-from claim  → dropped (never an ingredient, never a finding)
-  //   • PRECAUTIONARY (PAL / "made in a facility…") → palItems → "May contain"
-  //   • ingredient       → tokens (parentheticals expanded)
-  // Also joins OCR hyphen-at-linebreak ("pea-\nnut" → "peanut").
-  const FREE_RE = /[a-z][- ]free\b|\bfree (?:from|of)\b|\bwithout\b|\bcontains no\b/i;
-  const ADVISORY_RE = /\b(?:may (?:also )?contain|contains traces|traces of|made (?:in|on)|manufactured (?:in|on)|processed (?:in|on)|produced (?:in|on)|packa?ged (?:in|on)|in a facility|on (?:shared )?equipment|shared (?:equipment|line|facility)|also (?:handles|processes|makes))\b/i;
-  function tokenize(label) {
-    const text = (' ' + label + ' ').replace(/-\s*[\r\n]+\s*/g, ''); // join hyphenated line breaks
-    const palItems = [], tokens = [];
-    text.split(/[,;.\n]+/).forEach((seg) => {
-      const s = seg.trim();
-      if (!s) return;
-      if (FREE_RE.test(s)) return;                       // "peanut free" / "contains no peanuts" → ignore
-      if (ADVISORY_RE.test(s)) { palItems.push(s); return; } // cross-contact → May contain
-      const inner = [];
-      const base = s.replace(/\(([^)]*)\)/g, (m, g) => { inner.push(g); return ' '; });
-      [base].concat(inner).forEach((x) => { const r = x.trim(); if (r) tokens.push(r); });
-    });
-    return { tokens, palItems };
+  // ── precautionary (PAL) & free-from detection ──
+  const ADVISORY_RE = /\b(?:may (?:also )?contain|may be present|contains? traces|traces of|made (?:in|on)|manufactured (?:in|on)|processed (?:in|on)|produced (?:in|on)|prepared (?:in|on)|packa?ged (?:in|on|where)|in (?:a|the) (?:facility|kitchen|plant|production line)|on (?:shared )?equipment|shared (?:equipment|line|facility)|(?:also )?(?:handles|processes)|not suitable for|cannot guarantee)\b/i;
+  const FREE_OPEN_RE = /\b(?:free from(?: the following)?|free of|does ?n.?t contain|does not contain|contains no)\b/i;
+  const INLINE_FREE_RE = /\b([a-z][a-z]+)[- ]free\b/ig;
+  const ZERO_RE = /\b0\s*(?:g|mg)\s+([a-z][a-z]+)\b/ig;
+  const CONTAINS_RE = /\b(?:contains?|ingredients?)\b/i;
+  const hasLetters = (s) => /[a-z]{2,}/i.test(s);
+
+  function sgFirstParent(sgid) { const p = D.parents.find((x) => x.sgid === sgid); return p ? p.pid : null; }
+  function expandTokens(text) {
+    const out = [], inner = [];
+    const base = text.replace(/\(([^()]*)\)/g, (m, g) => { inner.push(g); return ' '; });
+    [base].concat(inner).forEach((s) => { const r = s.replace(/^[\s:;.\-–—•*]+|[\s:;.]+$/g, '').trim(); if (r) out.push(r); });
+    return out;
+  }
+  // build one finding item for a sub-group, listing all matched specifics
+  function buildItem(sgid, domain, specifics, token, may, pal, conf) {
+    const sg = subGroupById[sgid];
+    const multi = specifics.length > 1;
+    const aka = (byParentTerms[sgFirstParent(sgid)] || []).filter((x) => !specifics.some((s) => norm(s) === norm(x))).slice(0, 4);
+    const dietNote = domain === 'GOAL' ? 'Relates to your goal.' : 'Doesn’t fit your selection.';
+    return {
+      common: multi ? pretty(sg.label) : specifics[0],
+      technical: multi ? specifics.join(', ') : (pal ? null : token),
+      note: (domain === 'ALLERGEN' || domain === 'INTOLERANCE')
+        ? (pal ? '“May contain” — precautionary note on the label' : (may ? '“May contain” — depends on source' : null))
+        : dietNote,
+      derivative: pal ? 'Listed as a precautionary “may contain” statement on the packaging.'
+        : (may ? 'May be present depending on source or manufacture.' : `Found on this label${token ? ` as “${token}”` : ''}.`),
+      correlation: `Matches ${sg.label} on your profile.`,
+      confidence: CONF[conf] || 'Medium',
+      aka,
+    };
   }
 
   // best graph matches for one raw token → [{pid, mc, conf, domain, sgid, common}] (one per parent)
@@ -122,68 +143,74 @@
   }
 
   // ── main: scan a label against a profile (selected sub-group ids) ──
+  // Segments carry a propagating context: CONTAINS (default) → flips to MAY at a
+  // precautionary marker, FREE at a free-from opener; the context applies to the
+  // allergens that follow (so "may contain: a, b, c" and "free from: a, b" distribute).
   function scanLabel(label, selectedIds) {
     const watch = new Set(selectedIds || []);
-    const { tokens, palItems } = tokenize(label);
-    const groups = {}; // domain → { sgid → item }
-    const seenIdentified = []; // tokens we recognized at all
-    const unverifiedNames = [];
+    const text0 = (' ' + label + ' ').replace(/-\s*[\r\n]+\s*/g, ''); // join OCR hyphen line-breaks
+    const segs = text0.split(/[,;\n]+|(?<!\d)\.(?!\d)| but /i).map((s) => s.trim()).filter(Boolean);
 
-    const addItem = (sgid, domain, rawToken, wording, conf, viaCommon, pal) => {
-      const sg = subGroupById[sgid]; if (!sg) return;
-      const g = (groups[domain] = groups[domain] || {});
-      const isMay = wording === 'May contain';
-      const existing = g[sgid];
-      // prefer a "Contains" over a previously-recorded "May contain"
-      if (existing && existing._may && !isMay) { /* upgrade below */ } else if (existing) return;
-      const aka = (byParentTerms[sgFirstParent(sgid)] || []).filter((x) => norm(x) !== norm(rawToken)).slice(0, 4);
-      const dietNote = domain === 'GOAL' ? 'Relates to your goal.' : 'Doesn’t fit your selection.';
-      g[sgid] = {
-        common: pretty(viaCommon || sg.label),
-        technical: pal ? null : rawToken, // PAL rows have no ingredient name to quote
-        note: (domain === 'ALLERGEN' || domain === 'INTOLERANCE')
-          ? (pal ? '“May contain” — precautionary note on the label' : (isMay ? '“May contain” — depends on source' : null))
-          : dietNote,
-        derivative: pal ? 'Listed as a precautionary “may contain” statement on the packaging.'
-          : (isMay ? `Appears here as “${rawToken}” — may be present depending on source or manufacture.`
-                   : `Found on this label as “${rawToken}.”`),
-        correlation: `Matches ${sg.label} on your profile.`,
-        confidence: CONF[conf] || 'Medium',
-        aka, _may: isMay,
-      };
+    const recs = [];           // {sgid, domain, common, token, mc, conf, may, pal}
+    const freeSet = new Set();  // sub-groups declared free-from
+    const unverified = [];
+    let ctx = 'CONTAINS';
+
+    const markFree = (txt) => graphMatches(txt).forEach((m) => freeSet.add(m.sgid));
+    const record = (tok, contextMay) => {
+      let identified = false;
+      graphMatches(tok).forEach((m) => {
+        identified = true;
+        const may = contextMay || m.mc === 'POSSIBLE' || m.mc === 'AMBIGUOUS';
+        recs.push({ sgid: m.sgid, domain: m.domain, common: m.common, token: tok, mc: m.mc, conf: m.conf, may, pal: contextMay });
+      });
+      const tw = norm(tok).split(' ');
+      GOAL_KW.forEach((g) => { if (kwHit(tw, g.kws)) { identified = true; recs.push({ sgid: g.sgid, domain: 'GOAL', common: g.common, token: tok, mc: 'DERIVED', conf: 'MEDIUM', may: false, pal: false }); } });
+      DIET_KW.forEach((g) => { if (kwHit(tw, g.kws)) { identified = true; recs.push({ sgid: g.sgid, domain: 'DIETARY_PREFERENCE', common: g.common, token: tok, mc: 'DERIVED', conf: 'MEDIUM', may: false, pal: false }); } });
+      if (knownIngredients.has(norm(tok)) || PANTRY.has(norm(tok))) identified = true;
+      return identified;
     };
 
-    function sgFirstParent(sgid) { const p = D.parents.find((x) => x.sgid === sgid); return p ? p.pid : null; }
-
-    function handleToken(raw, forcePal) {
-      let identified = false;
-      // allergen / intolerance via synonym graph
-      graphMatches(raw).forEach((m) => {
-        identified = true;
-        if (!watch.has(m.sgid)) return;
-        const isMay = forcePal || m.mc === 'POSSIBLE' || m.mc === 'AMBIGUOUS';
-        addItem(m.sgid, m.domain, raw, isMay ? 'May contain' : 'Contains', m.conf, m.common, forcePal);
+    segs.forEach((seg) => {
+      let s = seg;
+      s = s.replace(ZERO_RE, (m, w) => { markFree(w); return ' '; });        // "0g lactose" → free lactose
+      s = s.replace(INLINE_FREE_RE, (m, w) => { markFree(w); return ' '; }); // "lactose-free" → free lactose, keep the rest
+      const adv = ADVISORY_RE.test(s);
+      const freeOpen = !adv && FREE_OPEN_RE.test(s);
+      if (adv) ctx = 'MAY'; else if (freeOpen) ctx = 'FREE'; else if (CONTAINS_RE.test(s)) ctx = 'CONTAINS';
+      const cleaned = s.replace(ADVISORY_RE, ' ').replace(FREE_OPEN_RE, ' ').replace(CONTAINS_RE, ' ')
+        .replace(/\b(?:the following|those|traces?|an?|of|that|with|present|sufferers|allergy)\b/ig, ' ');
+      expandTokens(cleaned).forEach((tok) => {
+        if (ctx === 'FREE') { markFree(tok); return; }
+        const identified = record(tok, ctx === 'MAY');
+        if (ctx === 'CONTAINS' && !identified && hasLetters(tok)) unverified.push(tok);
       });
-      const tw = norm(raw).split(' ');
-      // goal keywords
-      GOAL_KW.forEach((g) => { if (kwHit(tw, g.kws)) { identified = true; if (watch.has(g.sgid)) addItem(g.sgid, 'GOAL', raw, 'Contains', 'MEDIUM', g.common); } });
-      // dietary keywords
-      DIET_KW.forEach((g) => { if (kwHit(tw, g.kws)) { identified = true; if (watch.has(g.sgid)) addItem(g.sgid, 'DIETARY_PREFERENCE', raw, 'Contains', 'MEDIUM', g.common); } });
-      // known-but-irrelevant / pantry → identified, no finding
-      if (knownIngredients.has(norm(raw)) || PANTRY.has(norm(raw))) identified = true;
-      if (forcePal) return; // PAL items never go to "could not verify"
-      if (!identified) unverifiedNames.push(raw.replace(/\b\w/g, (c) => c)); // keep original casing-ish
-    }
+    });
 
-    tokens.forEach((t) => handleToken(t, false));
-    palItems.forEach((t) => handleToken(t, true));
+    // group by sub-group, aggregate specifics; free-from suppresses only UNCERTAIN matches
+    const bySg = {};
+    recs.forEach((r) => {
+      if (!watch.has(r.sgid)) return;
+      const definite = (r.mc === 'DIRECT' || r.mc === 'DERIVED') && !r.pal && !r.may;
+      if (freeSet.has(r.sgid) && !definite) return; // a definite ingredient overrides a free-from claim (surfaces contradictions)
+      (bySg[r.sgid] = bySg[r.sgid] || { domain: r.domain, sgid: r.sgid, matches: [] }).matches.push(r);
+    });
 
-    const findings = DOMAIN_ORDER.filter((d) => groups[d] && Object.keys(groups[d]).length).map((d) => ({
-      cat: DOMAIN_META[d].cat, label: DOMAIN_META[d].label, childLabel: DOMAIN_META[d].child,
-      items: Object.values(groups[d]).map((it) => { delete it._may; return it; }),
+    const groups = {};
+    Object.values(bySg).forEach((e) => {
+      const may = !e.matches.some((m) => !m.may);
+      const pal = e.matches.every((m) => m.pal);
+      const specifics = [...new Set(e.matches.map((m) => pretty(m.common)))];
+      const def = e.matches.find((m) => !m.may);
+      const token = specifics.length === 1 ? ((def && def.token) || e.matches[0].token) : null;
+      (groups[e.domain] = groups[e.domain] || []).push(buildItem(e.sgid, e.domain, specifics, token, may, pal, e.matches[0].conf));
+    });
+
+    const findings = DOMAIN_ORDER.filter((d) => groups[d] && groups[d].length).map((d) => ({
+      cat: DOMAIN_META[d].cat, label: DOMAIN_META[d].label, childLabel: DOMAIN_META[d].child, items: groups[d],
     }));
-    const unverified = unverifiedNames.length ? [{ tier: 'Not in our database', items: unverifiedNames }] : [];
-    return { findings, unverified };
+    const unv = unverified.length ? [{ tier: 'Not in our database', items: [...new Set(unverified)] }] : [];
+    return { findings, unverified: unv };
   }
 
   window.SFIS = {
