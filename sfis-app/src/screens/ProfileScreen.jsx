@@ -1,0 +1,150 @@
+import React, { useMemo, useState } from 'react';
+import { View, Text, Pressable, ScrollView } from 'react-native';
+import { useTheme } from '../theme/ThemeProvider';
+import { Card, Overline, Pill, ProgressBar, ScreenIntro } from '../components/DesignPrimitives';
+import { MemberSearchSheet } from '../components/MemberSearchSheet';
+import { profileIds, profileItems } from '../profile/profileModel';
+
+export function ProfileScreen({ profile = null, scans = [], feedbackCount = 0, onAppearance, onEditProfile, onClearLocalData }) {
+  const { theme: t } = useTheme();
+  const selected = useMemo(() => profileItems(profile), [profile]);
+  const watchedIds = profileIds(profile);
+  const memberCount = 1 + (profile?.familyMembers?.length || 0);
+  const [memberSearch, setMemberSearch] = useState(false);
+
+  return (
+    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ padding: 18, paddingBottom: 28 }}>
+      <ScreenIntro title="Profile" sub="Your saved rules, severity levels, and local scan history." t={t} />
+
+      <Card t={t} style={{ marginBottom: 18 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 12, alignItems: 'flex-start' }}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontFamily: t.serif, fontSize: 21, fontWeight: '600', color: t.ink }}>
+              {profile?.name || 'You'}
+            </Text>
+            <Text style={{ fontFamily: t.sans, fontSize: 13.5, color: t.ink2, lineHeight: 19, marginTop: 3 }}>
+              {memberCount} of 5 family profiles used. A child counts as one profile.
+            </Text>
+          </View>
+          <Pill t={t}>Self</Pill>
+        </View>
+
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
+          {selected.slice(0, 10).map((item) => (
+            <Pill key={`${item.id}-${item.severity}`} t={t} palette={item.palette}>
+              {item.label}: {item.severity}
+            </Pill>
+          ))}
+          {selected.length > 10 ? <Pill t={t}>+{selected.length - 10} more</Pill> : null}
+          {selected.length === 0 ? (
+            <Text style={{ fontFamily: t.sans, fontSize: 13.5, color: t.ink2 }}>No profile selections yet.</Text>
+          ) : null}
+        </View>
+
+        <Pressable onPress={onEditProfile} accessibilityRole="button" style={{ marginTop: 15, minHeight: 44, borderRadius: 12,
+          backgroundColor: t.surfaceWarm, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontFamily: t.sans, fontSize: 14, fontWeight: '800', color: t.accentDeep }}>
+            Edit watched items
+          </Text>
+        </Pressable>
+      </Card>
+
+      <Card t={t} style={{ marginBottom: 18 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <Text style={{ fontFamily: t.sans, fontSize: 15, fontWeight: '800', color: t.ink }}>
+            Family profiles
+          </Text>
+          <Text style={{ fontFamily: t.mono, fontSize: 12.5, color: t.ink2 }}>{5 - memberCount} left</Text>
+        </View>
+        {/* avatar row: self + the gray "+" circle (same size) — founder spec */}
+        <View style={{ flexDirection: 'row', gap: 16, alignItems: 'flex-start' }}>
+          <View style={{ alignItems: 'center', gap: 6 }}>
+            <View style={{ width: 58, height: 58, borderRadius: 29, alignItems: 'center', justifyContent: 'center',
+              backgroundColor: t.accentSoft, borderWidth: 1, borderColor: t.accent }}>
+              <Text style={{ fontFamily: t.serif, fontSize: 23, fontWeight: '700', color: t.accentDeep }}>
+                {(profile?.name || 'You')[0].toUpperCase()}
+              </Text>
+            </View>
+            <Text style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: '700', color: t.ink2 }}>
+              {profile?.name || 'You'}
+            </Text>
+          </View>
+          <Pressable onPress={() => setMemberSearch(true)} accessibilityRole="button"
+            accessibilityLabel="Add family members" style={{ alignItems: 'center', gap: 6 }}>
+            <View style={{ width: 58, height: 58, borderRadius: 29, alignItems: 'center', justifyContent: 'center',
+              backgroundColor: t.lineSoft, borderWidth: 1, borderColor: t.line }}>
+              <Text style={{ fontSize: 26, fontWeight: '600', color: t.ink2, marginTop: -2 }}>+</Text>
+            </View>
+            <Text style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: '700', color: t.ink3 }}>
+              Add members
+            </Text>
+          </Pressable>
+        </View>
+      </Card>
+
+      <MemberSearchSheet visible={memberSearch} onClose={() => setMemberSearch(false)} t={t} />
+
+      <Card t={t} style={{ marginBottom: 18 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <Text style={{ fontFamily: t.sans, fontSize: 15, fontWeight: '800', color: t.ink }}>
+            Saved scans
+          </Text>
+          <Text style={{ fontFamily: t.mono, fontSize: 12.5, color: t.ink2 }}>{scans.length} saved</Text>
+        </View>
+        <ProgressBar value={Math.min(scans.length, 6)} max={6} color={t.accent} t={t} />
+        <Text style={{ fontFamily: t.sans, fontSize: 13, color: t.ink2, lineHeight: 19, marginTop: 11 }}>
+          {watchedIds.length} watched item{watchedIds.length === 1 ? '' : 's'} active. {feedbackCount} result feedback entr{feedbackCount === 1 ? 'y' : 'ies'} saved locally.
+        </Text>
+      </Card>
+
+      <SettingsGroup title="App" t={t}>
+        <SettingRow label="Appearance" sub="Background and accent colors" value="Theme" onPress={onAppearance} t={t} />
+        <SettingRow label="Result child mode" sub="Available from each result screen" value="Result" t={t} />
+        <SettingRow label="Export diary" sub="Download saved scan history" value="Soon" t={t} />
+        <SettingRow label="Clear local data" sub="Remove profile, scans, and feedback from this device" value="Clear" onPress={onClearLocalData} danger t={t} />
+        <SettingRow label="Report a product issue" sub="Flag wrong or missing ingredient data" value="Soon" t={t} last />
+      </SettingsGroup>
+    </ScrollView>
+  );
+}
+
+function SettingsGroup({ title, children, t }) {
+  return (
+    <View style={{ marginBottom: 18 }}>
+      <Overline t={t}>{title}</Overline>
+      <Card t={t} style={{ paddingVertical: 2, marginTop: 10 }}>
+        {children}
+      </Card>
+    </View>
+  );
+}
+
+function SettingRow({ label, sub, value, onPress, danger, t, last }) {
+  const Container = onPress ? Pressable : View;
+  const pressProps = onPress ? { onPress, accessibilityRole: 'button' } : {};
+
+  return (
+    <Container {...pressProps}
+      style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 58, paddingVertical: 10,
+        borderBottomWidth: last ? 0 : 1, borderBottomColor: t.lineSoft }}>
+      <View style={{ width: 34, height: 34, borderRadius: 11, backgroundColor: t.surfaceWarm,
+        borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: danger ? t.amber : (onPress ? t.accent : t.ink3) }} />
+      </View>
+      <View style={{ flex: 1, minWidth: 0 }}>
+        <Text style={{ fontFamily: t.sans, fontSize: 15, fontWeight: '700', color: t.ink }}>
+          {label}
+        </Text>
+        {sub ? (
+          <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink3, lineHeight: 18, marginTop: 1 }}>
+            {sub}
+          </Text>
+        ) : null}
+      </View>
+      <Text style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: '700',
+        color: danger ? t.amber : (value === 'Soon' ? t.ink3 : t.accentDeep) }}>
+        {value || ''}
+      </Text>
+    </Container>
+  );
+}
