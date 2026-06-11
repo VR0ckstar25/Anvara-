@@ -1,3400 +1,3742 @@
 {
-"version": "2026.06-draft",
-"note": "DRAFT data — not validated; prototype only.",
-"terms": [
-{
-"term": "casein",
-"display": "Casein",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "caseinate",
-"display": "Caseinate",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sodium caseinate",
-"display": "Sodium caseinate",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "calcium caseinate",
-"display": "Calcium caseinate",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "potassium caseinate",
-"display": "Potassium caseinate",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "rennet casein",
-"display": "Rennet casein",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "whey",
-"display": "Whey",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "whey protein concentrate",
-"display": "Whey protein concentrate",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "whey protein isolate",
-"display": "Whey protein isolate",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "lactalbumin",
-"display": "Lactalbumin",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "lactoglobulin",
-"display": "Lactoglobulin",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "lactoferrin",
-"display": "Lactoferrin",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "lactose",
-"display": "Lactose",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Pure lactose is a milk SUGAR; may carry trace milk protein depending on manufacture. Also an intolerance parent."
-},
-{
-"term": "milk solids",
-"display": "Milk solids",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "nonfat milk solids",
-"display": "Nonfat milk solids",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "milk powder",
-"display": "Milk powder",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "dry milk",
-"display": "Dry milk",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "buttermilk",
-"display": "Buttermilk",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "butterfat",
-"display": "Butterfat",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "ghee",
-"display": "Ghee",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "curds",
-"display": "Curds",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "milk protein",
-"display": "Milk protein",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "hydrolyzed casein",
-"display": "Hydrolyzed casein",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "recaldent",
-"display": "Recaldent",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "CPP-ACP; milk-derived ingredient in some dental/gum products"
-},
-{
-"term": "natural flavoring",
-"display": "Natural flavoring",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "May be milk-derived; verify with manufacturer"
-},
-{
-"term": "albumin",
-"display": "Albumin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "albumen",
-"display": "Albumen",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "ovalbumin",
-"display": "Ovalbumin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "ovomucoid",
-"display": "Ovomucoid",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "ovomucin",
-"display": "Ovomucin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "ovotransferrin",
-"display": "Ovotransferrin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "conalbumin",
-"display": "Conalbumin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "livetin",
-"display": "Livetin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "lysozyme",
-"display": "Lysozyme",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "globulin",
-"display": "Globulin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Egg protein fraction; confirm context"
-},
-{
-"term": "vitellin",
-"display": "Vitellin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "ovovitellin",
-"display": "Ovovitellin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "meringue",
-"display": "Meringue",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "mayonnaise",
-"display": "Mayonnaise",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "egg white",
-"display": "Egg white",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "egg yolk",
-"display": "Egg yolk",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "dried egg",
-"display": "Dried egg",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "egg powder",
-"display": "Egg powder",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "egg solids",
-"display": "Egg solids",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "lecithin",
-"display": "Lecithin",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Usually soy-derived; can be egg-derived (E322) — dual-source, verify"
-},
-{
-"term": "surimi",
-"display": "Surimi",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Often contains egg white as binder; also a fish product"
-},
-{
-"term": "wheat flour",
-"display": "Wheat flour",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "whole wheat",
-"display": "Whole wheat",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "semolina",
-"display": "Semolina",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "durum",
-"display": "Durum",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "durum wheat",
-"display": "Durum wheat",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "spelt",
-"display": "Spelt",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "farina",
-"display": "Farina",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "einkorn",
-"display": "Einkorn",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "emmer",
-"display": "Emmer",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "kamut",
-"display": "Kamut",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "khorasan wheat",
-"display": "Khorasan wheat",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "farro",
-"display": "Farro",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "bulgur",
-"display": "Bulgur",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "couscous",
-"display": "Couscous",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "seitan",
-"display": "Seitan",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "vital wheat gluten",
-"display": "Vital wheat gluten",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "wheat gluten",
-"display": "Wheat gluten",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "wheat starch",
-"display": "Wheat starch",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Processing-dependent: Codex gluten-free wheat starch exists; protein/gluten content varies. Confirm context."
-},
-{
-"term": "wheat bran",
-"display": "Wheat bran",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "wheat germ",
-"display": "Wheat germ",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "hydrolyzed wheat protein",
-"display": "Hydrolyzed wheat protein",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "modified wheat starch",
-"display": "Modified wheat starch",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Processing-dependent; protein/gluten content varies. Confirm context."
-},
-{
-"term": "atta flour",
-"display": "Atta flour",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "graham flour",
-"display": "Graham flour",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "matzo",
-"display": "Matzo",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "triticale",
-"display": "Triticale",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Wheat-rye hybrid; relevant to wheat-avoiders"
-},
-{
-"term": "soya",
-"display": "Soya",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "soybean",
-"display": "Soybean",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "edamame",
-"display": "Edamame",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "tofu",
-"display": "Tofu",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "tempeh",
-"display": "Tempeh",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "miso",
-"display": "Miso",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "natto",
-"display": "Natto",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "soy protein",
-"display": "Soy protein",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "soy protein isolate",
-"display": "Soy protein isolate",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "soy protein concentrate",
-"display": "Soy protein concentrate",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "textured vegetable protein",
-"display": "Textured vegetable protein",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "tvp",
-"display": "TVP",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "tamari",
-"display": "Tamari",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "soy sauce",
-"display": "Soy sauce",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Usually also contains wheat — flag wheat too"
-},
-{
-"term": "soy flour",
-"display": "Soy flour",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "hydrolyzed soy protein",
-"display": "Hydrolyzed soy protein",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "okara",
-"display": "Okara",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "yuba",
-"display": "Yuba",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "soy lecithin",
-"display": "Soy lecithin",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Soy-derived emulsifier (E322); many soy-allergic tolerate it"
-},
-{
-"term": "soybean oil",
-"display": "Soybean oil",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Highly refined oil often tolerated; cold-pressed may carry protein"
-},
-{
-"term": "arachis oil",
-"display": "Arachis oil",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Highly refined peanut oil is exempt from major-allergen labeling (statute targets allergenic protein); unrefined/cold-/expeller-pressed retains protein."
-},
-{
-"term": "arachis hypogaea",
-"display": "Arachis hypogaea",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "groundnut",
-"display": "Groundnut",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "groundnut oil",
-"display": "Groundnut oil",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Refined groundnut oil is protein-exempt; unrefined retains protein."
-},
-{
-"term": "cold-pressed peanut oil",
-"display": "Cold-pressed peanut oil",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Unrefined — retains allergenic protein; not exempt."
-},
-{
-"term": "expeller-pressed peanut oil",
-"display": "Expeller-pressed peanut oil",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Unrefined — retains allergenic protein; not exempt."
-},
-{
-"term": "monkey nut",
-"display": "Monkey nut",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "beer nuts",
-"display": "Beer nuts",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "mandelona",
-"display": "Mandelona",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Peanuts flavored to imitate almonds"
-},
-{
-"term": "goober",
-"display": "Goober",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "goober peas",
-"display": "Goober peas",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "peanut butter",
-"display": "Peanut butter",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "peanut flour",
-"display": "Peanut flour",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "peanut protein",
-"display": "Peanut protein",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "hydrolyzed peanut protein",
-"display": "Hydrolyzed peanut protein",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "valencia peanut",
-"display": "Valencia peanut",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "almond oil",
-"display": "Almond oil",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Refined almond oil is largely protein-exempt; unrefined/cold-pressed retains protein."
-},
-{
-"term": "almond butter",
-"display": "Almond butter",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "almond flour",
-"display": "Almond flour",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "almond paste",
-"display": "Almond paste",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "marzipan",
-"display": "Marzipan",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "almond extract",
-"display": "Almond extract",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "May be imitation/benzaldehyde; verify if true almond"
-},
-{
-"term": "praline",
-"display": "Praline",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Typically almond or hazelnut — verify nut"
-},
-{
-"term": "walnut oil",
-"display": "Walnut oil",
-"parent": "walnut",
-"parentCommon": "Walnut",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Refined walnut oil is largely protein-exempt; unrefined/cold-pressed retains protein."
-},
-{
-"term": "black walnut",
-"display": "Black walnut",
-"parent": "walnut",
-"parentCommon": "Walnut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "FDA-named walnut type."
-},
-{
-"term": "california walnut",
-"display": "California walnut",
-"parent": "walnut",
-"parentCommon": "Walnut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "FDA-named walnut type (English/Persian)."
-},
-{
-"term": "english walnut",
-"display": "English walnut",
-"parent": "walnut",
-"parentCommon": "Walnut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "FDA-named walnut type (Persian)."
-},
-{
-"term": "persian walnut",
-"display": "Persian walnut",
-"parent": "walnut",
-"parentCommon": "Walnut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "FDA-named walnut type (English)."
-},
-{
-"term": "heartnut",
-"display": "Heartnut",
-"parent": "walnut",
-"parentCommon": "Walnut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Japanese walnut; FDA-named walnut type."
-},
-{
-"term": "japanese walnut",
-"display": "Japanese walnut",
-"parent": "walnut",
-"parentCommon": "Walnut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Heartnut; FDA-named walnut type."
-},
-{
-"term": "cashew butter",
-"display": "Cashew butter",
-"parent": "cashew",
-"parentCommon": "Cashew",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "filbert",
-"display": "Filbert",
-"parent": "hazelnut",
-"parentCommon": "Hazelnut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "gianduja",
-"display": "Gianduja",
-"parent": "hazelnut",
-"parentCommon": "Hazelnut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Chocolate-hazelnut paste"
-},
-{
-"term": "frangelico",
-"display": "Frangelico",
-"parent": "hazelnut",
-"parentCommon": "Hazelnut",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Hazelnut liqueur"
-},
-{
-"term": "brazil nut",
-"display": "Brazil nut",
-"parent": "brazil_nut",
-"parentCommon": "Brazil Nut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "macadamia nut",
-"display": "Macadamia nut",
-"parent": "macadamia",
-"parentCommon": "Macadamia",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "queensland nut",
-"display": "Queensland nut",
-"parent": "macadamia",
-"parentCommon": "Macadamia",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "bush nut",
-"display": "Bush nut",
-"parent": "macadamia",
-"parentCommon": "Macadamia",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "pignoli",
-"display": "Pignoli",
-"parent": "pine_nut",
-"parentCommon": "Pine Nut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "pinon",
-"display": "Pinon",
-"parent": "pine_nut",
-"parentCommon": "Pine Nut",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "anchovy",
-"display": "Anchovy",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "cod",
-"display": "Cod",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "salmon",
-"display": "Salmon",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "tuna",
-"display": "Tuna",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "tilapia",
-"display": "Tilapia",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "bass",
-"display": "Bass",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "haddock",
-"display": "Haddock",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "halibut",
-"display": "Halibut",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "mackerel",
-"display": "Mackerel",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sardine",
-"display": "Sardine",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "herring",
-"display": "Herring",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "trout",
-"display": "Trout",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "pollock",
-"display": "Pollock",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "surimi",
-"display": "Surimi",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Imitation crab made from fish"
-},
-{
-"term": "fish sauce",
-"display": "Fish sauce",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "fish gelatin",
-"display": "Fish gelatin",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "fish stock",
-"display": "Fish stock",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "caviar",
-"display": "Caviar",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "roe",
-"display": "Roe",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "fish oil",
-"display": "Fish oil",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Refined fish oil may retain trace protein"
-},
-{
-"term": "worcestershire sauce",
-"display": "Worcestershire sauce",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Often contains anchovy"
-},
-{
-"term": "omega-3",
-"display": "Omega-3",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "May be fish-derived; can be algal/plant — verify source"
-},
-{
-"term": "shrimp",
-"display": "Shrimp",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "prawn",
-"display": "Prawn",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "crab",
-"display": "Crab",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "lobster",
-"display": "Lobster",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "crayfish",
-"display": "Crayfish",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "crawfish",
-"display": "Crawfish",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "langoustine",
-"display": "Langoustine",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "krill",
-"display": "Krill",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "scampi",
-"display": "Scampi",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "clam",
-"display": "Clam",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "mussel",
-"display": "Mussel",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "oyster",
-"display": "Oyster",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "scallop",
-"display": "Scallop",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "squid",
-"display": "Squid",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "calamari",
-"display": "Calamari",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "octopus",
-"display": "Octopus",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "snail",
-"display": "Snail",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "escargot",
-"display": "Escargot",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "abalone",
-"display": "Abalone",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "cockle",
-"display": "Cockle",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "whelk",
-"display": "Whelk",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "cuttlefish",
-"display": "Cuttlefish",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "glucosamine",
-"display": "Glucosamine",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Often shellfish-derived; can be corn-fermented — verify source"
-},
-{
-"term": "sesame seed",
-"display": "Sesame seed",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sesame oil",
-"display": "Sesame oil",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Refined sesame oil is largely protein-exempt; culinary/toasted sesame oil is usually unrefined and retains protein."
-},
-{
-"term": "toasted sesame oil",
-"display": "Toasted sesame oil",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Unrefined/aromatic — retains protein; not exempt."
-},
-{
-"term": "sesame paste",
-"display": "Sesame paste",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "tahini",
-"display": "Tahini",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "tahina",
-"display": "Tahina",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sesamol",
-"display": "Sesamol",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sesamin",
-"display": "Sesamin",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "benne",
-"display": "Benne",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "benniseed",
-"display": "Benniseed",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "gingelly",
-"display": "Gingelly",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "gingelly oil",
-"display": "Gingelly oil",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Refined is largely protein-exempt; unrefined retains protein."
-},
-{
-"term": "til",
-"display": "Til",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "halvah",
-"display": "Halvah",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sim sim",
-"display": "Sim sim",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sesame flour",
-"display": "Sesame flour",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "hummus",
-"display": "Hummus",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Usually contains tahini (sesame) but not always; broad term — inference only."
-},
-{
-"term": "milk",
-"display": "Milk",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "egg",
-"display": "Egg",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "eggs",
-"display": "Eggs",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "wheat",
-"display": "Wheat",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "soy",
-"display": "Soy",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "peanut",
-"display": "Peanut",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "peanuts",
-"display": "Peanuts",
-"parent": "peanut",
-"parentCommon": "Peanuts",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "fish",
-"display": "Fish",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "sesame",
-"display": "Sesame",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "almond",
-"display": "Almond",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "almonds",
-"display": "Almonds",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "walnut",
-"display": "Walnut",
-"parent": "walnut",
-"parentCommon": "Walnut",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "walnuts",
-"display": "Walnuts",
-"parent": "walnut",
-"parentCommon": "Walnut",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "cashew",
-"display": "Cashew",
-"parent": "cashew",
-"parentCommon": "Cashew",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "cashews",
-"display": "Cashews",
-"parent": "cashew",
-"parentCommon": "Cashew",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "pecan",
-"display": "Pecan",
-"parent": "pecan",
-"parentCommon": "Pecan",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "pecans",
-"display": "Pecans",
-"parent": "pecan",
-"parentCommon": "Pecan",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "pistachio",
-"display": "Pistachio",
-"parent": "pistachio",
-"parentCommon": "Pistachio",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "pistachios",
-"display": "Pistachios",
-"parent": "pistachio",
-"parentCommon": "Pistachio",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "hazelnut",
-"display": "Hazelnut",
-"parent": "hazelnut",
-"parentCommon": "Hazelnut",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "hazelnuts",
-"display": "Hazelnuts",
-"parent": "hazelnut",
-"parentCommon": "Hazelnut",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "brazil nuts",
-"display": "Brazil nuts",
-"parent": "brazil_nut",
-"parentCommon": "Brazil Nut",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "macadamia",
-"display": "Macadamia",
-"parent": "macadamia",
-"parentCommon": "Macadamia",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "pine nut",
-"display": "Pine nut",
-"parent": "pine_nut",
-"parentCommon": "Pine Nut",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "pine nuts",
-"display": "Pine nuts",
-"parent": "pine_nut",
-"parentCommon": "Pine Nut",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "pinon nut",
-"display": "Pinon nut",
-"parent": "pine_nut",
-"parentCommon": "Pine Nut",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "crustacean",
-"display": "Crustacean",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "mollusc",
-"display": "Mollusc",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "mollusk",
-"display": "Mollusk",
-"parent": "mollusc",
-"parentCommon": "Mollusc Shellfish",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "cow milk",
-"display": "Cow milk",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "goat milk",
-"display": "Goat milk",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": "FDA 2025: ruminant milk."
-},
-{
-"term": "sheep milk",
-"display": "Sheep milk",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": "FDA 2025: ruminant milk."
-},
-{
-"term": "buffalo milk",
-"display": "Buffalo milk",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": "Ruminant milk."
-},
-{
-"term": "goat cheese",
-"display": "Goat cheese",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "sheep cheese",
-"display": "Sheep cheese",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "goat whey",
-"display": "Goat whey",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "pecorino",
-"display": "Pecorino",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": "Sheep-milk cheese."
-},
-{
-"term": "chicken egg",
-"display": "Chicken egg",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": null
-},
-{
-"term": "duck egg",
-"display": "Duck egg",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": "FDA 2025: fowl egg."
-},
-{
-"term": "goose egg",
-"display": "Goose egg",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": "FDA 2025: fowl egg."
-},
-{
-"term": "quail egg",
-"display": "Quail egg",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": "FDA 2025: fowl egg."
-},
-{
-"term": "fowl egg",
-"display": "Fowl egg",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "DIRECT",
-"note": "FDA 2025: covers other fowl."
-},
-{
-"term": "lactose",
-"display": "Lactose",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "milk",
-"display": "Milk",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "whole milk",
-"display": "Whole milk",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "skim milk",
-"display": "Skim milk",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "milk solids",
-"display": "Milk solids",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "milk powder",
-"display": "Milk powder",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "buttermilk",
-"display": "Buttermilk",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "cream",
-"display": "Cream",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "condensed milk",
-"display": "Condensed milk",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "evaporated milk",
-"display": "Evaporated milk",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "ice cream",
-"display": "Ice cream",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "lactose monohydrate",
-"display": "Lactose monohydrate",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "curds",
-"display": "Curds",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "whey",
-"display": "Whey",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Whey can be low-lactose depending on processing."
-},
-{
-"term": "cheese",
-"display": "Cheese",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Aged/hard cheeses are often very low in lactose."
-},
-{
-"term": "butter",
-"display": "Butter",
-"parent": "lactose",
-"parentCommon": "Lactose",
-"cat": "intolerance",
-"matchClass": "AMBIGUOUS",
-"note": "Very low lactose."
-},
-{
-"term": "gluten",
-"display": "Gluten",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "wheat",
-"display": "Wheat",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "barley",
-"display": "Barley",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "rye",
-"display": "Rye",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "triticale",
-"display": "Triticale",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "malt",
-"display": "Malt",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": "Usually barley-derived."
-},
-{
-"term": "malt extract",
-"display": "Malt extract",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "malt vinegar",
-"display": "Malt vinegar",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "spelt",
-"display": "Spelt",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "kamut",
-"display": "Kamut",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "semolina",
-"display": "Semolina",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "durum",
-"display": "Durum",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "farro",
-"display": "Farro",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "bulgur",
-"display": "Bulgur",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "seitan",
-"display": "Seitan",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "brewer's yeast",
-"display": "Brewer's yeast",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Often barley-derived."
-},
-{
-"term": "oats",
-"display": "Oats",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Pure oats are gluten-free; risk is cross-contamination."
-},
-{
-"term": "wheat starch",
-"display": "Wheat starch",
-"parent": "gluten",
-"parentCommon": "Gluten",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Codex gluten-free wheat starch exists; varies."
-},
-{
-"term": "fructose",
-"display": "Fructose",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "crystalline fructose",
-"display": "Crystalline fructose",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "high-fructose corn syrup",
-"display": "High-fructose corn syrup",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "hfcs",
-"display": "HFCS",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "agave",
-"display": "Agave",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "agave nectar",
-"display": "Agave nectar",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "honey",
-"display": "Honey",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "invert sugar",
-"display": "Invert sugar",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": null
-},
-{
-"term": "fruit juice concentrate",
-"display": "Fruit juice concentrate",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": null
-},
-{
-"term": "sorbitol",
-"display": "Sorbitol",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Polyol; worsens fructose malabsorption."
-},
-{
-"term": "inulin",
-"display": "Inulin",
-"parent": "fructose",
-"parentCommon": "Fructose",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": null
-},
-{
-"term": "aged cheese",
-"display": "Aged cheese",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "cured meats",
-"display": "Cured meats",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "salami",
-"display": "Salami",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "fermented foods",
-"display": "Fermented foods",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sauerkraut",
-"display": "Sauerkraut",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "kimchi",
-"display": "Kimchi",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "wine",
-"display": "Wine",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "smoked fish",
-"display": "Smoked fish",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "soy sauce",
-"display": "Soy sauce",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": null
-},
-{
-"term": "vinegar",
-"display": "Vinegar",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": null
-},
-{
-"term": "tuna",
-"display": "Tuna",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Scombroid risk if poorly stored."
-},
-{
-"term": "tomatoes",
-"display": "Tomatoes",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Histamine liberator."
-},
-{
-"term": "spinach",
-"display": "Spinach",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": null
-},
-{
-"term": "avocado",
-"display": "Avocado",
-"parent": "histamine",
-"parentCommon": "Histamine",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": null
-},
-{
-"term": "sulfites",
-"display": "Sulfites",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sulphur dioxide",
-"display": "Sulphur dioxide",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sulfur dioxide",
-"display": "Sulfur dioxide",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sodium sulfite",
-"display": "Sodium sulfite",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sodium bisulfite",
-"display": "Sodium bisulfite",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sodium metabisulfite",
-"display": "Sodium metabisulfite",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "potassium bisulfite",
-"display": "Potassium bisulfite",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "potassium metabisulfite",
-"display": "Potassium metabisulfite",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "e220",
-"display": "E220",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": "Sulphur dioxide."
-},
-{
-"term": "e223",
-"display": "E223",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": "Sodium metabisulfite."
-},
-{
-"term": "e224",
-"display": "E224",
-"parent": "sulfites",
-"parentCommon": "Sulfites",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": "Potassium metabisulfite."
-},
-{
-"term": "caffeine",
-"display": "Caffeine",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "coffee",
-"display": "Coffee",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "tea",
-"display": "Tea",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "green tea",
-"display": "Green tea",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "black tea",
-"display": "Black tea",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "matcha",
-"display": "Matcha",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "guarana",
-"display": "Guarana",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "yerba mate",
-"display": "Yerba mate",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "kola nut",
-"display": "Kola nut",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "cocoa",
-"display": "Cocoa",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Contains some caffeine + theobromine."
-},
-{
-"term": "chocolate",
-"display": "Chocolate",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": null
-},
-{
-"term": "green tea extract",
-"display": "Green tea extract",
-"parent": "caffeine",
-"parentCommon": "Caffeine",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "aspartame",
-"display": "Aspartame",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sucralose",
-"display": "Sucralose",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "saccharin",
-"display": "Saccharin",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "acesulfame potassium",
-"display": "Acesulfame potassium",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "acesulfame k",
-"display": "Acesulfame K",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "neotame",
-"display": "Neotame",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "advantame",
-"display": "Advantame",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "e951",
-"display": "E951",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": "Aspartame."
-},
-{
-"term": "e955",
-"display": "E955",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": "Sucralose."
-},
-{
-"term": "e950",
-"display": "E950",
-"parent": "sweeteners",
-"parentCommon": "Artificial Sweeteners",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": "Acesulfame K."
-},
-{
-"term": "fructans",
-"display": "Fructans",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "galacto-oligosaccharides",
-"display": "Galacto-oligosaccharides",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "gos",
-"display": "GOS",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "inulin",
-"display": "Inulin",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "chicory root",
-"display": "Chicory root",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "sorbitol",
-"display": "Sorbitol",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "mannitol",
-"display": "Mannitol",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "xylitol",
-"display": "Xylitol",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "maltitol",
-"display": "Maltitol",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "onion",
-"display": "Onion",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "garlic",
-"display": "Garlic",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "DERIVED",
-"note": null
-},
-{
-"term": "lactose",
-"display": "Lactose",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "A FODMAP for those who malabsorb it."
-},
-{
-"term": "wheat",
-"display": "Wheat",
-"parent": "fodmaps",
-"parentCommon": "FODMAPs",
-"cat": "intolerance",
-"matchClass": "POSSIBLE",
-"note": "Fructan source."
-},
-{
-"term": "lecithin",
-"display": "Lecithin",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Most bare \"lecithin\" is soy-derived; can be egg/sunflower (egg edge also modelled)."
-},
-{
-"term": "tocopherols",
-"display": "Tocopherols",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Often soy-derived; can be sunflower/other. Verify."
-},
-{
-"term": "vitamin e",
-"display": "Vitamin E",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Frequently soy-derived tocopherols."
-},
-{
-"term": "mono- and diglycerides",
-"display": "Mono- and diglycerides",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Emulsifier; can be soy-, other-plant-, or animal-derived."
-},
-{
-"term": "mono- and diglycerides",
-"display": "Mono- and diglycerides",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Can be animal-fat-derived."
-},
-{
-"term": "enzymes",
-"display": "Enzymes",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "In cheese/dairy products may carry milk."
-},
-{
-"term": "cultures",
-"display": "Cultures",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Dairy cultures may carry milk."
-},
-{
-"term": "lactic acid",
-"display": "Lactic acid",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "AMBIGUOUS",
-"note": "Usually fermented from sugar; occasionally dairy. Verify."
-},
-{
-"term": "hydrolyzed vegetable protein",
-"display": "Hydrolyzed vegetable protein",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "HVP is commonly soy-derived."
-},
-{
-"term": "hydrolyzed vegetable protein",
-"display": "Hydrolyzed vegetable protein",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "HVP can be wheat-derived."
-},
-{
-"term": "paneer",
-"display": "Paneer",
-"parent": "milk",
-"parentCommon": "Milk and Dairy",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Fresh curdled-milk cheese."
-},
-{
-"term": "gochujang",
-"display": "Gochujang",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Korean chili paste; fermented soybean."
-},
-{
-"term": "gochujang",
-"display": "Gochujang",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Often contains wheat/barley."
-},
-{
-"term": "furikake",
-"display": "Furikake",
-"parent": "sesame",
-"parentCommon": "Sesame",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Japanese rice seasoning; usually sesame."
-},
-{
-"term": "furikake",
-"display": "Furikake",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Often contains bonito (fish)."
-},
-{
-"term": "nougat",
-"display": "Nougat",
-"parent": "egg",
-"parentCommon": "Eggs",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Typically whipped egg white."
-},
-{
-"term": "nougat",
-"display": "Nougat",
-"parent": "almond",
-"parentCommon": "Almond",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Often contains almonds/other nuts."
-},
-{
-"term": "kimchi",
-"display": "Kimchi",
-"parent": "fish",
-"parentCommon": "Fish",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Often made with fish sauce."
-},
-{
-"term": "kimchi",
-"display": "Kimchi",
-"parent": "crustacean",
-"parentCommon": "Crustacean Shellfish",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Often made with salted shrimp."
-},
-{
-"term": "doenjang",
-"display": "Doenjang",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Korean soybean paste."
-},
-{
-"term": "hoisin",
-"display": "Hoisin",
-"parent": "soy",
-"parentCommon": "Soybeans",
-"cat": "allergen",
-"matchClass": "POSSIBLE",
-"note": "Usually fermented soybean."
-},
-{
-"term": "seitan",
-"display": "Seitan",
-"parent": "wheat",
-"parentCommon": "Wheat",
-"cat": "allergen",
-"matchClass": "DERIVED",
-"note": "Wheat gluten (also in seed_02)."
-}
-],
-"opaque": [
-"artificial flavors",
-"cultures",
-"emulsifier",
-"enzymes",
-"flavor",
-"flavoring",
-"hydrolyzed plant protein",
-"hydrolyzed vegetable protein",
-"modified food starch",
-"natural flavoring",
-"natural flavors",
-"seasoning",
-"seasoning blend",
-"spice",
-"spice extract",
-"spices",
-"starch",
-"vegetable broth",
-"vegetable oil"
-],
-"parents": {
-"lactose": {
-"common": "Lactose",
-"cat": "intolerance"
-},
-"gluten": {
-"common": "Gluten",
-"cat": "intolerance"
-},
-"fructose": {
-"common": "Fructose",
-"cat": "intolerance"
-},
-"histamine": {
-"common": "Histamine",
-"cat": "intolerance"
-},
-"sulfites": {
-"common": "Sulfites",
-"cat": "intolerance"
-},
-"caffeine": {
-"common": "Caffeine",
-"cat": "intolerance"
-},
-"sweeteners": {
-"common": "Artificial Sweeteners",
-"cat": "intolerance"
-},
-"fodmaps": {
-"common": "FODMAPs",
-"cat": "intolerance"
-},
-"milk": {
-"common": "Milk and Dairy",
-"cat": "allergen"
-},
-"egg": {
-"common": "Eggs",
-"cat": "allergen"
-},
-"wheat": {
-"common": "Wheat",
-"cat": "allergen"
-},
-"soy": {
-"common": "Soybeans",
-"cat": "allergen"
-},
-"peanut": {
-"common": "Peanuts",
-"cat": "allergen"
-},
-"fish": {
-"common": "Fish",
-"cat": "allergen"
-},
-"sesame": {
-"common": "Sesame",
-"cat": "allergen"
-},
-"almond": {
-"common": "Almond",
-"cat": "allergen"
-},
-"walnut": {
-"common": "Walnut",
-"cat": "allergen"
-},
-"cashew": {
-"common": "Cashew",
-"cat": "allergen"
-},
-"pecan": {
-"common": "Pecan",
-"cat": "allergen"
-},
-"pistachio": {
-"common": "Pistachio",
-"cat": "allergen"
-},
-"hazelnut": {
-"common": "Hazelnut",
-"cat": "allergen"
-},
-"brazil_nut": {
-"common": "Brazil Nut",
-"cat": "allergen"
-},
-"macadamia": {
-"common": "Macadamia",
-"cat": "allergen"
-},
-"pine_nut": {
-"common": "Pine Nut",
-"cat": "allergen"
-},
-"crustacean": {
-"common": "Crustacean Shellfish",
-"cat": "allergen"
-},
-"mollusc": {
-"common": "Mollusc Shellfish",
-"cat": "allergen"
-}
-}
+  "version": "2026.06-draft",
+  "note": "DRAFT data — not validated; prototype only. Generated by database/export-data.js — do not hand-edit.",
+  "terms": [
+    {
+      "term": "almond",
+      "display": "Almond",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "almond butter",
+      "display": "Almond butter",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "almond extract",
+      "display": "Almond extract",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "May be imitation/benzaldehyde; verify if true almond"
+    },
+    {
+      "term": "almond flour",
+      "display": "Almond flour",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "almond oil",
+      "display": "Almond oil",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Refined almond oil is largely protein-exempt; unrefined/cold-pressed retains protein."
+    },
+    {
+      "term": "almond paste",
+      "display": "Almond paste",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "almonds",
+      "display": "Almonds",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "marzipan",
+      "display": "Marzipan",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "nougat",
+      "display": "Nougat",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Often contains almonds/other nuts."
+    },
+    {
+      "term": "praline",
+      "display": "Praline",
+      "parent": "almond",
+      "parentCommon": "Almond",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Typically almond or hazelnut — verify nut"
+    },
+    {
+      "term": "brazil nut",
+      "display": "Brazil nut",
+      "parent": "brazil_nut",
+      "parentCommon": "Brazil Nut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "brazil nuts",
+      "display": "Brazil nuts",
+      "parent": "brazil_nut",
+      "parentCommon": "Brazil Nut",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "anacardium",
+      "display": "Anacardium",
+      "parent": "cashew",
+      "parentCommon": "Cashew",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cashew",
+      "display": "Cashew",
+      "parent": "cashew",
+      "parentCommon": "Cashew",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "cashew butter",
+      "display": "Cashew butter",
+      "parent": "cashew",
+      "parentCommon": "Cashew",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cashews",
+      "display": "Cashews",
+      "parent": "cashew",
+      "parentCommon": "Cashew",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "crab",
+      "display": "Crab",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "crawfish",
+      "display": "Crawfish",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "crayfish",
+      "display": "Crayfish",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "crustacean",
+      "display": "Crustacean",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "kimchi",
+      "display": "Kimchi",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Often made with salted shrimp."
+    },
+    {
+      "term": "krill",
+      "display": "Krill",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "langoustine",
+      "display": "Langoustine",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lobster",
+      "display": "Lobster",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "prawn",
+      "display": "Prawn",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "scampi",
+      "display": "Scampi",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "shrimp",
+      "display": "Shrimp",
+      "parent": "crustacean",
+      "parentCommon": "Crustacean Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "albumen",
+      "display": "Albumen",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "albumin",
+      "display": "Albumin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "apovitellin",
+      "display": "Apovitellin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "avidin",
+      "display": "Avidin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "chicken egg",
+      "display": "Chicken egg",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "conalbumin",
+      "display": "Conalbumin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "conalbumin",
+      "display": "Conalbumin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "dried egg",
+      "display": "Dried egg",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "duck egg",
+      "display": "Duck egg",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": "FDA 2025: fowl egg."
+    },
+    {
+      "term": "egg",
+      "display": "Egg",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "egg powder",
+      "display": "Egg powder",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "egg solids",
+      "display": "Egg solids",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "egg white",
+      "display": "Egg white",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "egg yolk",
+      "display": "Egg yolk",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "eggs",
+      "display": "Eggs",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "fowl egg",
+      "display": "Fowl egg",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": "FDA 2025: covers other fowl."
+    },
+    {
+      "term": "globulin",
+      "display": "Globulin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Egg protein fraction; confirm context"
+    },
+    {
+      "term": "goose egg",
+      "display": "Goose egg",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": "FDA 2025: fowl egg."
+    },
+    {
+      "term": "lecithin",
+      "display": "Lecithin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Usually soy-derived; can be egg-derived (E322) — dual-source, verify"
+    },
+    {
+      "term": "livetin",
+      "display": "Livetin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lysozyme",
+      "display": "Lysozyme",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "mayonnaise",
+      "display": "Mayonnaise",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "meringue",
+      "display": "Meringue",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "nougat",
+      "display": "Nougat",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Typically whipped egg white."
+    },
+    {
+      "term": "ovalbumin",
+      "display": "Ovalbumin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "ovomucin",
+      "display": "Ovomucin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "ovomucoid",
+      "display": "Ovomucoid",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "ovotransferrin",
+      "display": "Ovotransferrin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "ovotransferrin",
+      "display": "Ovotransferrin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "ovovitellin",
+      "display": "Ovovitellin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "quail egg",
+      "display": "Quail egg",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": "FDA 2025: fowl egg."
+    },
+    {
+      "term": "surimi",
+      "display": "Surimi",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Often contains egg white as binder; also a fish product"
+    },
+    {
+      "term": "vitellin",
+      "display": "Vitellin",
+      "parent": "egg",
+      "parentCommon": "Eggs",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "anchovy",
+      "display": "Anchovy",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "bass",
+      "display": "Bass",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "bottarga",
+      "display": "Bottarga",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "caviar",
+      "display": "Caviar",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cod",
+      "display": "Cod",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "dashi",
+      "display": "Dashi",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "fish",
+      "display": "Fish",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "fish gelatin",
+      "display": "Fish gelatin",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "fish oil",
+      "display": "Fish oil",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Refined fish oil may retain trace protein"
+    },
+    {
+      "term": "fish sauce",
+      "display": "Fish sauce",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "fish stock",
+      "display": "Fish stock",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "furikake",
+      "display": "Furikake",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Often contains bonito (fish)."
+    },
+    {
+      "term": "garum",
+      "display": "Garum",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "haddock",
+      "display": "Haddock",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "halibut",
+      "display": "Halibut",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "herring",
+      "display": "Herring",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "kimchi",
+      "display": "Kimchi",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Often made with fish sauce."
+    },
+    {
+      "term": "mackerel",
+      "display": "Mackerel",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "nam pla",
+      "display": "Nam pla",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "omega-3",
+      "display": "Omega-3",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "May be fish-derived; can be algal/plant — verify source"
+    },
+    {
+      "term": "pollock",
+      "display": "Pollock",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "roe",
+      "display": "Roe",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "salmon",
+      "display": "Salmon",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sardine",
+      "display": "Sardine",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "surimi",
+      "display": "Surimi",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Imitation crab made from fish"
+    },
+    {
+      "term": "tilapia",
+      "display": "Tilapia",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "trout",
+      "display": "Trout",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "tuna",
+      "display": "Tuna",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "worcestershire sauce",
+      "display": "Worcestershire sauce",
+      "parent": "fish",
+      "parentCommon": "Fish",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Often contains anchovy"
+    },
+    {
+      "term": "filbert",
+      "display": "Filbert",
+      "parent": "hazelnut",
+      "parentCommon": "Hazelnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "frangelico",
+      "display": "Frangelico",
+      "parent": "hazelnut",
+      "parentCommon": "Hazelnut",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Hazelnut liqueur"
+    },
+    {
+      "term": "gianduja",
+      "display": "Gianduja",
+      "parent": "hazelnut",
+      "parentCommon": "Hazelnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Chocolate-hazelnut paste"
+    },
+    {
+      "term": "gianduja",
+      "display": "Gianduja",
+      "parent": "hazelnut",
+      "parentCommon": "Hazelnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "hazelnut",
+      "display": "Hazelnut",
+      "parent": "hazelnut",
+      "parentCommon": "Hazelnut",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "hazelnuts",
+      "display": "Hazelnuts",
+      "parent": "hazelnut",
+      "parentCommon": "Hazelnut",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "noisette",
+      "display": "Noisette",
+      "parent": "hazelnut",
+      "parentCommon": "Hazelnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "bush nut",
+      "display": "Bush nut",
+      "parent": "macadamia",
+      "parentCommon": "Macadamia",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "macadamia",
+      "display": "Macadamia",
+      "parent": "macadamia",
+      "parentCommon": "Macadamia",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "macadamia nut",
+      "display": "Macadamia nut",
+      "parent": "macadamia",
+      "parentCommon": "Macadamia",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "queensland nut",
+      "display": "Queensland nut",
+      "parent": "macadamia",
+      "parentCommon": "Macadamia",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "buffalo milk",
+      "display": "Buffalo milk",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": "Ruminant milk."
+    },
+    {
+      "term": "butter",
+      "display": "Butter",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Dairy butter; guard nut/plant butter uses in matcher."
+    },
+    {
+      "term": "butter",
+      "display": "Butter",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Refined; plant butters (cocoa/shea/nut) are guarded at runtime."
+    },
+    {
+      "term": "butterfat",
+      "display": "Butterfat",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "buttermilk",
+      "display": "Buttermilk",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "calcium caseinate",
+      "display": "Calcium caseinate",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "casein",
+      "display": "Casein",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "caseinate",
+      "display": "Caseinate",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cheese",
+      "display": "Cheese",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Dairy cheese; guard vegan/non-dairy uses in matcher."
+    },
+    {
+      "term": "cheese",
+      "display": "Cheese",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "clotted cream",
+      "display": "Clotted cream",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "condensed milk",
+      "display": "Condensed milk",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cow milk",
+      "display": "Cow milk",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "cream",
+      "display": "Cream",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Dairy cream; guard plant/non-dairy uses in matcher."
+    },
+    {
+      "term": "cream",
+      "display": "Cream",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Plant creams and cream of tartar are guarded at runtime."
+    },
+    {
+      "term": "cultures",
+      "display": "Cultures",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Dairy cultures may carry milk."
+    },
+    {
+      "term": "curds",
+      "display": "Curds",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "custard",
+      "display": "Custard",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "dry milk",
+      "display": "Dry milk",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "dulce de leche",
+      "display": "Dulce de leche",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "enzymes",
+      "display": "Enzymes",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "In cheese/dairy products may carry milk."
+    },
+    {
+      "term": "evaporated milk",
+      "display": "Evaporated milk",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "ghee",
+      "display": "Ghee",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "goat cheese",
+      "display": "Goat cheese",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "goat milk",
+      "display": "Goat milk",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": "FDA 2025: ruminant milk."
+    },
+    {
+      "term": "goat whey",
+      "display": "Goat whey",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "hydrolyzed casein",
+      "display": "Hydrolyzed casein",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "kefir",
+      "display": "Kefir",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "khoa",
+      "display": "Khoa",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lactalbumin",
+      "display": "Lactalbumin",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lactic acid",
+      "display": "Lactic acid",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Usually fermented from sugar; occasionally dairy. Verify."
+    },
+    {
+      "term": "lactoferrin",
+      "display": "Lactoferrin",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lactoglobulin",
+      "display": "Lactoglobulin",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lactose",
+      "display": "Lactose",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Pure lactose is a milk SUGAR; may carry trace milk protein depending on manufacture. Also an intolerance parent."
+    },
+    {
+      "term": "mascarpone",
+      "display": "Mascarpone",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "mawa",
+      "display": "Mawa",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "milk",
+      "display": "Milk",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "milk powder",
+      "display": "Milk powder",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "milk protein",
+      "display": "Milk protein",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "milk solids",
+      "display": "Milk solids",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "mono- and diglycerides",
+      "display": "Mono- and diglycerides",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Can be animal-fat-derived."
+    },
+    {
+      "term": "natural flavoring",
+      "display": "Natural flavoring",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "May be milk-derived; verify with manufacturer"
+    },
+    {
+      "term": "nonfat milk solids",
+      "display": "Nonfat milk solids",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "paneer",
+      "display": "Paneer",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Fresh curdled-milk cheese."
+    },
+    {
+      "term": "pecorino",
+      "display": "Pecorino",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": "Sheep-milk cheese."
+    },
+    {
+      "term": "potassium caseinate",
+      "display": "Potassium caseinate",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "quark",
+      "display": "Quark",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "recaldent",
+      "display": "Recaldent",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "CPP-ACP; milk-derived ingredient in some dental/gum products"
+    },
+    {
+      "term": "rennet casein",
+      "display": "Rennet casein",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "ricotta",
+      "display": "Ricotta",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sheep cheese",
+      "display": "Sheep cheese",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "sheep milk",
+      "display": "Sheep milk",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": "FDA 2025: ruminant milk."
+    },
+    {
+      "term": "sodium caseinate",
+      "display": "Sodium caseinate",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sour cream",
+      "display": "Sour cream",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "whey",
+      "display": "Whey",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "whey protein concentrate",
+      "display": "Whey protein concentrate",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "whey protein isolate",
+      "display": "Whey protein isolate",
+      "parent": "milk",
+      "parentCommon": "Milk and Dairy",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "abalone",
+      "display": "Abalone",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "calamari",
+      "display": "Calamari",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "clam",
+      "display": "Clam",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cockle",
+      "display": "Cockle",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cuttlefish",
+      "display": "Cuttlefish",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "escargot",
+      "display": "Escargot",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "glucosamine",
+      "display": "Glucosamine",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Often shellfish-derived; can be corn-fermented — verify source"
+    },
+    {
+      "term": "mollusc",
+      "display": "Mollusc",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "mollusk",
+      "display": "Mollusk",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "mussel",
+      "display": "Mussel",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "octopus",
+      "display": "Octopus",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "oyster",
+      "display": "Oyster",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "scallop",
+      "display": "Scallop",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "snail",
+      "display": "Snail",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "squid",
+      "display": "Squid",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "whelk",
+      "display": "Whelk",
+      "parent": "mollusc",
+      "parentCommon": "Mollusc Shellfish",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "arachis hypogaea",
+      "display": "Arachis hypogaea",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "arachis oil",
+      "display": "Arachis oil",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Highly refined peanut oil is exempt from major-allergen labeling (statute targets allergenic protein); unrefined/cold-/expeller-pressed retains protein."
+    },
+    {
+      "term": "beer nuts",
+      "display": "Beer nuts",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cold-pressed peanut oil",
+      "display": "Cold-pressed peanut oil",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Unrefined — retains allergenic protein; not exempt."
+    },
+    {
+      "term": "expeller-pressed peanut oil",
+      "display": "Expeller-pressed peanut oil",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Unrefined — retains allergenic protein; not exempt."
+    },
+    {
+      "term": "goober",
+      "display": "Goober",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "goober peas",
+      "display": "Goober peas",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "groundnut",
+      "display": "Groundnut",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "groundnut oil",
+      "display": "Groundnut oil",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Refined groundnut oil is protein-exempt; unrefined retains protein."
+    },
+    {
+      "term": "hydrolyzed peanut protein",
+      "display": "Hydrolyzed peanut protein",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "mandelona",
+      "display": "Mandelona",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Peanuts flavored to imitate almonds"
+    },
+    {
+      "term": "monkey nut",
+      "display": "Monkey nut",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "peanut",
+      "display": "Peanut",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "peanut butter",
+      "display": "Peanut butter",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "peanut flour",
+      "display": "Peanut flour",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "peanut protein",
+      "display": "Peanut protein",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "peanuts",
+      "display": "Peanuts",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "valencia peanut",
+      "display": "Valencia peanut",
+      "parent": "peanut",
+      "parentCommon": "Peanuts",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "pecan",
+      "display": "Pecan",
+      "parent": "pecan",
+      "parentCommon": "Pecan",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "pecans",
+      "display": "Pecans",
+      "parent": "pecan",
+      "parentCommon": "Pecan",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "pignoli",
+      "display": "Pignoli",
+      "parent": "pine_nut",
+      "parentCommon": "Pine Nut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "pine nut",
+      "display": "Pine nut",
+      "parent": "pine_nut",
+      "parentCommon": "Pine Nut",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "pine nuts",
+      "display": "Pine nuts",
+      "parent": "pine_nut",
+      "parentCommon": "Pine Nut",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "pinon",
+      "display": "Pinon",
+      "parent": "pine_nut",
+      "parentCommon": "Pine Nut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "pinon nut",
+      "display": "Pinon nut",
+      "parent": "pine_nut",
+      "parentCommon": "Pine Nut",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "pistachio",
+      "display": "Pistachio",
+      "parent": "pistachio",
+      "parentCommon": "Pistachio",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "pistachios",
+      "display": "Pistachios",
+      "parent": "pistachio",
+      "parentCommon": "Pistachio",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "ajonjoli",
+      "display": "Ajonjoli",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "benne",
+      "display": "Benne",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "benniseed",
+      "display": "Benniseed",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "furikake",
+      "display": "Furikake",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Japanese rice seasoning; usually sesame."
+    },
+    {
+      "term": "gingelly",
+      "display": "Gingelly",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "gingelly oil",
+      "display": "Gingelly oil",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Refined is largely protein-exempt; unrefined retains protein."
+    },
+    {
+      "term": "goma",
+      "display": "Goma",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "halvah",
+      "display": "Halvah",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "hummus",
+      "display": "Hummus",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Usually contains tahini (sesame) but not always; broad term — inference only."
+    },
+    {
+      "term": "sesame",
+      "display": "Sesame",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "sesame flour",
+      "display": "Sesame flour",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sesame oil",
+      "display": "Sesame oil",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Refined sesame oil is largely protein-exempt; culinary/toasted sesame oil is usually unrefined and retains protein."
+    },
+    {
+      "term": "sesame paste",
+      "display": "Sesame paste",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sesame seed",
+      "display": "Sesame seed",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sesamin",
+      "display": "Sesamin",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sesamol",
+      "display": "Sesamol",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sim sim",
+      "display": "Sim sim",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "tahina",
+      "display": "Tahina",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "tahini",
+      "display": "Tahini",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "til",
+      "display": "Til",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "toasted sesame oil",
+      "display": "Toasted sesame oil",
+      "parent": "sesame",
+      "parentCommon": "Sesame",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Unrefined/aromatic — retains protein; not exempt."
+    },
+    {
+      "term": "doenjang",
+      "display": "Doenjang",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Korean soybean paste."
+    },
+    {
+      "term": "edamame",
+      "display": "Edamame",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "gochujang",
+      "display": "Gochujang",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Korean chili paste; fermented soybean."
+    },
+    {
+      "term": "hoisin",
+      "display": "Hoisin",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Usually fermented soybean."
+    },
+    {
+      "term": "hydrolyzed soy protein",
+      "display": "Hydrolyzed soy protein",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "hydrolyzed vegetable protein",
+      "display": "Hydrolyzed vegetable protein",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "HVP is commonly soy-derived."
+    },
+    {
+      "term": "kinako",
+      "display": "Kinako",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lecithin",
+      "display": "Lecithin",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Most bare \"lecithin\" is soy-derived; can be egg/sunflower (egg edge also modelled)."
+    },
+    {
+      "term": "miso",
+      "display": "Miso",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "mono- and diglycerides",
+      "display": "Mono- and diglycerides",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Emulsifier; can be soy-, other-plant-, or animal-derived."
+    },
+    {
+      "term": "natto",
+      "display": "Natto",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "okara",
+      "display": "Okara",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "soy",
+      "display": "Soy",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "soy flour",
+      "display": "Soy flour",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "soy lecithin",
+      "display": "Soy lecithin",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Soy-derived emulsifier (E322); many soy-allergic tolerate it"
+    },
+    {
+      "term": "soy protein",
+      "display": "Soy protein",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "soy protein concentrate",
+      "display": "Soy protein concentrate",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "soy protein isolate",
+      "display": "Soy protein isolate",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "soy sauce",
+      "display": "Soy sauce",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Usually also contains wheat — flag wheat too"
+    },
+    {
+      "term": "soya",
+      "display": "Soya",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "soybean",
+      "display": "Soybean",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "soybean oil",
+      "display": "Soybean oil",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Highly refined oil often tolerated; cold-pressed may carry protein"
+    },
+    {
+      "term": "tvp",
+      "display": "TVP",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "tamari",
+      "display": "Tamari",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "tempeh",
+      "display": "Tempeh",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "textured vegetable protein",
+      "display": "Textured vegetable protein",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "tocopherols",
+      "display": "Tocopherols",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Often soy-derived; can be sunflower/other. Verify."
+    },
+    {
+      "term": "tofu",
+      "display": "Tofu",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "vitamin e",
+      "display": "Vitamin E",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "AMBIGUOUS",
+      "note": "Frequently soy-derived tocopherols."
+    },
+    {
+      "term": "yuba",
+      "display": "Yuba",
+      "parent": "soy",
+      "parentCommon": "Soybeans",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "black walnut",
+      "display": "Black walnut",
+      "parent": "walnut",
+      "parentCommon": "Walnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "FDA-named walnut type."
+    },
+    {
+      "term": "california walnut",
+      "display": "California walnut",
+      "parent": "walnut",
+      "parentCommon": "Walnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "FDA-named walnut type (English/Persian)."
+    },
+    {
+      "term": "english walnut",
+      "display": "English walnut",
+      "parent": "walnut",
+      "parentCommon": "Walnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "FDA-named walnut type (Persian)."
+    },
+    {
+      "term": "heartnut",
+      "display": "Heartnut",
+      "parent": "walnut",
+      "parentCommon": "Walnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Japanese walnut; FDA-named walnut type."
+    },
+    {
+      "term": "japanese walnut",
+      "display": "Japanese walnut",
+      "parent": "walnut",
+      "parentCommon": "Walnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Heartnut; FDA-named walnut type."
+    },
+    {
+      "term": "persian walnut",
+      "display": "Persian walnut",
+      "parent": "walnut",
+      "parentCommon": "Walnut",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "FDA-named walnut type (English)."
+    },
+    {
+      "term": "walnut",
+      "display": "Walnut",
+      "parent": "walnut",
+      "parentCommon": "Walnut",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "walnut oil",
+      "display": "Walnut oil",
+      "parent": "walnut",
+      "parentCommon": "Walnut",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Refined walnut oil is largely protein-exempt; unrefined/cold-pressed retains protein."
+    },
+    {
+      "term": "walnuts",
+      "display": "Walnuts",
+      "parent": "walnut",
+      "parentCommon": "Walnut",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "atta",
+      "display": "Atta",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "atta flour",
+      "display": "Atta flour",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "bulgur",
+      "display": "Bulgur",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "couscous",
+      "display": "Couscous",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "durum",
+      "display": "Durum",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "durum wheat",
+      "display": "Durum wheat",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "einkorn",
+      "display": "Einkorn",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "emmer",
+      "display": "Emmer",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "farina",
+      "display": "Farina",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "farina",
+      "display": "Farina",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "farro",
+      "display": "Farro",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "freekeh",
+      "display": "Freekeh",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "gochujang",
+      "display": "Gochujang",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Often contains wheat/barley."
+    },
+    {
+      "term": "graham flour",
+      "display": "Graham flour",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "hydrolyzed vegetable protein",
+      "display": "Hydrolyzed vegetable protein",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "HVP can be wheat-derived."
+    },
+    {
+      "term": "hydrolyzed wheat protein",
+      "display": "Hydrolyzed wheat protein",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "kamut",
+      "display": "Kamut",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "khorasan wheat",
+      "display": "Khorasan wheat",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "maida",
+      "display": "Maida",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "matzo",
+      "display": "Matzo",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "modified wheat starch",
+      "display": "Modified wheat starch",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Processing-dependent; protein/gluten content varies. Confirm context."
+    },
+    {
+      "term": "panko",
+      "display": "Panko",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "rusk",
+      "display": "Rusk",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "seitan",
+      "display": "Seitan",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "seitan",
+      "display": "Seitan",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": "Wheat gluten (also in seed_02)."
+    },
+    {
+      "term": "semolina",
+      "display": "Semolina",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "spelt",
+      "display": "Spelt",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "triticale",
+      "display": "Triticale",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Wheat-rye hybrid; relevant to wheat-avoiders"
+    },
+    {
+      "term": "vital wheat gluten",
+      "display": "Vital wheat gluten",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "wheat",
+      "display": "Wheat",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DIRECT",
+      "note": null
+    },
+    {
+      "term": "wheat bran",
+      "display": "Wheat bran",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "wheat flour",
+      "display": "Wheat flour",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "wheat germ",
+      "display": "Wheat germ",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "wheat gluten",
+      "display": "Wheat gluten",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "wheat starch",
+      "display": "Wheat starch",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "POSSIBLE",
+      "note": "Processing-dependent: Codex gluten-free wheat starch exists; protein/gluten content varies. Confirm context."
+    },
+    {
+      "term": "whole wheat",
+      "display": "Whole wheat",
+      "parent": "wheat",
+      "parentCommon": "Wheat",
+      "cat": "allergen",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "black tea",
+      "display": "Black tea",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "caffeine",
+      "display": "Caffeine",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "chocolate",
+      "display": "Chocolate",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "cocoa",
+      "display": "Cocoa",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Contains some caffeine + theobromine."
+    },
+    {
+      "term": "coffee",
+      "display": "Coffee",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "green tea",
+      "display": "Green tea",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "green tea extract",
+      "display": "Green tea extract",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "guarana",
+      "display": "Guarana",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "kola nut",
+      "display": "Kola nut",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "matcha",
+      "display": "Matcha",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "tea",
+      "display": "Tea",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "yerba mate",
+      "display": "Yerba mate",
+      "parent": "caffeine",
+      "parentCommon": "Caffeine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "chicory root",
+      "display": "Chicory root",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "fructans",
+      "display": "Fructans",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "gos",
+      "display": "GOS",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "galacto-oligosaccharides",
+      "display": "Galacto-oligosaccharides",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "garlic",
+      "display": "Garlic",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "inulin",
+      "display": "Inulin",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lactose",
+      "display": "Lactose",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "A FODMAP for those who malabsorb it."
+    },
+    {
+      "term": "maltitol",
+      "display": "Maltitol",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "mannitol",
+      "display": "Mannitol",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "onion",
+      "display": "Onion",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sorbitol",
+      "display": "Sorbitol",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "wheat",
+      "display": "Wheat",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Fructan source."
+    },
+    {
+      "term": "xylitol",
+      "display": "Xylitol",
+      "parent": "fodmaps",
+      "parentCommon": "FODMAPs",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "agave",
+      "display": "Agave",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "agave nectar",
+      "display": "Agave nectar",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "crystalline fructose",
+      "display": "Crystalline fructose",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "fructose",
+      "display": "Fructose",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "fruit juice concentrate",
+      "display": "Fruit juice concentrate",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "hfcs",
+      "display": "HFCS",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "high-fructose corn syrup",
+      "display": "High-fructose corn syrup",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "honey",
+      "display": "Honey",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "inulin",
+      "display": "Inulin",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "invert sugar",
+      "display": "Invert sugar",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "sorbitol",
+      "display": "Sorbitol",
+      "parent": "fructose",
+      "parentCommon": "Fructose",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Polyol; worsens fructose malabsorption."
+    },
+    {
+      "term": "barley",
+      "display": "Barley",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "brewer's yeast",
+      "display": "Brewer's yeast",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Often barley-derived."
+    },
+    {
+      "term": "bulgur",
+      "display": "Bulgur",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "durum",
+      "display": "Durum",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "farro",
+      "display": "Farro",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "gluten",
+      "display": "Gluten",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "kamut",
+      "display": "Kamut",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "malt",
+      "display": "Malt",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": "Usually barley-derived."
+    },
+    {
+      "term": "malt extract",
+      "display": "Malt extract",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "malt vinegar",
+      "display": "Malt vinegar",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "oats",
+      "display": "Oats",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Pure oats are gluten-free; risk is cross-contamination."
+    },
+    {
+      "term": "rye",
+      "display": "Rye",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "seitan",
+      "display": "Seitan",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "semolina",
+      "display": "Semolina",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "spelt",
+      "display": "Spelt",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "triticale",
+      "display": "Triticale",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "wheat",
+      "display": "Wheat",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "wheat starch",
+      "display": "Wheat starch",
+      "parent": "gluten",
+      "parentCommon": "Gluten",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Codex gluten-free wheat starch exists; varies."
+    },
+    {
+      "term": "aged cheese",
+      "display": "Aged cheese",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "avocado",
+      "display": "Avocado",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "cured meats",
+      "display": "Cured meats",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "fermented foods",
+      "display": "Fermented foods",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "kimchi",
+      "display": "Kimchi",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "salami",
+      "display": "Salami",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sauerkraut",
+      "display": "Sauerkraut",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "smoked fish",
+      "display": "Smoked fish",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "soy sauce",
+      "display": "Soy sauce",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "spinach",
+      "display": "Spinach",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "tomatoes",
+      "display": "Tomatoes",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Histamine liberator."
+    },
+    {
+      "term": "tuna",
+      "display": "Tuna",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Scombroid risk if poorly stored."
+    },
+    {
+      "term": "vinegar",
+      "display": "Vinegar",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": null
+    },
+    {
+      "term": "wine",
+      "display": "Wine",
+      "parent": "histamine",
+      "parentCommon": "Histamine",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "butter",
+      "display": "Butter",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "AMBIGUOUS",
+      "note": "Very low lactose."
+    },
+    {
+      "term": "buttermilk",
+      "display": "Buttermilk",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cheese",
+      "display": "Cheese",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Aged/hard cheeses are often very low in lactose."
+    },
+    {
+      "term": "condensed milk",
+      "display": "Condensed milk",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "cream",
+      "display": "Cream",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "curds",
+      "display": "Curds",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "evaporated milk",
+      "display": "Evaporated milk",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "ice cream",
+      "display": "Ice cream",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lactose",
+      "display": "Lactose",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "lactose monohydrate",
+      "display": "Lactose monohydrate",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "milk",
+      "display": "Milk",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "milk powder",
+      "display": "Milk powder",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "milk solids",
+      "display": "Milk solids",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "skim milk",
+      "display": "Skim milk",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "whey",
+      "display": "Whey",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "POSSIBLE",
+      "note": "Whey can be low-lactose depending on processing."
+    },
+    {
+      "term": "whole milk",
+      "display": "Whole milk",
+      "parent": "lactose",
+      "parentCommon": "Lactose",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "e220",
+      "display": "E220",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": "Sulphur dioxide."
+    },
+    {
+      "term": "e223",
+      "display": "E223",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": "Sodium metabisulfite."
+    },
+    {
+      "term": "e224",
+      "display": "E224",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": "Potassium metabisulfite."
+    },
+    {
+      "term": "potassium bisulfite",
+      "display": "Potassium bisulfite",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "potassium metabisulfite",
+      "display": "Potassium metabisulfite",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sodium bisulfite",
+      "display": "Sodium bisulfite",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sodium metabisulfite",
+      "display": "Sodium metabisulfite",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sodium sulfite",
+      "display": "Sodium sulfite",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sulfites",
+      "display": "Sulfites",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sulfur dioxide",
+      "display": "Sulfur dioxide",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sulphur dioxide",
+      "display": "Sulphur dioxide",
+      "parent": "sulfites",
+      "parentCommon": "Sulfites",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "acesulfame k",
+      "display": "Acesulfame K",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "acesulfame potassium",
+      "display": "Acesulfame potassium",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "advantame",
+      "display": "Advantame",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "aspartame",
+      "display": "Aspartame",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "e950",
+      "display": "E950",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": "Acesulfame K."
+    },
+    {
+      "term": "e951",
+      "display": "E951",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": "Aspartame."
+    },
+    {
+      "term": "e955",
+      "display": "E955",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": "Sucralose."
+    },
+    {
+      "term": "neotame",
+      "display": "Neotame",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "saccharin",
+      "display": "Saccharin",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    },
+    {
+      "term": "sucralose",
+      "display": "Sucralose",
+      "parent": "sweeteners",
+      "parentCommon": "Artificial Sweeteners",
+      "cat": "intolerance",
+      "matchClass": "DERIVED",
+      "note": null
+    }
+  ],
+  "opaque": [
+    "artificial flavors",
+    "cultures",
+    "emulsifier",
+    "enzymes",
+    "flavor",
+    "flavoring",
+    "hydrolyzed plant protein",
+    "hydrolyzed vegetable protein",
+    "modified food starch",
+    "natural flavoring",
+    "natural flavors",
+    "seasoning",
+    "seasoning blend",
+    "spice",
+    "spice extract",
+    "spices",
+    "starch",
+    "vegetable broth",
+    "vegetable oil"
+  ],
+  "parents": {
+    "almond": {
+      "common": "Almond",
+      "cat": "allergen"
+    },
+    "brazil_nut": {
+      "common": "Brazil Nut",
+      "cat": "allergen"
+    },
+    "cashew": {
+      "common": "Cashew",
+      "cat": "allergen"
+    },
+    "crustacean": {
+      "common": "Crustacean Shellfish",
+      "cat": "allergen"
+    },
+    "egg": {
+      "common": "Eggs",
+      "cat": "allergen"
+    },
+    "fish": {
+      "common": "Fish",
+      "cat": "allergen"
+    },
+    "hazelnut": {
+      "common": "Hazelnut",
+      "cat": "allergen"
+    },
+    "macadamia": {
+      "common": "Macadamia",
+      "cat": "allergen"
+    },
+    "milk": {
+      "common": "Milk and Dairy",
+      "cat": "allergen"
+    },
+    "mollusc": {
+      "common": "Mollusc Shellfish",
+      "cat": "allergen"
+    },
+    "peanut": {
+      "common": "Peanuts",
+      "cat": "allergen"
+    },
+    "pecan": {
+      "common": "Pecan",
+      "cat": "allergen"
+    },
+    "pine_nut": {
+      "common": "Pine Nut",
+      "cat": "allergen"
+    },
+    "pistachio": {
+      "common": "Pistachio",
+      "cat": "allergen"
+    },
+    "sesame": {
+      "common": "Sesame",
+      "cat": "allergen"
+    },
+    "soy": {
+      "common": "Soybeans",
+      "cat": "allergen"
+    },
+    "walnut": {
+      "common": "Walnut",
+      "cat": "allergen"
+    },
+    "wheat": {
+      "common": "Wheat",
+      "cat": "allergen"
+    },
+    "caffeine": {
+      "common": "Caffeine",
+      "cat": "intolerance"
+    },
+    "fodmaps": {
+      "common": "FODMAPs",
+      "cat": "intolerance"
+    },
+    "fructose": {
+      "common": "Fructose",
+      "cat": "intolerance"
+    },
+    "gluten": {
+      "common": "Gluten",
+      "cat": "intolerance"
+    },
+    "histamine": {
+      "common": "Histamine",
+      "cat": "intolerance"
+    },
+    "lactose": {
+      "common": "Lactose",
+      "cat": "intolerance"
+    },
+    "sulfites": {
+      "common": "Sulfites",
+      "cat": "intolerance"
+    },
+    "sweeteners": {
+      "common": "Artificial Sweeteners",
+      "cat": "intolerance"
+    }
+  }
 }

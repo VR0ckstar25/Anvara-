@@ -13,12 +13,15 @@ Built per Transfer Note v3.0 §3/§4, the Ingredient Database Construction note
 rm -f sfis_ingredients.db
 for f in schema.sql seed_01_categories.sql seed_02_allergens.sql \
          seed_03_dietary_primary_meta.sql seed_04_intolerances.sql \
-         seed_05_composite_global.sql finalize.sql \
+         seed_05_composite_global.sql seed_06_gap_fills.sql finalize.sql \
          ground_01_fda_identities.sql ground_02_fare_aliases.sql; do
   sqlite3 sfis_ingredients.db < "$f"
 done
-sqlite3 sfis_ingredients.db < tests.sql            # 39 checks — CI fails if FAILURES > 0
+sqlite3 sfis_ingredients.db < tests.sql            # 42 checks — CI fails if FAILURES > 0
 sqlite3 sfis_ingredients.db < challenge_corpus.sql  # hostile real-world strings
+
+# Regenerate the app's data export FROM the DB (never hand-edit allergens.json):
+node export-data.js                                 # → ../sfis-app/src/data/allergens.json
 ```
 
 ## Adversarial-review hardening (structural/semantic)
@@ -33,7 +36,7 @@ sqlite3 sfis_ingredients.db < challenge_corpus.sql  # hostile real-world strings
 | **Frequency = risk** | `frequency_rank` documented search-ordering-only; risk derives from `match_class` |
 | **Absence of evidence** | Four runtime states **Detected / Possible / Unknown / Not detected** — see [match_semantics.md](match_semantics.md); never "Safe" |
 | **Provenance strength** | `source_attribution.evidence_strength` (STATUTORY > guidance > advisory > reference > expert) |
-| **No hostile corpus** | [challenge_corpus.sql](challenge_corpus.sql) — 74 real-world strings (MATCH/OPAQUE/NONE), 0 failures; starter for a thousands-row production corpus |
+| **No hostile corpus** | [challenge_corpus.sql](challenge_corpus.sql) — 77 real-world strings (MATCH/OPAQUE/NONE), 0 failures; starter for a thousands-row production corpus |
 
 FARE aliases grounded (`ground_02`): FARE `source_url` attached to alias rows as
 **ADVISORY** evidence — still PENDING, FDA remains primary for identities. 251
@@ -61,12 +64,12 @@ fetcher, so facts were corroborated against
 | Table | Rows | Notes |
 |---|---|---|
 | `parents` | 26 | Big 9 allergen heads (18, tree nuts + shellfish split per FDA) + 8 intolerance heads |
-| `synonyms` | 340 | Allergen graph + canonical self-terms + species variants + all 8 intolerance graphs |
+| `synonyms` | 366 | Allergen graph + canonical self-terms + species variants + all 8 intolerance graphs |
 | `sub_groups` | 32 | Selectable download units (Decision 6); map 1:1 to onboarding tiles |
 | `dietary_rules` | 24 | Vegan + vegetarian starters |
 | `ingredients` | 8 | Illustrative USDA samples — full set comes from the import job |
 | `information_cards` | 26 | One per parent, all `CONTENT_PENDING` (§7.2) |
-| `source_attribution` | 398 | One per entry; USDA/FDA/FARE/EXPERT_REVIEW only; evidence-level fields |
+| `source_attribution` | 424 | One per entry; USDA/FDA/FARE/EXPERT_REVIEW only; evidence-level fields |
 
 ## Expert-review corrections applied
 
@@ -145,9 +148,10 @@ DRAFT ──(ambiguous / needs a human)─────────────�
 
 1. **UT Dallas cross-validation** of the synonym graph → promote `DRAFT` rows.
 2. **USDA import job** to populate `ingredients` from SR Legacy + Foundation Foods,
-   filtered by commercial significance; set `usda_fdc_id` and `frequency_rank`.
-3. **Populate `frequency_rank`** on synonyms from USDA appearance data (drives
-   priority-cache ordering).
+   filtered by commercial significance; set `usda_fdc_id`.
+3. **Populate `frequency_rank` in Phase 2** only when a commercial appearance source
+   is selected; v1 does not use frequency for type-ahead, priority-cache ordering,
+   or risk.
 4. **Intolerance synonym graphs** — drafted (105 entries). Validate, then enable the
    intolerance tiles (keep disabled until then).
 5. **Dietary rules** beyond vegan/vegetarian (pescatarian, keto, mediterranean,
