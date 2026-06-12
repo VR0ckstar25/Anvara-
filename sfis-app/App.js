@@ -14,6 +14,7 @@ import { AppearanceScreen } from './src/screens/AppearanceScreen';
 import { PatternsScreen } from './src/screens/PatternsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { DesignPreviewScreen } from './src/screens/DesignPreviewScreen';
+import { VisualConceptScreen } from './src/screens/VisualConceptScreen';
 import { SecurityBackupScreen } from './src/screens/SecurityBackupScreen';
 import { UnlockScreen } from './src/screens/UnlockScreen';
 import { BottomTabs } from './src/components/BottomTabs';
@@ -23,8 +24,10 @@ import { TUTORIAL } from './src/data/tutorial';
 import { profileIds } from './src/profile/profileModel';
 import { firebaseReady, firebaseUnavailableMessage } from './src/services/firebaseClient';
 import {
+  preproductionAuthReady,
   resetPassword,
   signInWithApple,
+  signInWithDemoGoogle,
   signInWithEmail,
   signInWithGoogleIdToken,
   signOutCurrentUser,
@@ -44,6 +47,7 @@ import {
   DEFAULT_SETTINGS,
   LOCAL_KEYS,
   loadLocalSnapshot,
+  readLocalValue,
   removeLocalValues,
   writeLocalValue,
 } from './src/services/localDataStore';
@@ -60,16 +64,22 @@ import {
 
 const OUTBOX_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 const RETRY_DELAYS_MS = [5 * 60 * 1000, 15 * 60 * 1000, 60 * 60 * 1000, 6 * 60 * 60 * 1000];
-const HEADER_ROW_HEIGHT = 62;
+const HEADER_ROW_HEIGHT = 48;
 const RESTORABLE_SCREENS = new Set([
   'diary', 'scan', 'patterns', 'profile', 'history',
   'save-profile', 'getting-ready', 'onboarding', 'appearance',
-  'design-preview', 'security-backup',
+  'design-preview', 'visual-concept', 'security-backup',
 ]);
 const SCREEN_RESTORE_FALLBACKS = {
   camera: 'scan',
   result: 'diary',
 };
+
+function authStatusMessage() {
+  if (firebaseReady) return 'Local mode';
+  if (preproductionAuthReady) return 'Preproduction demo auth active';
+  return firebaseUnavailableMessage();
+}
 
 function makeId(prefix) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -154,12 +164,12 @@ function restoreScreenFromSession(session, hasProfile) {
 
 function HeaderButton({ label, onPress, align, t }) {
   return (
-    <View style={{ width: 116, alignItems: align }}>
+    <View style={{ width: 104, alignItems: align }}>
       {label ? (
         <Pressable onPress={onPress} accessibilityRole="button" hitSlop={12}
-          style={{ minHeight: 48, minWidth: 88, paddingHorizontal: 8, justifyContent: 'center',
+          style={{ minHeight: 42, minWidth: 82, paddingHorizontal: 6, justifyContent: 'center',
             alignItems: align }}>
-          <Text style={{ fontFamily: t.sans, fontSize: 15, fontWeight: '800', color: t.accentDeep }}>
+          <Text style={{ fontFamily: t.sans, fontSize: 14, fontWeight: '800', color: t.accentDeep }}>
             {label}
           </Text>
         </Pressable>
@@ -170,12 +180,12 @@ function HeaderButton({ label, onPress, align, t }) {
 
 function HeaderTitle({ title, t }) {
   return (
-    <View style={{ alignItems: 'center', minWidth: 0 }}>
-      <Text style={{ fontFamily: t.sans, fontSize: 10.5, fontWeight: '900', color: t.accentDeep,
+    <View style={{ alignItems: 'center', justifyContent: 'center', minWidth: 0 }}>
+      <Text style={{ fontFamily: t.sans, fontSize: 9.5, fontWeight: '900', color: t.accentDeep,
         textTransform: 'uppercase', letterSpacing: 0 }}>
         Anvara
       </Text>
-      <Text numberOfLines={1} style={{ fontFamily: t.sans, fontSize: 16, fontWeight: '800', color: t.ink }}>
+      <Text numberOfLines={1} style={{ fontFamily: t.sans, fontSize: 14.5, lineHeight: 18, fontWeight: '800', color: t.ink }}>
         {title}
       </Text>
     </View>
@@ -405,8 +415,25 @@ function Shell() {
     return event;
   };
 
+  // Cross-account guard (adversarial review, CRITICAL): this device's health data
+  // may belong to a different account. Never pull-merge or push across accounts.
+  // The owner stamp survives sign-out on purpose.
+  const verifyDataOwnership = async (uid) => {
+    const owner = await readLocalValue(LOCAL_KEYS.dataOwner, null).catch(() => null);
+    const hasLocalData = !!profile || savedScans.length > 0 || feedbackLog.length > 0;
+    if (owner && owner !== uid && hasLocalData) {
+      setSyncStatus("This device holds another account's data - cloud sync is blocked. Clear local data in Profile to use this account here.");
+      return false;
+    }
+    if (owner !== uid) {
+      await writeLocalValue(LOCAL_KEYS.dataOwner, uid).catch((e) => console.warn('data-owner stamp failed:', e?.message));
+    }
+    return true;
+  };
+
   const pushSnapshotWithQueue = async (uid, snapshot = currentBackupSnapshot()) => {
     try {
+      if (!(await verifyDataOwnership(uid))) return false;
       await pushLocalSnapshot(uid, snapshot);
       await flushOutbox(uid);
       setSyncStatus(`Backed up ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`);
@@ -501,6 +528,7 @@ function Shell() {
     async function syncCloud() {
       try {
         setSyncStatus('Syncing…');
+        if (!(await verifyDataOwnership(authUser.uid))) return;
         const cloud = await pullCloudSnapshot(authUser.uid);
         if (!live) return;
 
@@ -738,6 +766,10 @@ function Shell() {
     if (signedInUser?.uid && cloudBackupEnabled) {
       setSyncStatus('Signed in. Syncing…');
       try {
+        if (!(await verifyDataOwnership(signedInUser.uid))) {
+          setScreen(profile ? 'getting-ready' : 'onboarding');
+          return credential;
+        }
         const cloud = await pullCloudSnapshot(signedInUser.uid);
         nextProfile = cloud.profile || profile;
         nextScans = mergeById(savedScans, cloud.scans, 'savedAt');
@@ -1039,9 +1071,11 @@ function Shell() {
     title = profileSaved ? 'Edit Profile' : 'Watch For';
     body = <OnboardingScreen initialProfile={profile} onDone={(p) => {
       const editing = profileSaved && !!profile;
-      if (editing) {
+      // A signed-in user finishing onboarding must SAVE and proceed - never re-run
+      // the first-run sample funnel into the sign-in screen again (review finding).
+      if (editing || authUser) {
         saveProfile(p);
-        setScreen('profile');
+        setScreen(editing ? 'profile' : 'getting-ready');
       } else {
         setProfile(p);
         setProfileSaved(false);
@@ -1089,7 +1123,8 @@ function Shell() {
       onAppearance={openAppearance} onEditProfile={() => setScreen('onboarding')} onClearLocalData={clearLocalData}
       onToggleSaveLabelImages={() => updateSettings({ saveLabelImages: !settings.saveLabelImages })}
       onSignIn={() => setScreen('save-profile')} onSignOut={handleSignOut} onAddMember={addFamilyMember}
-      onDesignPreview={() => setScreen('design-preview')} onSecurityBackup={() => setScreen('security-backup')} />;
+      onDesignPreview={() => setScreen('design-preview')} onVisualConcept={() => setScreen('visual-concept')}
+      onSecurityBackup={() => setScreen('security-backup')} />;
   } else if (screen === 'camera') {
     title = 'Camera';
     left = { label: '‹ Scan', onPress: () => setScreen('scan') };
@@ -1112,6 +1147,10 @@ function Shell() {
     left = { label: '‹ Profile', onPress: () => setScreen('profile') };
     body = <DesignPreviewScreen scans={savedScans} offlinePack={offlinePack}
       onScan={() => setScreen('scan')} onDownload={() => setScreen('getting-ready')} />;
+  } else if (screen === 'visual-concept') {
+    title = 'Visuals';
+    left = { label: '‹ Profile', onPress: () => setScreen('profile') };
+    body = <VisualConceptScreen />;
   } else if (screen === 'security-backup') {
     title = 'Security';
     left = { label: '‹ Profile', onPress: () => setScreen('profile') };

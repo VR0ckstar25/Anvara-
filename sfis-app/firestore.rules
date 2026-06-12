@@ -10,23 +10,37 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == uid;
     }
 
+    // If the payload carries an ownerUid, it must match the authenticated user —
+    // blocks a buggy/compromised client writing another person's records into
+    // its own tree (defense for the cross-account guard on the client).
+    function payloadOwnerOk() {
+      return !('ownerUid' in request.resource.data)
+        || request.resource.data.ownerUid == request.auth.uid;
+    }
+
     match /users/{uid} {
       allow read, write: if owns(uid);
 
       match /profile/{docId} {
-        allow read, write: if owns(uid);
+        allow read, delete: if owns(uid);
+        allow create, update: if owns(uid) && payloadOwnerOk();
       }
 
       match /scans/{scanId} {
-        allow read, write: if owns(uid);
+        allow read, delete: if owns(uid);
+        allow create, update: if owns(uid) && payloadOwnerOk();
       }
 
       match /feedback/{feedbackId} {
-        allow read, write: if owns(uid);
+        allow read, delete: if owns(uid);
+        allow create, update: if owns(uid) && payloadOwnerOk();
       }
 
+      // Audit trail: append-only. No client edits or deletes after the fact.
       match /events/{eventId} {
-        allow read, write: if owns(uid);
+        allow read: if owns(uid);
+        allow create: if owns(uid) && payloadOwnerOk();
+        allow update, delete: if false;
       }
 
       match /meta/{docId} {
