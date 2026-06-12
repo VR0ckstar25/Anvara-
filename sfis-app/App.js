@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, AppState, SafeAreaView, View, Text, Pressable } from 'react-native';
+import { ActivityIndicator, Alert, AppState, SafeAreaView, View, Text, Pressable } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { WelcomeScreen } from './src/screens/WelcomeScreen';
@@ -214,6 +214,39 @@ function NoticeBanner({ message, actionLabel, onAction, t }) {
   );
 }
 
+function ProcessingBanner({ task, t }) {
+  if (!task) return null;
+  const label = task.label || 'This step';
+  const detail = task.type === 'camera-ocr'
+    ? 'Keep Anvara open while it reads the label. Closing now can stop the scan, and you may need to take it again.'
+    : task.type === 'offline-pack'
+      ? 'Keep Anvara open while it prepares offline scanning. This helps make future scans faster and more reliable.'
+      : task.type === 'cloud-backup'
+        ? 'Keep Anvara open while it finishes the backup. Your local data stays saved even if the network is slow.'
+        : 'Keep Anvara open for a moment so this can finish cleanly.';
+
+  return (
+    <View style={{ paddingHorizontal: 14, paddingTop: 10, backgroundColor: t.bg }}>
+      <View accessibilityRole="alert" style={{ flexDirection: 'row', alignItems: 'center', gap: 12,
+        borderRadius: 15, backgroundColor: t.accentTint, borderWidth: 1, borderColor: t.accentSoft,
+        padding: 13 }}>
+        <View style={{ width: 34, height: 34, borderRadius: 12, backgroundColor: t.surface,
+          alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator color={t.accentDeep} />
+        </View>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text style={{ fontFamily: t.sans, fontSize: 14.2, fontWeight: '900', color: t.ink }}>
+            {label} is in progress
+          </Text>
+          <Text style={{ fontFamily: t.sans, fontSize: 12.7, color: t.ink2, lineHeight: 18, marginTop: 2 }}>
+            {detail}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
 function Shell() {
   const { theme: t } = useTheme();
   const [profile, setProfile] = useState(null);
@@ -223,7 +256,7 @@ function Shell() {
   const [feedbackLog, setFeedbackLog] = useState([]);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [authUser, setAuthUser] = useState(null);
-  const [syncStatus, setSyncStatus] = useState(firebaseReady ? 'Local mode' : firebaseUnavailableMessage());
+  const [syncStatus, setSyncStatus] = useState(authStatusMessage());
   const [syncOutbox, setSyncOutbox] = useState([]);
   const syncOutboxRef = useRef([]);
   const [storageNotice, setStorageNotice] = useState('');
@@ -506,7 +539,7 @@ function Shell() {
     if (!hydrated || !interruptedTask) return;
     Alert.alert(
       'Processing stopped',
-      `${interruptedTask.label || 'The last task'} stopped because Anvara was closed before it finished. Please start it again.`,
+      `${interruptedTask.label || 'The last task'} did not keep running after Anvara closed, so nothing was half-saved. Start it again when you're ready.`,
       [{ text: 'OK', onPress: () => setInterruptedTask(null) }],
     );
   }, [hydrated, interruptedTask]);
@@ -514,7 +547,7 @@ function Shell() {
   useEffect(() => subscribeAuthState((user) => {
     const nextUser = serializeUser(user);
     setAuthUser(nextUser);
-    setSyncStatus(nextUser ? 'Signed in. Sync pending…' : (firebaseReady ? 'Local mode' : firebaseUnavailableMessage()));
+    setSyncStatus(nextUser ? 'Signed in. Sync pending…' : authStatusMessage());
   }), []);
 
   useEffect(() => {
@@ -626,7 +659,8 @@ function Shell() {
     if (!profile) return;
     const existing = profile.familyMembers || [];
     if (existing.some((m) => m.id === member.id) || existing.length >= 4) return;
-    saveProfile({ ...profile, familyMembers: [...existing, member] });
+    // Snapshot date: members match offline from this snapshot; UI can show staleness.
+    saveProfile({ ...profile, familyMembers: [...existing, { ...member, addedAt: new Date().toISOString() }] });
   };
 
   const updateSettings = (patch) => {
@@ -831,6 +865,11 @@ function Shell() {
     return finishAuth(credential);
   };
 
+  const handleDemoGoogleAuth = async () => {
+    const credential = await signInWithDemoGoogle();
+    return finishAuth(credential);
+  };
+
   const handleAppleAuth = async () => {
     const credential = await signInWithApple();
     return finishAuth(credential);
@@ -840,7 +879,7 @@ function Shell() {
     try {
       await signOutCurrentUser();
       setAuthUser(null);
-      setSyncStatus(firebaseReady ? 'Local mode' : firebaseUnavailableMessage());
+      setSyncStatus(authStatusMessage());
     } catch (error) {
       setSyncStatus(error.message || 'Sign out failed');
     }
@@ -1088,9 +1127,11 @@ function Shell() {
       onBack={() => setScreen(profile ? 'result' : 'welcome')}
       onEmailAuth={handleEmailAuth}
       onGoogleToken={handleGoogleAuth}
+      onDemoGoogleAuth={handleDemoGoogleAuth}
       onAppleAuth={handleAppleAuth}
       onResetPassword={resetPassword}
       authReady={firebaseReady}
+      preproductionAuthReady={preproductionAuthReady}
       authUser={authUser}
       syncStatus={syncStatus} />;
   } else if (screen === 'getting-ready') {
@@ -1119,7 +1160,8 @@ function Shell() {
   } else if (screen === 'profile') {
     title = 'Profile';
     body = <ProfileScreen profile={profile} scans={savedScans} feedbackCount={feedbackLog.length}
-      settings={settings} authUser={authUser} authReady={firebaseReady} syncStatus={syncStatus}
+      settings={settings} authUser={authUser} authReady={firebaseReady} preproductionAuthReady={preproductionAuthReady}
+      syncStatus={syncStatus}
       onAppearance={openAppearance} onEditProfile={() => setScreen('onboarding')} onClearLocalData={clearLocalData}
       onToggleSaveLabelImages={() => updateSettings({ saveLabelImages: !settings.saveLabelImages })}
       onSignIn={() => setScreen('save-profile')} onSignOut={handleSignOut} onAddMember={addFamilyMember}
@@ -1159,6 +1201,7 @@ function Shell() {
       security={security}
       authUser={authUser}
       authReady={firebaseReady}
+      preproductionAuthReady={preproductionAuthReady}
       syncStatus={syncStatus}
       syncOutbox={syncOutbox}
       offlinePack={offlinePack}
@@ -1200,6 +1243,7 @@ function Shell() {
         actionLabel={canCloudBackup && syncOutbox.length ? 'Retry' : ''}
         onAction={canCloudBackup && syncOutbox.length ? () => flushOutbox(authUser.uid) : undefined}
         t={t} />
+      <ProcessingBanner task={activeTask} t={t} />
       <View style={{ flex: 1 }}>{body}</View>
       {tabs.has(screen) ? <BottomTabs active={screen} onChange={setScreen} /> : null}
       <StatusBar style="dark" translucent={false} backgroundColor={t.surfaceWarm} />
