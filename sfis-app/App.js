@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
+import { OnboardingIntentScreen } from './src/screens/OnboardingIntentScreen';
 import { DiaryScreen } from './src/screens/DiaryScreen';
 import { ScanScreen } from './src/screens/ScanScreen';
 import { CameraScreen } from './src/screens/CameraScreen';
@@ -17,6 +18,10 @@ import { DesignPreviewScreen } from './src/screens/DesignPreviewScreen';
 import { VisualConceptScreen } from './src/screens/VisualConceptScreen';
 import { SecurityBackupScreen } from './src/screens/SecurityBackupScreen';
 import { UnlockScreen } from './src/screens/UnlockScreen';
+import { PolicyAgreementScreen } from './src/screens/PolicyAgreementScreen';
+import { HowItWorksScreen } from './src/screens/HowItWorksScreen';
+import { PlansScreen } from './src/screens/PlansScreen';
+import { CredibilityScreen } from './src/screens/CredibilityScreen';
 import { BottomTabs } from './src/components/BottomTabs';
 import { matchScan } from './src/match/scanMatch';
 import data from './src/data/allergens.json';
@@ -43,6 +48,7 @@ import {
   saveCloudScan,
 } from './src/services/syncService';
 import { cleanupExpiredLabelImages, enrichCapturedImage } from './src/services/localRetention';
+import { houseAdForContext, normalizeCommercial, updateCommercialPlan } from './src/services/commercialModel';
 import {
   DEFAULT_SETTINGS,
   LOCAL_KEYS,
@@ -67,7 +73,7 @@ const RETRY_DELAYS_MS = [5 * 60 * 1000, 15 * 60 * 1000, 60 * 60 * 1000, 6 * 60 *
 const HEADER_ROW_HEIGHT = 48;
 const RESTORABLE_SCREENS = new Set([
   'diary', 'scan', 'patterns', 'profile', 'history',
-  'save-profile', 'getting-ready', 'onboarding', 'appearance',
+  'policy', 'save-profile', 'getting-ready', 'onboarding-intent', 'onboarding', 'credibility', 'how-it-works', 'appearance', 'plans',
   'design-preview', 'visual-concept', 'security-backup',
 ]);
 const SCREEN_RESTORE_FALLBACKS = {
@@ -76,7 +82,7 @@ const SCREEN_RESTORE_FALLBACKS = {
 };
 
 function authStatusMessage() {
-  if (firebaseReady) return 'Local mode';
+  if (firebaseReady) return 'Firebase ready';
   if (preproductionAuthReady) return 'Preproduction demo auth active';
   return firebaseUnavailableMessage();
 }
@@ -92,7 +98,15 @@ function serializeUser(user) {
 function mergeById(local = [], cloud = [], dateKey = 'savedAt') {
   const merged = new Map();
   [...cloud, ...local].forEach((item) => {
-    if (item?.id) merged.set(item.id, item);
+    if (!item?.id) return;
+    const existing = merged.get(item.id);
+    if (!existing) {
+      merged.set(item.id, item);
+      return;
+    }
+    const existingDate = new Date(existing?.[dateKey] || existing?.updatedAt || existing?.cloudUpdatedAt || existing?.createdAt || 0).getTime();
+    const itemDate = new Date(item?.[dateKey] || item?.updatedAt || item?.cloudUpdatedAt || item?.createdAt || 0).getTime();
+    if (itemDate >= existingDate) merged.set(item.id, item);
   });
   return Array.from(merged.values()).sort((a, b) => {
     const left = b?.[dateKey] || b?.createdAt || '';
@@ -116,13 +130,12 @@ function outboxDedupeKey(item) {
 
 function makeOutboxItem(kind, payload, error) {
   const createdAt = new Date().toISOString();
-  const imageExpiry = payload?.image?.deleteAfter;
   return {
     id: makeId('outbox'),
     kind,
     payload,
     createdAt,
-    expiresAt: imageExpiry || new Date(Date.now() + OUTBOX_RETENTION_MS).toISOString(),
+    expiresAt: new Date(Date.now() + OUTBOX_RETENTION_MS).toISOString(),
     attempts: 0,
     lastError: messageFrom(error, 'Cloud sync failed'),
     nextRetryAt: createdAt,
@@ -264,6 +277,7 @@ function Shell() {
   const [security, setSecurity] = useState(null);
   const [localBackup, setLocalBackup] = useState(null);
   const [locked, setLocked] = useState(false);
+  const [lockRecoveryMode, setLockRecoveryMode] = useState(false);
   const [screen, setScreen] = useState('welcome');
   const [returnTo, setReturnTo] = useState('scan');
   const [activeTask, setActiveTask] = useState(null);
@@ -274,6 +288,13 @@ function Shell() {
   const matcherData = offlinePack?.data || data;
   const cloudBackupEnabled = !!settings.cloudBackupEnabled;
   const canCloudBackup = !!authUser?.uid && cloudBackupEnabled;
+  const commercial = normalizeCommercial(settings.commercial);
+  const homeAd = houseAdForContext(commercial, 'home');
+  const productReviewQueue = feedbackLog.filter((entry) => {
+    const label = String(entry?.label || '').toLowerCase();
+    return entry?.category === 'product_issue' || label === 'wrong' || label === 'unsure';
+  });
+  const productIssueCount = productReviewQueue.length;
 
   useEffect(() => {
     syncOutboxRef.current = syncOutbox;
@@ -369,17 +390,19 @@ function Shell() {
     return enqueueOutboxItems(items);
   };
 
-  const flushOutbox = async (uid, queue = syncOutboxRef.current) => {
-    if (!uid || !queue.length) return queue;
+  const flushOutbox = async (uid, queue = syncOutboxRef.current, { force = false } = {}) => {
+    if (!uid || !queue.length) return { queue, pushed: 0, expired: 0, lastError: '' };
     const now = Date.now();
     const remaining = [];
     let pushed = 0;
+    let expired = 0;
     let lastError = '';
 
     for (const item of queue) {
-      const expired = item.expiresAt && new Date(item.expiresAt).getTime() <= now;
-      const due = !item.nextRetryAt || new Date(item.nextRetryAt).getTime() <= now;
-      if (expired) {
+      const isExpired = item.expiresAt && new Date(item.expiresAt).getTime() <= now;
+      const due = force || !item.nextRetryAt || new Date(item.nextRetryAt).getTime() <= now;
+      if (isExpired) {
+        expired += 1;
         lastError = `${item.kind} backup expired after the 7-day retention window.`;
         continue;
       }
@@ -408,8 +431,10 @@ function Shell() {
       setSyncStatus(`Backup pending: ${savedQueue.length} item${savedQueue.length === 1 ? '' : 's'}. ${reason}`);
     } else if (pushed) {
       setSyncStatus(`Synced ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`);
+    } else if (expired) {
+      setSyncStatus(`Backup queue cleared: ${lastError}`);
     }
-    return savedQueue;
+    return { queue: savedQueue, pushed, expired, lastError };
   };
 
   const refreshOfflinePackForProfile = async (nextProfile) => {
@@ -452,7 +477,8 @@ function Shell() {
   // may belong to a different account. Never pull-merge or push across accounts.
   // The owner stamp survives sign-out on purpose.
   const verifyDataOwnership = async (uid) => {
-    const owner = await readLocalValue(LOCAL_KEYS.dataOwner, null).catch(() => null);
+    const ownerResult = await readLocalValue(LOCAL_KEYS.dataOwner, null).catch(() => null);
+    const owner = ownerResult?.value || null;
     const hasLocalData = !!profile || savedScans.length > 0 || feedbackLog.length > 0;
     if (owner && owner !== uid && hasLocalData) {
       setSyncStatus("This device holds another account's data - cloud sync is blocked. Clear local data in Profile to use this account here.");
@@ -468,8 +494,12 @@ function Shell() {
     try {
       if (!(await verifyDataOwnership(uid))) return false;
       await pushLocalSnapshot(uid, snapshot);
-      await flushOutbox(uid);
-      setSyncStatus(`Backed up ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`);
+      const outboxResult = await flushOutbox(uid);
+      if (outboxResult.expired && !outboxResult.queue.length && !outboxResult.pushed) {
+        setSyncStatus(`Backed up current data. Old queued item expired: ${outboxResult.lastError}`);
+      } else {
+        setSyncStatus(`Backed up ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`);
+      }
       return true;
     } catch (error) {
       await enqueueSnapshotOutbox(snapshot, error);
@@ -663,6 +693,25 @@ function Shell() {
     saveProfile({ ...profile, familyMembers: [...existing, { ...member, addedAt: new Date().toISOString() }] });
   };
 
+  const removeFamilyMember = (member) => {
+    if (!profile || !member?.id) return;
+    Alert.alert(
+      'Remove family profile?',
+      `Remove ${member.name || 'this family member'} from this device's Anvara profile? Saved scans stay in Diary.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => {
+            const nextMembers = (profile.familyMembers || []).filter((m) => m.id !== member.id);
+            saveProfile({ ...profile, familyMembers: nextMembers });
+          },
+        },
+      ],
+    );
+  };
+
   const updateSettings = (patch) => {
     setSettings((prev) => {
       const next = { ...prev, ...patch };
@@ -703,6 +752,7 @@ function Shell() {
             setSecurity(null);
             setLocalBackup(null);
             setLocked(false);
+            setLockRecoveryMode(false);
             if (!clearFailed) setStorageNotice('');
             setResult(null);
             setResultNext(null);
@@ -756,13 +806,16 @@ function Shell() {
     setScreen('result');
   };
 
-  const recordFeedback = (label) => {
+  const recordFeedback = (label, extra = {}) => {
     const entry = {
       id: makeId('feedback'),
       label,
+      category: extra.category || 'result_feedback',
+      source: extra.source || 'result',
+      note: extra.note || '',
       createdAt: new Date().toISOString(),
-      savedScanId: result?.savedScanId || null,
-      product: result?.product || {},
+      savedScanId: extra.savedScanId || result?.savedScanId || null,
+      product: extra.product || result?.product || {},
     };
     setFeedbackLog((prev) => {
       const next = [entry, ...prev].slice(0, 200);
@@ -778,14 +831,65 @@ function Shell() {
       feedbackId: entry.id,
       savedScanId: entry.savedScanId,
       label,
+      category: entry.category,
     });
-    setSavedScans((prev) => {
-      const next = prev.map((scan) => (scan.id === entry.savedScanId ? { ...scan, feedback: label } : scan));
-      persistLocalValue(LOCAL_KEYS.scans, next, 'Scan diary');
-      const updated = next.find((scan) => scan.id === entry.savedScanId);
-      if (canCloudBackup && updated) saveCloudScan(authUser.uid, updated).catch((error) => enqueueOutbox('scan', updated, error));
-      return next;
+    if (entry.savedScanId) {
+      setSavedScans((prev) => {
+        const next = prev.map((scan) => (scan.id === entry.savedScanId ? { ...scan, feedback: label } : scan));
+        persistLocalValue(LOCAL_KEYS.scans, next, 'Scan diary');
+        const updated = next.find((scan) => scan.id === entry.savedScanId);
+        if (canCloudBackup && updated) saveCloudScan(authUser.uid, updated).catch((error) => enqueueOutbox('scan', updated, error));
+        return next;
+      });
+    }
+  };
+
+  const openSavedScan = (scan) => {
+    if (!scan) return;
+    setResult({
+      findings: scan.findings || [],
+      unverified: scan.unverified || [],
+      product: scan.product || {},
+      image: scan.image || null,
+      ocr: scan.ocr || null,
+      savedScanId: scan.id,
+      savedAt: scan.savedAt,
+      source: scan.source || 'saved',
     });
+    setResultNext(null);
+    setScreen('result');
+  };
+
+  const reportProductIssue = () => {
+    Alert.alert(
+      'Report product data?',
+      'Open a saved scan to mark the exact result as Wrong or Unsure, or log a general review request now.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Open diary', onPress: () => setScreen('history') },
+        {
+          text: 'Log request',
+          onPress: () => {
+            recordFeedback('Product issue', {
+              category: 'product_issue',
+              source: 'profile',
+              note: 'General product or ingredient data review request.',
+            });
+            setStorageNotice('Product data review request saved.');
+          },
+        },
+      ],
+    );
+  };
+
+  const openProductReviewItem = (entry) => {
+    if (!entry) return;
+    const scan = entry.savedScanId ? savedScans.find((item) => item.id === entry.savedScanId) : null;
+    if (scan) {
+      openSavedScan(scan);
+      return;
+    }
+    setStorageNotice('General product review request is saved. Open a saved scan to attach exact label evidence.');
   };
 
   const finishAuth = async (credential) => {
@@ -801,7 +905,7 @@ function Shell() {
       setSyncStatus('Signed in. Syncing…');
       try {
         if (!(await verifyDataOwnership(signedInUser.uid))) {
-          setScreen(profile ? 'getting-ready' : 'onboarding');
+          setScreen(profile ? (returnTo && returnTo !== 'scan' ? returnTo : 'profile') : 'onboarding-intent');
           return credential;
         }
         const cloud = await pullCloudSnapshot(signedInUser.uid);
@@ -851,7 +955,7 @@ function Shell() {
       }
       setSyncStatus('Signed in. Cloud backup off.');
     }
-    setScreen(nextProfile ? 'getting-ready' : 'onboarding');
+    setScreen(nextProfile ? (returnTo && returnTo !== 'scan' ? returnTo : 'getting-ready') : 'onboarding-intent');
     return credential;
   };
 
@@ -873,6 +977,51 @@ function Shell() {
   const handleAppleAuth = async () => {
     const credential = await signInWithApple();
     return finishAuth(credential);
+  };
+
+  const finishLockRecovery = async (credential) => {
+    const signedInUser = serializeUser(credential?.user);
+    if (!signedInUser?.uid) {
+      throw new Error('Sign-in did not complete. No account was returned.');
+    }
+    const ownerResult = await readLocalValue(LOCAL_KEYS.dataOwner, null).catch(() => null);
+    const owner = ownerResult?.value || null;
+    const hasLocalData = !!profile || savedScans.length > 0 || feedbackLog.length > 0;
+    if (owner && owner !== signedInUser.uid && hasLocalData) {
+      throw new Error("This account does not match the Anvara data protected on this phone.");
+    }
+
+    setAuthUser(signedInUser);
+    if (owner !== signedInUser.uid) {
+      await persistLocalValue(LOCAL_KEYS.dataOwner, signedInUser.uid, 'Data owner');
+    }
+    const nextSecurity = disablePinSecurity(security || {});
+    await persistSecurity(nextSecurity);
+    setLocked(false);
+    setLockRecoveryMode(false);
+    setSyncStatus('Signed in. App PIN reset on this device.');
+    setScreen('security-backup');
+    return credential;
+  };
+
+  const handleEmailLockRecovery = async ({ email, password }) => {
+    const credential = await signInWithEmail({ email, password, mode: 'sign-in' });
+    return finishLockRecovery(credential);
+  };
+
+  const handleGoogleLockRecovery = async (idToken) => {
+    const credential = await signInWithGoogleIdToken(idToken);
+    return finishLockRecovery(credential);
+  };
+
+  const handleDemoGoogleLockRecovery = async () => {
+    const credential = await signInWithDemoGoogle();
+    return finishLockRecovery(credential);
+  };
+
+  const handleAppleLockRecovery = async () => {
+    const credential = await signInWithApple();
+    return finishLockRecovery(credential);
   };
 
   const handleSignOut = async () => {
@@ -914,6 +1063,7 @@ function Shell() {
   const backupNow = async () => {
     if (!authUser?.uid) {
       setSyncStatus('Sign in to use cloud backup.');
+      setReturnTo('security-backup');
       setScreen('save-profile');
       return false;
     }
@@ -930,6 +1080,32 @@ function Shell() {
         queuedItems: syncOutboxRef.current.length,
       });
       return ok;
+    } finally {
+      endProcessingTask(taskId);
+    }
+  };
+
+  const retryAllBackupsNow = async () => {
+    if (!authUser?.uid) {
+      setSyncStatus('Sign in to retry cloud backup.');
+      setReturnTo('security-backup');
+      setScreen('save-profile');
+      return false;
+    }
+    if (!cloudBackupEnabled) {
+      setSyncStatus('Turn on cloud backup before retrying.');
+      return false;
+    }
+    const taskId = beginProcessingTask('cloud-retry', 'Retrying backup queue');
+    setSyncStatus('Retrying queued backups...');
+    try {
+      const result = await flushOutbox(authUser.uid, syncOutboxRef.current, { force: true });
+      if (!result.queue.length && result.expired) {
+        setSyncStatus(`Queued backups expired: ${result.lastError}`);
+        return false;
+      }
+      if (!result.queue.length) setSyncStatus('Queued backups are synced.');
+      return result.queue.length === 0;
     } finally {
       endProcessingTask(taskId);
     }
@@ -1039,12 +1215,20 @@ function Shell() {
   };
 
   const runFirstSample = (nextProfile) => {
+    if (!nextProfile) {
+      setScreen('onboarding-intent');
+      return;
+    }
     const { findings, unverified } = matchScan(TUTORIAL.text, nextProfile, matcherData);
     showResult({
       findings,
       unverified,
       product: { name: TUTORIAL.name, brand: TUTORIAL.brand, date: TUTORIAL.date },
-    }, { source: 'sample', persist: false, next: { label: 'Continue', screen: 'save-profile' } });
+    }, { source: 'sample', persist: false, next: { label: 'Show me how Anvara works', screen: 'how-it-works' } });
+  };
+
+  const previewFirstResult = () => {
+    runFirstSample(profile);
   };
 
   const downloadOfflinePack = async (selectedPackIds) => {
@@ -1067,11 +1251,36 @@ function Shell() {
 
   const useLocally = () => {
     if (!profile) {
-      setScreen('onboarding');
+      setScreen('onboarding-intent');
       return;
     }
     saveProfile(profile);
     setScreen('getting-ready');
+  };
+
+  const continueFromOnboardingIntent = (intent) => {
+    updateSettings({ onboardingIntent: intent ? { id: intent.id, title: intent.title } : null });
+    setScreen('onboarding');
+  };
+
+  const acceptPolicies = () => {
+    const now = new Date().toISOString();
+    updateSettings({
+      policyAcceptedAt: now,
+      safetyAcknowledgedAt: now,
+    });
+    setReturnTo('getting-ready');
+    setScreen('save-profile');
+  };
+
+  const selectPlanPreview = (planId) => {
+    const nextCommercial = updateCommercialPlan(settings.commercial, planId);
+    updateSettings({ commercial: nextCommercial });
+    setStorageNotice(`${nextCommercial.planId === 'free' ? 'Free' : nextCommercial.planId === 'plus' ? 'Plus' : 'Family'} preview selected. Store billing is not connected yet.`);
+    recordProcessEvent('commercial.plan_preview_selected', {
+      planId: nextCommercial.planId,
+      billingMode: nextCommercial.billingMode,
+    });
   };
 
   const continueFromResult = () => {
@@ -1091,11 +1300,29 @@ function Shell() {
   if (locked && isSecurityEnabled(security)) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }}>
-        <UnlockScreen
-          onUnlock={unlockApp}
-          onResetDevice={clearLocalData}
-          lockoutText={lockoutMessage(security)}
-        />
+        {lockRecoveryMode ? (
+          <SaveProfileScreen
+            hasProfile={!!profile}
+            onBack={() => setLockRecoveryMode(false)}
+            onEraseDevice={clearLocalData}
+            onEmailAuth={handleEmailLockRecovery}
+            onGoogleToken={handleGoogleLockRecovery}
+            onDemoGoogleAuth={handleDemoGoogleLockRecovery}
+            onAppleAuth={handleAppleLockRecovery}
+            onResetPassword={resetPassword}
+            authReady={firebaseReady}
+            preproductionAuthReady={preproductionAuthReady}
+            authUser={authUser}
+            syncStatus={syncStatus}
+            recoveryMode
+          />
+        ) : (
+          <UnlockScreen
+            onUnlock={unlockApp}
+            onForgotPin={() => setLockRecoveryMode(true)}
+            lockoutText={lockoutMessage(security)}
+          />
+        )}
         <StatusBar style="dark" />
       </SafeAreaView>
     );
@@ -1105,26 +1332,37 @@ function Shell() {
   const tabs = new Set(['diary', 'scan', 'patterns', 'profile']);
   if (screen === 'welcome') {
     title = 'Welcome';
-    body = <WelcomeScreen onStart={() => setScreen('onboarding')} onSignIn={() => setScreen('save-profile')} />;
+    body = <WelcomeScreen
+      onStart={() => { setReturnTo('getting-ready'); setScreen(settings.policyAcceptedAt ? 'save-profile' : 'policy'); }}
+      onSignIn={() => { setReturnTo('getting-ready'); setScreen(settings.policyAcceptedAt ? 'save-profile' : 'policy'); }}
+    />;
+  } else if (screen === 'policy') {
+    title = 'Agreement';
+    left = { label: '‹ Welcome', onPress: () => setScreen('welcome') };
+    body = <PolicyAgreementScreen onAccept={acceptPolicies} onBack={() => setScreen('welcome')} />;
+  } else if (screen === 'onboarding-intent') {
+    title = 'Setup';
+    left = { label: '‹ Sign in', onPress: () => setScreen('save-profile') };
+    body = <OnboardingIntentScreen
+      onContinue={continueFromOnboardingIntent}
+      onSkip={() => continueFromOnboardingIntent(null)}
+    />;
   } else if (screen === 'onboarding') {
-    title = profileSaved ? 'Edit Profile' : 'Watch For';
+    title = profileSaved ? 'Edit Profile' : 'Watchlist';
     body = <OnboardingScreen initialProfile={profile} onDone={(p) => {
       const editing = profileSaved && !!profile;
-      // A signed-in user finishing onboarding must SAVE and proceed - never re-run
-      // the first-run sample funnel into the sign-in screen again (review finding).
-      if (editing || authUser) {
+      if (editing) {
         saveProfile(p);
-        setScreen(editing ? 'profile' : 'getting-ready');
+        setScreen('profile');
       } else {
-        setProfile(p);
-        setProfileSaved(false);
-        runFirstSample(p);
+        saveProfile(p);
+        setScreen('credibility');
       }
-    }} />;
+    }} guidedFocus={settings.onboardingIntent} />;
   } else if (screen === 'save-profile') {
     title = profile ? 'Save Profile' : 'Sign In';
     body = <SaveProfileScreen hasProfile={!!profile} onUseLocal={useLocally}
-      onBack={() => setScreen(profile ? 'result' : 'welcome')}
+      onBack={() => setScreen(profile ? (returnTo && returnTo !== 'scan' ? returnTo : 'profile') : 'policy')}
       onEmailAuth={handleEmailAuth}
       onGoogleToken={handleGoogleAuth}
       onDemoGoogleAuth={handleDemoGoogleAuth}
@@ -1138,20 +1376,27 @@ function Shell() {
     title = 'Getting Ready';
     body = <GettingReadyScreen profile={profile} offlinePack={offlinePack}
       onDownload={downloadOfflinePack} onDone={() => setScreen('diary')} />;
+  } else if (screen === 'credibility') {
+    title = 'Why Anvara';
+    body = <CredibilityScreen onContinue={previewFirstResult} onSkip={previewFirstResult} />;
+  } else if (screen === 'how-it-works') {
+    title = 'How It Works';
+    body = <HowItWorksScreen onDone={() => setScreen('getting-ready')} />;
   } else if (screen === 'diary') {
     title = 'Home';
     right = { label: 'Theme', onPress: openAppearance };
-    body = <DesignPreviewScreen scans={savedScans} offlinePack={offlinePack}
-      onScan={() => setScreen('scan')} onDownload={() => setScreen('getting-ready')} onDiary={() => setScreen('history')} />;
+    body = <DesignPreviewScreen scans={savedScans} offlinePack={offlinePack} ad={homeAd}
+      onScan={() => setScreen('scan')} onDownload={() => setScreen('getting-ready')}
+      onDiary={() => setScreen('history')} onPlans={() => setScreen('plans')} />;
   } else if (screen === 'history') {
     title = 'Diary';
     left = { label: '‹ Home', onPress: () => setScreen('diary') };
-    body = <DiaryScreen scans={savedScans} onSample={runTutorial} onScan={() => setScreen('scan')} />;
+    body = <DiaryScreen scans={savedScans} onSample={runTutorial} onScan={() => setScreen('scan')} onOpenScan={openSavedScan} />;
   } else if (screen === 'scan') {
     title = 'Scan';
     right = { label: 'Theme', onPress: openAppearance };
     body = <ScanScreen profile={profile} matcherData={matcherData}
-              onResult={(r) => showResult(r, { source: 'manual', persist: true })}
+              onResult={(r, options = {}) => showResult(r, { source: 'manual', persist: true, ...options })}
               onCamera={() => setScreen('camera')} />;
   } else if (screen === 'patterns') {
     title = 'Patterns';
@@ -1160,12 +1405,18 @@ function Shell() {
   } else if (screen === 'profile') {
     title = 'Profile';
     body = <ProfileScreen profile={profile} scans={savedScans} feedbackCount={feedbackLog.length}
+      productIssueCount={productIssueCount}
+      productReviewQueue={productReviewQueue}
       settings={settings} authUser={authUser} authReady={firebaseReady} preproductionAuthReady={preproductionAuthReady}
-      syncStatus={syncStatus}
+      syncStatus={syncStatus} commercial={commercial}
       onAppearance={openAppearance} onEditProfile={() => setScreen('onboarding')} onClearLocalData={clearLocalData}
       onToggleSaveLabelImages={() => updateSettings({ saveLabelImages: !settings.saveLabelImages })}
-      onSignIn={() => setScreen('save-profile')} onSignOut={handleSignOut} onAddMember={addFamilyMember}
+      onSignIn={() => { setReturnTo('profile'); setScreen('save-profile'); }} onSignOut={handleSignOut} onAddMember={addFamilyMember}
+      onRemoveMember={removeFamilyMember}
       onDesignPreview={() => setScreen('design-preview')} onVisualConcept={() => setScreen('visual-concept')}
+      onPlans={() => setScreen('plans')}
+      onReportIssue={reportProductIssue}
+      onOpenReviewItem={openProductReviewItem}
       onSecurityBackup={() => setScreen('security-backup')} />;
   } else if (screen === 'camera') {
     title = 'Camera';
@@ -1177,13 +1428,17 @@ function Shell() {
               onProcessingEnd={endProcessingTask} />;
   } else if (screen === 'result') {
     title = 'Result';
-    left = { label: resultNext ? '‹ Watch' : '‹ Scan', onPress: () => setScreen(resultNext ? 'onboarding' : 'scan') };
+    left = { label: resultNext ? '‹ Watchlist' : '‹ Scan', onPress: () => setScreen(resultNext ? 'onboarding' : 'scan') };
     body = <ResultScreen {...(result || {})} onFeedback={recordFeedback}
       nextLabel={resultNext?.label} onNext={resultNext ? continueFromResult : undefined} />;
   } else if (screen === 'appearance') {
     title = 'Appearance';
     left = { label: '‹ Back', onPress: () => setScreen(returnTo) };
     body = <AppearanceScreen />;
+  } else if (screen === 'plans') {
+    title = 'Plans';
+    left = { label: '‹ Profile', onPress: () => setScreen('profile') };
+    body = <PlansScreen commercial={commercial} onSelectPlan={selectPlanPreview} onBack={() => setScreen('profile')} />;
   } else if (screen === 'design-preview') {
     title = 'Preview';
     left = { label: '‹ Profile', onPress: () => setScreen('profile') };
@@ -1213,6 +1468,7 @@ function Shell() {
       onLockNow={() => setLocked(true)}
       onToggleCloudBackup={toggleCloudBackup}
       onBackupNow={backupNow}
+      onRetryBackupsNow={retryAllBackupsNow}
       onDeleteCloudBackup={deleteCloudBackupNow}
       onCreateLocalBackup={createLocalBackup}
       onRestoreLocalBackup={restoreLocalBackup}
@@ -1220,7 +1476,7 @@ function Shell() {
       onManageOfflinePack={() => setScreen('getting-ready')}
       onToggleSaveLabelImages={() => updateSettings({ saveLabelImages: !settings.saveLabelImages })}
       onClearLocalData={clearLocalData}
-      onSignIn={() => setScreen('save-profile')}
+      onSignIn={() => { setReturnTo('security-backup'); setScreen('save-profile'); }}
     />;
   }
 
@@ -1241,7 +1497,7 @@ function Shell() {
       </View>
       <NoticeBanner message={bannerMessage}
         actionLabel={canCloudBackup && syncOutbox.length ? 'Retry' : ''}
-        onAction={canCloudBackup && syncOutbox.length ? () => flushOutbox(authUser.uid) : undefined}
+        onAction={canCloudBackup && syncOutbox.length ? () => flushOutbox(authUser.uid, syncOutboxRef.current, { force: true }) : undefined}
         t={t} />
       <ProcessingBanner task={activeTask} t={t} />
       <View style={{ flex: 1 }}>{body}</View>

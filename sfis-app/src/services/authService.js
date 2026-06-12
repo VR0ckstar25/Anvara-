@@ -14,7 +14,11 @@ import {
 import { firebaseAuth, firebaseReady, firebaseUnavailableMessage } from './firebaseClient';
 
 const LAST_AUTH_USER_KEY = 'anvara.auth.lastUser.v1';
+const DEMO_AUTH_USER_KEY = 'anvara.auth.preproductionUser.v1';
 const NONCE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._';
+const PREPRODUCTION_AUTH_ENABLED = process.env.EXPO_PUBLIC_PREPROD_AUTH === 'true' && process.env.NODE_ENV !== 'production';
+
+export const preproductionAuthReady = PREPRODUCTION_AUTH_ENABLED && !firebaseReady;
 
 function requireFirebaseAuth() {
   if (!firebaseReady || !firebaseAuth) {
@@ -32,9 +36,52 @@ function makeNonce(size = 32) {
   return Array.from(bytes, (byte) => NONCE_CHARS[byte % NONCE_CHARS.length]).join('');
 }
 
+function demoUidFor(email, provider = 'email') {
+  const clean = normalizeEmail(email || `${provider}@anvara.preprod`);
+  return `preprod-${provider}-${clean.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 54)}`;
+}
+
+function makeDemoCredential({ email, provider = 'email', displayName = 'Preproduction user' }) {
+  return {
+    user: {
+      uid: demoUidFor(email, provider),
+      email: normalizeEmail(email),
+      displayName,
+      isAnonymous: false,
+      providerId: `preproduction.${provider}`,
+      preproduction: true,
+    },
+  };
+}
+
+async function saveDemoUser(user) {
+  await SecureStore.setItemAsync(DEMO_AUTH_USER_KEY, JSON.stringify({
+    uid: user.uid,
+    email: user.email || '',
+    displayName: user.displayName || 'Preproduction user',
+    preproduction: true,
+    updatedAt: new Date().toISOString(),
+  }));
+}
+
+async function readDemoUser() {
+  const text = await SecureStore.getItemAsync(DEMO_AUTH_USER_KEY);
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    await SecureStore.deleteItemAsync(DEMO_AUTH_USER_KEY).catch(() => {});
+    return null;
+  }
+}
+
 export function subscribeAuthState(callback) {
   if (!firebaseReady || !firebaseAuth) {
-    callback(null);
+    if (preproductionAuthReady) {
+      readDemoUser().then(callback).catch(() => callback(null));
+    } else {
+      callback(null);
+    }
     return () => {};
   }
 
@@ -52,8 +99,20 @@ export function subscribeAuthState(callback) {
   });
 }
 
+export async function signInWithDemoGoogle() {
+  if (!preproductionAuthReady) {
+    throw new Error('Preproduction demo auth is not enabled.');
+  }
+  const credential = makeDemoCredential({
+    email: 'google.demo@anvara.preprod',
+    provider: 'google',
+    displayName: 'Google demo',
+  });
+  await saveDemoUser(credential.user);
+  return credential;
+}
+
 export async function signInWithEmail({ email, password, mode = 'sign-in' }) {
-  const auth = requireFirebaseAuth();
   const cleanEmail = normalizeEmail(email);
   if (!cleanEmail || !password) {
     throw new Error('Enter an email and password.');
@@ -62,6 +121,17 @@ export async function signInWithEmail({ email, password, mode = 'sign-in' }) {
     throw new Error('Password must be at least 6 characters.');
   }
 
+  if (!firebaseReady && preproductionAuthReady) {
+    const credential = makeDemoCredential({
+      email: cleanEmail,
+      provider: 'email',
+      displayName: mode === 'create' ? 'Preproduction account' : 'Preproduction user',
+    });
+    await saveDemoUser(credential.user);
+    return credential;
+  }
+
+  const auth = requireFirebaseAuth();
   if (mode === 'create') {
     return createUserWithEmailAndPassword(auth, cleanEmail, password);
   }
@@ -69,6 +139,11 @@ export async function signInWithEmail({ email, password, mode = 'sign-in' }) {
 }
 
 export async function resetPassword(email) {
+  if (!firebaseReady && preproductionAuthReady) {
+    const cleanEmail = normalizeEmail(email);
+    if (!cleanEmail) throw new Error('Enter your email first.');
+    return { preproduction: true };
+  }
   const auth = requireFirebaseAuth();
   const cleanEmail = normalizeEmail(email);
   if (!cleanEmail) throw new Error('Enter your email first.');
@@ -113,6 +188,10 @@ export async function signInWithApple() {
 }
 
 export async function signOutCurrentUser() {
+  if (!firebaseReady && preproductionAuthReady) {
+    await SecureStore.deleteItemAsync(DEMO_AUTH_USER_KEY).catch(() => {});
+    return;
+  }
   const auth = requireFirebaseAuth();
   await signOut(auth);
   await SecureStore.deleteItemAsync(LAST_AUTH_USER_KEY).catch(() => {});

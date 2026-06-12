@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { View, Text, Pressable, ScrollView, TextInput } from 'react-native';
+import { Search } from 'lucide-react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { Card, Overline, PrimaryButton, ProgressBar, ScreenIntro } from '../components/DesignPrimitives';
 
@@ -23,8 +24,44 @@ function timeLabel(scan) {
   return `${MONTHS[date.getMonth()].slice(0, 3)} ${date.getDate()}`;
 }
 
-export function DiaryScreen({ scans = [], onSample, onScan }) {
+function findingCount(scan) {
+  return (scan.findings || []).reduce((sum, finding) => sum + (finding.items?.length || 0), 0);
+}
+
+function scanSearchText(scan) {
+  const findingsText = (scan.findings || []).flatMap((finding) => [
+    finding.label,
+    finding.cat,
+    ...(finding.items || []).flatMap((item) => [
+      item.common,
+      item.technical,
+      item.derivative,
+      item.note,
+      ...(item.aka || []),
+      ...(item.profiles || []).map((profile) => profile.name),
+    ]),
+  ]);
+  return [
+    scan.product?.name,
+    scan.product?.brand,
+    scan.source,
+    scan.feedback,
+    ...(scan.unverified || []),
+    ...findingsText,
+  ].filter(Boolean).join(' ').toLowerCase();
+}
+
+const FILTERS = [
+  { id: 'all', label: 'All' },
+  { id: 'real', label: 'Real' },
+  { id: 'sample', label: 'Samples' },
+  { id: 'matches', label: 'Matches' },
+];
+
+export function DiaryScreen({ scans = [], onSample, onScan, onOpenScan }) {
   const { theme: t } = useTheme();
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState('all');
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -34,14 +71,26 @@ export function DiaryScreen({ scans = [], onSample, onScan }) {
     ...Array.from({ length: firstWeekday }, () => null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
-  const dotsByDay = scans.reduce((acc, scan) => {
+  // Stats reflect REAL scans only (review finding: sample taps polluted the calendar
+  // and unlock progress). The list below still shows sample entries, labeled.
+  const realScans = scans.filter((scan) => scan.source !== 'sample');
+  const dotsByDay = realScans.reduce((acc, scan) => {
     const date = scanDate(scan);
     if (date.getFullYear() === year && date.getMonth() === month) {
       acc[date.getDate()] = [...new Set([...(acc[date.getDate()] || []), ...scanCategories(scan)])];
     }
     return acc;
   }, {});
-  const scanCount = scans.length;
+  const scanCount = realScans.length;
+  const filteredScans = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return scans.filter((scan) => {
+      if (filter === 'real' && scan.source === 'sample') return false;
+      if (filter === 'sample' && scan.source !== 'sample') return false;
+      if (filter === 'matches' && findingCount(scan) === 0) return false;
+      return !q || scanSearchText(scan).includes(q);
+    });
+  }, [filter, query, scans]);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ padding: 18, paddingBottom: 28 }}>
@@ -73,6 +122,43 @@ export function DiaryScreen({ scans = [], onSample, onScan }) {
       <PrimaryButton onPress={onSample} t={t} style={{ marginBottom: 16 }}>
         Try a sample scan
       </PrimaryButton>
+
+      <Card t={t} style={{ marginBottom: 18, padding: 13 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10,
+          minHeight: 44, borderRadius: 14, backgroundColor: t.surfaceWarm,
+          borderWidth: 1, borderColor: t.line, paddingHorizontal: 12 }}>
+          <Search size={18} color={t.ink3} strokeWidth={2.4} />
+          <TextInput
+            value={query}
+            onChangeText={setQuery}
+            placeholder="Search products, brands, ingredients"
+            placeholderTextColor={t.ink3}
+            autoCorrect={false}
+            accessibilityLabel="Search diary"
+            style={{ flex: 1, minHeight: 42, paddingVertical: 0, fontFamily: t.sans,
+              fontSize: 14, fontWeight: '700', color: t.ink }}
+          />
+        </View>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 11 }}>
+          {FILTERS.map((option) => {
+            const selected = filter === option.id;
+            return (
+              <Pressable key={option.id} onPress={() => setFilter(option.id)}
+                accessibilityRole="button" accessibilityState={{ selected }}
+                style={{ minHeight: 34, paddingHorizontal: 12, borderRadius: 999,
+                  backgroundColor: selected ? t.accentTint : t.surface,
+                  borderWidth: selected ? 2 : 1,
+                  borderColor: selected ? t.accent : t.line,
+                  alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: '900',
+                  color: selected ? t.accentDeep : t.ink2 }}>
+                  {option.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </Card>
 
       <Card t={t} style={{ marginBottom: 18 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
@@ -121,10 +207,12 @@ export function DiaryScreen({ scans = [], onSample, onScan }) {
 
       <Overline t={t}>Recent scans</Overline>
       <View style={{ gap: 10, marginTop: 12 }}>
-        {scans.length ? scans.slice(0, 6).map((entry) => {
+        {filteredScans.length ? filteredScans.slice(0, 20).map((entry) => {
           const dots = scanCategories(entry);
+          const matches = findingCount(entry);
           return (
-            <Card key={entry.id} t={t} style={{ padding: 14 }}>
+            <Pressable key={entry.id} onPress={() => onOpenScan?.(entry)} accessibilityRole="button">
+              <Card t={t} style={{ padding: 14 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
                 <View style={{ flex: 1, minWidth: 0 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 7, marginBottom: 7 }}>
@@ -136,20 +224,27 @@ export function DiaryScreen({ scans = [], onSample, onScan }) {
                   <Text style={{ fontFamily: t.sans, fontSize: 16, fontWeight: '800', color: t.ink }}>
                     {entry.product?.name || 'Unnamed Product'}
                   </Text>
+                  <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink2, lineHeight: 18, marginTop: 3 }}>
+                    {entry.product?.brand ? `${entry.product.brand} · ` : ''}
+                    {matches} matched item{matches === 1 ? '' : 's'}
+                  </Text>
                 </View>
                 <Text style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: '800', color: t.ink3 }}>
-                  {entry.source === 'sample' ? 'Sample' : 'Saved'}
+                  {entry.source === 'sample' ? 'Sample' : 'Open'}
                 </Text>
               </View>
-            </Card>
+              </Card>
+            </Pressable>
           );
         }) : (
           <Card t={t}>
             <Text style={{ fontFamily: t.sans, fontSize: 15, fontWeight: '800', color: t.ink }}>
-              No scans saved yet.
+              {scans.length ? 'No diary results match that view.' : 'No scans saved yet.'}
             </Text>
             <Text style={{ fontFamily: t.sans, fontSize: 13.5, color: t.ink2, lineHeight: 19, marginTop: 4 }}>
-              Run a manual or sample scan to start the diary.
+              {scans.length
+                ? 'Try a different search or filter.'
+                : 'Run a manual or sample scan to start the diary.'}
             </Text>
           </Card>
         )}

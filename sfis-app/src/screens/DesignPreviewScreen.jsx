@@ -13,6 +13,7 @@ import {
 } from 'lucide-react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { Card, Overline, PrimaryButton, ProgressBar, SecondaryButton } from '../components/DesignPrimitives';
+import { HouseAdCard } from '../components/HouseAdCard';
 import { formatBytes } from '../services/offlinePacks';
 
 function latestScan(scans) {
@@ -23,11 +24,11 @@ function findingCount(scan) {
   return (scan?.findings || []).reduce((sum, finding) => sum + (finding.items?.length || 0), 0);
 }
 
-export function DesignPreviewScreen({ scans = [], offlinePack, onScan, onDownload, onDiary }) {
+export function DesignPreviewScreen({ scans = [], offlinePack, ad = null, onScan, onDownload, onDiary, onPlans }) {
   const { theme: t } = useTheme();
   const latest = latestScan(scans);
-  const scanCount = scans.length;
-  const patternProgress = Math.min(scanCount, 6);
+  const realScanCount = scans.filter((scan) => scan.source !== 'sample').length;
+  const patternProgress = Math.min(realScanCount, 6);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ padding: 18, paddingBottom: 30 }}>
@@ -51,7 +52,7 @@ export function DesignPreviewScreen({ scans = [], offlinePack, onScan, onDownloa
         <View style={{ flexDirection: 'row', gap: 10, marginTop: 17 }}>
           <StatusChip icon={ShieldCheck} label="Profile" value="Active" color={t.accentDeep} t={t} />
           <StatusChip icon={Download} label="Offline" value={offlinePack ? `${offlinePack.termCount}` : 'Set up'} color="#0B8280" t={t} />
-          <StatusChip icon={Bell} label="Review" value={`${scanCount}`} color="#765C9C" t={t} />
+          <StatusChip icon={Bell} label="Review" value={`${realScanCount}`} color="#765C9C" t={t} />
         </View>
 
         <PrimaryButton onPress={onScan} t={t} style={{ marginTop: 16 }}>
@@ -60,9 +61,11 @@ export function DesignPreviewScreen({ scans = [], offlinePack, onScan, onDownloa
       </View>
 
       <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
-        <MomentumCard title="Diary" value={`${scanCount}`} sub="saved scans" icon={HeartPulse} color={t.accentDeep} t={t} onPress={onDiary} />
+        <MomentumCard title="Diary" value={`${realScanCount}`} sub="real scans" icon={HeartPulse} color={t.accentDeep} t={t} onPress={onDiary} />
         <MomentumCard title="Patterns" value={`${patternProgress}/6`} sub="to summary" icon={Sparkles} color="#E89318" t={t} />
       </View>
+
+      <HouseAdCard ad={ad} onPress={onPlans} t={t} />
 
       <Card t={t} style={{ marginBottom: 16 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>

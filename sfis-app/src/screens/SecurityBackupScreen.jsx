@@ -13,6 +13,16 @@ function formatDate(value) {
   return date.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 }
 
+function offlineFreshness(pack) {
+  if (!pack?.downloadedAt) return { label: 'Not ready', detail: 'Download a recommended pack before relying on offline scanning.' };
+  const downloaded = new Date(pack.downloadedAt).getTime();
+  if (Number.isNaN(downloaded)) return { label: 'Saved', detail: 'Offline pack is saved, but the build date is unknown.' };
+  const ageDays = Math.floor((Date.now() - downloaded) / (24 * 60 * 60 * 1000));
+  if (ageDays < 1) return { label: 'Fresh', detail: 'Built today from the selected offline pack options.' };
+  if (ageDays <= 14) return { label: `${ageDays}d old`, detail: 'Still recent. Rebuild after profile or database changes.' };
+  return { label: `${ageDays}d old`, detail: 'Rebuild recommended so offline scans use the latest bundled data.' };
+}
+
 function Stat({ label, value, t }) {
   return (
     <View style={{ flex: 1, minHeight: 64, borderRadius: 14, backgroundColor: t.surfaceWarm,
@@ -50,6 +60,7 @@ export function SecurityBackupScreen({
   security,
   authUser,
   authReady,
+  preproductionAuthReady = false,
   syncStatus,
   syncOutbox,
   offlinePack,
@@ -61,6 +72,7 @@ export function SecurityBackupScreen({
   onLockNow,
   onToggleCloudBackup,
   onBackupNow,
+  onRetryBackupsNow,
   onDeleteCloudBackup,
   onCreateLocalBackup,
   onRestoreLocalBackup,
@@ -77,6 +89,11 @@ export function SecurityBackupScreen({
   const lockEnabled = isSecurityEnabled(security);
   const cloudEnabled = !!settings.cloudBackupEnabled;
   const autoOffline = !!settings.autoOfflinePack;
+  const canSignIn = authReady || preproductionAuthReady;
+  const freshness = offlineFreshness(offlinePack);
+  const selectedPackLabel = offlinePack?.selectedPackIds?.length
+    ? offlinePack.selectedPackIds.join(', ')
+    : 'None';
 
   const savePin = async () => {
     setStatus('');
@@ -167,7 +184,7 @@ export function SecurityBackupScreen({
               Cloud backup
             </Text>
             <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink2, lineHeight: 18, marginTop: 2 }}>
-              {authUser?.email ? authUser.email : (authReady ? 'Sign in to use cloud backup.' : 'Firebase is not configured.')}
+              {authUser?.email ? authUser.email : (authReady ? 'Sign in to use cloud backup.' : preproductionAuthReady ? 'Preproduction demo auth is available.' : 'Firebase is not configured.')}
             </Text>
           </View>
           <SwitchPill on={cloudEnabled} onPress={onToggleCloudBackup} t={t} />
@@ -178,12 +195,15 @@ export function SecurityBackupScreen({
         {authUser?.uid ? (
           <>
             <PrimaryButton onPress={onBackupNow} disabled={!cloudEnabled} t={t}>Back up now</PrimaryButton>
+            <SecondaryButton onPress={onRetryBackupsNow} disabled={!cloudEnabled || !syncOutbox.length} t={t} style={{ marginTop: 10 }}>
+              Retry queued backups now
+            </SecondaryButton>
             <SecondaryButton onPress={onDeleteCloudBackup} t={t} style={{ marginTop: 10 }}>
               Delete cloud backup
             </SecondaryButton>
           </>
         ) : (
-          <PrimaryButton onPress={onSignIn} disabled={!authReady} t={t}>Sign in for backup</PrimaryButton>
+          <PrimaryButton onPress={onSignIn} disabled={!canSignIn} t={t}>Sign in for backup</PrimaryButton>
         )}
       </Card>
 
@@ -204,6 +224,22 @@ export function SecurityBackupScreen({
         <View style={{ flexDirection: 'row', gap: 10, marginBottom: 12 }}>
           <Stat label="Offline terms" value={`${offlinePack?.termCount || 0}`} t={t} />
           <Stat label="Size" value={offlinePack ? formatBytes(offlinePack.bytes) : 'None'} t={t} />
+        </View>
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 12 }}>
+          <Stat label="Built" value={formatDate(offlinePack?.downloadedAt)} t={t} />
+          <Stat label="Freshness" value={freshness.label} t={t} />
+        </View>
+        <View style={{ borderRadius: 14, backgroundColor: t.surfaceWarm, borderWidth: 1,
+          borderColor: t.lineSoft, padding: 12, marginBottom: 12 }}>
+          <Text style={{ fontFamily: t.sans, fontSize: 13.2, fontWeight: '900', color: t.ink }}>
+            {offlinePack ? 'Offline pack saved' : 'Offline pack not ready'}
+          </Text>
+          <Text style={{ fontFamily: t.sans, fontSize: 12.4, color: t.ink2, lineHeight: 18, marginTop: 3 }}>
+            {freshness.detail}
+          </Text>
+          <Text style={{ fontFamily: t.mono, fontSize: 10.8, color: t.ink3, lineHeight: 16, marginTop: 6 }}>
+            Packs: {selectedPackLabel}
+          </Text>
         </View>
         <View style={{ marginBottom: 12 }}>
           <ProgressBar value={offlinePack ? 1 : 0.35} max={1} color="#E89318" t={t} />

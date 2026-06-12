@@ -11,13 +11,13 @@ export const CARD_SHADOW = {
 
 export function ScreenIntro({ title, sub, right, t }) {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', gap: 14, marginBottom: 18 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12, marginBottom: 12 }}>
       <View style={{ flex: 1 }}>
-        <Text style={{ fontFamily: t.serif, fontSize: 26, fontWeight: '600', color: t.ink, lineHeight: 31 }}>
+        <Text style={{ fontFamily: t.serif, fontSize: 23, fontWeight: '600', color: t.ink, lineHeight: 28 }}>
           {title}
         </Text>
         {sub ? (
-          <Text style={{ fontFamily: t.sans, fontSize: 14, color: t.ink2, lineHeight: 20, marginTop: 5 }}>
+          <Text style={{ fontFamily: t.sans, fontSize: 13.2, color: t.ink2, lineHeight: 18, marginTop: 3 }}>
             {sub}
           </Text>
         ) : null}

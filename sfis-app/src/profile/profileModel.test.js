@@ -8,6 +8,8 @@ const data = require('../data/allergens.json');
 const {
   buildSelfProfile,
   defaultSeverityFor,
+  FAMILY_MEMBER_CAP,
+  PROFILE_ITEM_CAP,
   profileIds,
   profileItems,
 } = require('./profileModel.js');
@@ -54,6 +56,33 @@ check('legacy array profile still supported', r.findings.some((f) => f.items.som
 
 // — defaults are sane —
 check('defaultSeverityFor returns a string for every known id', typeof defaultSeverityFor('peanut') === 'string' && typeof defaultSeverityFor('goal.less_sugar') === 'string');
+
+const tooMany = buildSelfProfile([
+  'milk',
+  'egg',
+  'wheat',
+  'soy',
+  'peanut',
+  'allergen.treenut',
+  'fish',
+  'allergen.shellfish',
+  'sesame',
+], {});
+check('profile caps self preferences at 8', tooMany.items.length === PROFILE_ITEM_CAP, JSON.stringify(tooMany.items.map((item) => item.id)));
+
+const duplicated = buildSelfProfile(['milk', 'milk', 'egg', 'egg', 'soy'], {});
+check('profile dedupes self preferences', duplicated.items.map((item) => item.id).join(',') === 'milk,egg,soy', JSON.stringify(duplicated.items));
+
+const oversizedFamily = buildSelfProfile(['milk'], {}, {
+  familyMembers: Array.from({ length: 7 }, (_, index) => ({
+    id: `m${index}`,
+    name: `Member ${index}`,
+    watched: ['milk', 'milk', 'egg', 'wheat', 'soy', 'peanut', 'fish', 'sesame', 'gluten', 'lactose'],
+  })),
+});
+check('profile caps family members to 4', oversizedFamily.familyMembers.length === FAMILY_MEMBER_CAP, JSON.stringify(oversizedFamily.familyMembers));
+check('profile caps member watched items to 8', oversizedFamily.familyMembers.every((m) => m.watched.length <= PROFILE_ITEM_CAP), JSON.stringify(oversizedFamily.familyMembers));
+check('profile dedupes member watched items', oversizedFamily.familyMembers.every((m) => new Set(m.watched.map((item) => typeof item === 'string' ? item : item.id)).size === m.watched.length), JSON.stringify(oversizedFamily.familyMembers));
 
 console.log(`\n${pass} passed, ${fail} failed`);
 failures.forEach((f) => console.log(f));

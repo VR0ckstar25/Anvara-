@@ -4,16 +4,20 @@ import { useTheme } from '../theme/ThemeProvider';
 import { Card, Overline, Pill, ProgressBar, ScreenIntro, SwitchPill } from '../components/DesignPrimitives';
 import { MemberSearchSheet } from '../components/MemberSearchSheet';
 import { profileIds, profileItems } from '../profile/profileModel';
+import { normalizeCommercial, planFor } from '../services/commercialModel';
 
 export function ProfileScreen({
   profile = null,
   scans = [],
   feedbackCount = 0,
+  productIssueCount = 0,
+  productReviewQueue = [],
   settings = {},
   authUser = null,
   authReady = false,
   preproductionAuthReady = false,
   syncStatus = '',
+  commercial = null,
   onAppearance,
   onEditProfile,
   onClearLocalData,
@@ -21,14 +25,19 @@ export function ProfileScreen({
   onSignIn,
   onSignOut,
   onAddMember,
+  onRemoveMember,
   onDesignPreview,
   onVisualConcept,
+  onPlans,
+  onReportIssue,
+  onOpenReviewItem,
   onSecurityBackup,
 }) {
   const { theme: t } = useTheme();
   const selected = useMemo(() => profileItems(profile), [profile]);
   const watchedIds = profileIds(profile);
   const memberCount = 1 + (profile?.familyMembers?.length || 0);
+  const plan = planFor(normalizeCommercial(commercial).planId);
   const [memberSearch, setMemberSearch] = useState(false);
 
   return (
@@ -112,26 +121,33 @@ export function ProfileScreen({
               {profile?.name || 'You'}
             </Text>
           </View>
-          {(profile?.familyMembers || []).map((m) => (
-            <View key={m.id} style={{ alignItems: 'center', gap: 6 }}>
+          {(profile?.familyMembers || []).map((m) => {
+            const memberName = m.name || 'Family member';
+            return (
+            <View key={m.id || memberName} style={{ alignItems: 'center', gap: 6 }}>
               <View style={{ width: 58, height: 58, borderRadius: m.child ? 18 : 29, alignItems: 'center',
                 justifyContent: 'center', backgroundColor: m.child ? '#E7D9C4' : t.accentSoft,
                 borderWidth: 1, borderColor: t.line }}>
                 <Text style={{ fontFamily: t.serif, fontSize: 23, fontWeight: '700',
                   color: m.child ? '#8A6B3D' : t.accentDeep }}>
-                  {m.name[0]}
+                  {memberName[0]}
                 </Text>
               </View>
               <Text style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: '700', color: t.ink2 }}>
-                {m.name.split(' ')[0]}
+                {memberName.split(' ')[0]}
               </Text>
               {m.addedAt ? (
                 <Text style={{ fontFamily: t.mono, fontSize: 9.5, color: t.ink3 }}>
                   as of {String(m.addedAt).slice(0, 10)}
                 </Text>
               ) : null}
+              <Pressable onPress={() => onRemoveMember?.(m)} accessibilityRole="button" hitSlop={8}>
+                <Text style={{ fontFamily: t.sans, fontSize: 11.5, fontWeight: '800', color: t.ink3 }}>
+                  Remove
+                </Text>
+              </Pressable>
             </View>
-          ))}
+          );})}
           <Pressable onPress={() => setMemberSearch(true)} accessibilityRole="button"
             accessibilityLabel="Add family members" style={{ alignItems: 'center', gap: 6 }}>
             <View style={{ width: 58, height: 58, borderRadius: 29, alignItems: 'center', justifyContent: 'center',
@@ -158,12 +174,68 @@ export function ProfileScreen({
         </View>
         <ProgressBar value={Math.min(scans.length, 6)} max={6} color={t.accent} t={t} />
         <Text style={{ fontFamily: t.sans, fontSize: 13, color: t.ink2, lineHeight: 19, marginTop: 11 }}>
-          {watchedIds.length} watched item{watchedIds.length === 1 ? '' : 's'} active. {feedbackCount} result feedback entr{feedbackCount === 1 ? 'y' : 'ies'} saved locally.
+          {watchedIds.length} watched item{watchedIds.length === 1 ? '' : 's'} active. {feedbackCount} feedback entr{feedbackCount === 1 ? 'y' : 'ies'} saved locally.
+          {productIssueCount ? ` ${productIssueCount} product issue${productIssueCount === 1 ? '' : 's'} queued.` : ''}
         </Text>
+      </Card>
+
+      <Card t={t} style={{ marginBottom: 18 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12,
+          marginBottom: 10 }}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontFamily: t.sans, fontSize: 15, fontWeight: '900', color: t.ink }}>
+              Product review queue
+            </Text>
+            <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink2, lineHeight: 18, marginTop: 2 }}>
+              Wrong, unsure, and product issue reports for founder review.
+            </Text>
+          </View>
+          <Pill t={t} palette={productReviewQueue.length ? 'goal' : 'accent'}>
+            {productReviewQueue.length}
+          </Pill>
+        </View>
+        {productReviewQueue.length ? (
+          <View style={{ gap: 8 }}>
+            {productReviewQueue.slice(0, 4).map((entry) => (
+              <Pressable key={entry.id} onPress={() => onOpenReviewItem?.(entry)}
+                accessibilityRole="button"
+                style={{ borderRadius: 14, backgroundColor: t.surfaceWarm, borderWidth: 1,
+                  borderColor: t.lineSoft, padding: 12 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
+                  <View style={{ flex: 1, minWidth: 0 }}>
+                    <Text numberOfLines={1} style={{ fontFamily: t.sans, fontSize: 14.2,
+                      fontWeight: '900', color: t.ink }}>
+                      {entry.product?.name || 'General product review'}
+                    </Text>
+                    <Text style={{ fontFamily: t.sans, fontSize: 12.3, color: t.ink2,
+                      lineHeight: 17, marginTop: 2 }}>
+                      {entry.label || 'Review'} · {String(entry.createdAt || '').slice(0, 10) || 'Saved'}
+                    </Text>
+                  </View>
+                  <Text style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: '900', color: t.accentDeep }}>
+                    {entry.savedScanId ? 'Open' : 'Saved'}
+                  </Text>
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        ) : (
+          <Text style={{ fontFamily: t.sans, fontSize: 13, color: t.ink2, lineHeight: 19 }}>
+            No reports yet. When a result is marked Wrong or Unsure, it appears here.
+          </Text>
+        )}
+        <Pressable onPress={onReportIssue} accessibilityRole="button" style={{ marginTop: 12, minHeight: 42,
+          borderRadius: 12, backgroundColor: t.surfaceWarm, borderWidth: 1, borderColor: t.line,
+          alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: '900', color: t.accentDeep }}>
+            Log review request
+          </Text>
+        </Pressable>
       </Card>
 
       <SettingsGroup title="App" t={t}>
         <SettingRow label="Security, backup, offline" sub="App lock, cloud backup, local checkpoint, offline pack" value="Open" onPress={onSecurityBackup} t={t} />
+        <SettingRow label="Plans & ads" sub="Free uses house messages; result screens stay ad-free" value={plan.label} onPress={onPlans} t={t} />
         <SettingRow label="New UI preview" sub="A richer Anvara home concept to test in-app" value="View" onPress={onDesignPreview} t={t} />
         <SettingRow label="Visual concept" sub="Bolder colors and scan-first outlook options" value="View" onPress={onVisualConcept} t={t} />
         <SettingRow label="Appearance" sub="Background and accent colors" value="Theme" onPress={onAppearance} t={t} />
@@ -176,7 +248,7 @@ export function ProfileScreen({
         />
         <SettingRow label="Result child mode" sub="Available from each result screen" value="Result" t={t} />
         <SettingRow label="Clear local data" sub="Remove profile, scans, and feedback from this device" value="Clear" onPress={onClearLocalData} danger t={t} />
-        <SettingRow label="Report a product issue" sub="Flag wrong or missing ingredient data" value="Soon" t={t} last />
+        <SettingRow label="Report a product issue" sub={`${productIssueCount} queued for review`} value="Report" onPress={onReportIssue} t={t} last />
       </SettingsGroup>
     </ScrollView>
   );
@@ -217,7 +289,7 @@ function SettingRow({ label, sub, value, right, onPress, danger, t, last }) {
       </View>
       {right || (
         <Text style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: '700',
-          color: danger ? t.amber : (value === 'Soon' ? t.ink3 : t.accentDeep) }}>
+          color: danger ? t.amber : t.accentDeep }}>
           {value || ''}
         </Text>
       )}

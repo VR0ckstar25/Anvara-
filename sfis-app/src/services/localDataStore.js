@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-import { normalizeSeverityFor, PROFILE_LABELS } from '../profile/profileModel';
+import { DEFAULT_COMMERCIAL, normalizeCommercial } from './commercialModel';
+import { normalizeSeverityFor, PROFILE_ITEM_CAP, PROFILE_LABELS } from '../profile/profileModel';
 
 export const LOCAL_SCHEMA_VERSION = 3;
 export const LOCAL_KEYS = {
@@ -24,6 +25,10 @@ export const DEFAULT_SETTINGS = {
   cloudBackupEnabled: true,
   autoOfflinePack: true,
   appLockTimeoutMinutes: 5,
+  policyAcceptedAt: null,
+  safetyAcknowledgedAt: null,
+  onboardingIntent: null,
+  commercial: DEFAULT_COMMERCIAL,
 };
 
 const CHUNK_SIZE = 1800;
@@ -66,7 +71,7 @@ function normalizeWatchedItems(items) {
       palette: palette || 'goal',
       severity: normalizeSeverityFor(id, typeof item === 'string' ? undefined : item.severity, palette),
     };
-  }).filter(Boolean).slice(0, 12);
+  }).filter(Boolean).slice(0, PROFILE_ITEM_CAP);
 }
 
 function normalizeFamilyMembers(members) {
@@ -113,6 +118,9 @@ function normalizeFeedback(feedback) {
   return feedback.map((entry, index) => ({
     id: entry.id || `feedback-migrated-${index}`,
     label: entry.label || 'unsure',
+    category: entry.category || 'result_feedback',
+    source: entry.source || 'result',
+    note: entry.note || '',
     createdAt: entry.createdAt || new Date().toISOString(),
     savedScanId: entry.savedScanId || null,
     product: entry.product || {},
@@ -120,7 +128,12 @@ function normalizeFeedback(feedback) {
 }
 
 function normalizeSettings(settings) {
-  return { ...DEFAULT_SETTINGS, ...(settings && typeof settings === 'object' ? settings : {}) };
+  const clean = settings && typeof settings === 'object' ? settings : {};
+  return {
+    ...DEFAULT_SETTINGS,
+    ...clean,
+    commercial: normalizeCommercial(clean.commercial || DEFAULT_SETTINGS.commercial),
+  };
 }
 
 function normalizeOutbox(outbox) {

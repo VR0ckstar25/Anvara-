@@ -5,6 +5,9 @@ export const SEVERITY = {
   goal: ['Heads-up', 'Prefer less', 'Avoid'],
 };
 
+export const PROFILE_ITEM_CAP = 8;
+export const FAMILY_MEMBER_CAP = 4;
+
 const LEGACY_SEVERITY = {
   Trace: 'Flag it',
   Some: 'Important',
@@ -108,8 +111,42 @@ function idFromWatched(item) {
   return item?.id || null;
 }
 
+function uniqueIds(ids = []) {
+  const out = [];
+  const seen = new Set();
+  (Array.isArray(ids) ? ids : []).forEach((id) => {
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    out.push(id);
+  });
+  return out;
+}
+
 function watchedIds(items = []) {
   return (Array.isArray(items) ? items : []).map(idFromWatched).filter(Boolean);
+}
+
+function capWatchedItems(items = []) {
+  const seen = new Set();
+  return (Array.isArray(items) ? items : []).filter((item) => {
+    const id = idFromWatched(item);
+    if (!id || seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  }).slice(0, PROFILE_ITEM_CAP);
+}
+
+function capFamilyMembers(members = []) {
+  return (Array.isArray(members) ? members : []).slice(0, FAMILY_MEMBER_CAP).map((member, index) => {
+    const capped = {
+      ...member,
+      id: member?.id || `member-${index}`,
+      name: member?.name || 'Family member',
+    };
+    if (Array.isArray(member?.watched)) capped.watched = capWatchedItems(member.watched);
+    if (Array.isArray(member?.items)) capped.items = capWatchedItems(member.items);
+    return capped;
+  });
 }
 
 export function profileIds(profile) {
@@ -138,14 +175,15 @@ export function profileItems(profile) {
 
 export function buildSelfProfile(selectedIds, severityById = {}, previousProfile = null) {
   const now = new Date().toISOString();
+  const cappedIds = uniqueIds(selectedIds).slice(0, PROFILE_ITEM_CAP);
   return {
     id: previousProfile?.id || 'self',
     name: previousProfile?.name || 'You',
     type: previousProfile?.type || 'adult',
     createdAt: previousProfile?.createdAt || now,
     updatedAt: now,
-    familyMembers: previousProfile?.familyMembers || [],
-    items: selectedIds.map((id) => {
+    familyMembers: capFamilyMembers(previousProfile?.familyMembers),
+    items: cappedIds.map((id) => {
       const source = PROFILE_LABELS[id] || { id, label: id, palette: 'goal', section: 'Saved' };
       return {
         id,

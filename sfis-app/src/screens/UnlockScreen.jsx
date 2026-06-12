@@ -4,7 +4,7 @@ import { LockKeyhole } from 'lucide-react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { Card, PrimaryButton, ScreenIntro, SecondaryButton } from '../components/DesignPrimitives';
 
-export function UnlockScreen({ onUnlock, onResetDevice, lockoutText = '' }) {
+export function UnlockScreen({ onUnlock, onForgotPin, lockoutText = '' }) {
   const { theme: t } = useTheme();
   const [pin, setPin] = useState('');
   const [status, setStatus] = useState(lockoutText);
@@ -63,9 +63,13 @@ export function UnlockScreen({ onUnlock, onResetDevice, lockoutText = '' }) {
       <PrimaryButton onPress={submit} disabled={busy || !pin.trim() || !!lockoutText} t={t}>
         {busy ? 'Checking...' : 'Unlock'}
       </PrimaryButton>
-      <SecondaryButton onPress={onResetDevice} t={t} style={{ marginTop: 10 }}>
-        Reset this device
+      <SecondaryButton onPress={onForgotPin} t={t} style={{ marginTop: 10 }}>
+        Forgot app PIN?
       </SecondaryButton>
+      <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink3, lineHeight: 18,
+        textAlign: 'center', marginTop: 10 }}>
+        Resetting the app PIN requires signing in to the Anvara account connected to this device.
+      </Text>
     </View>
   );
 }

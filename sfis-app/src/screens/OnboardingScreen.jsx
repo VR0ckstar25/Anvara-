@@ -6,6 +6,7 @@ import {
   buildSelfProfile,
   defaultSeverityFor,
   profileItems,
+  PROFILE_ITEM_CAP,
   PROFILE_ITEMS as ALL_ITEMS,
   PROFILE_SECTIONS as SECTIONS,
   SEVERITY,
@@ -14,10 +15,39 @@ import {
 // Founder decision (2026-06-11, revised same day): bounded watched list,
 // all chosen on one screen. Each watched item can add offline matcher data,
 // so the cap keeps the app small while covering broader real-world profiles.
-const MAX_SELECTIONS = 8; // founder-confirmed 2026-06-12: 8, not 12 (storage rationale)
+const MAX_SELECTIONS = PROFILE_ITEM_CAP;
 
-export function OnboardingScreen({ onDone, initialProfile = null, initialSelections = [] }) {
+const GUIDE_COPY = {
+  allergy: {
+    title: 'Choose your allergy watchlist',
+    sub: 'Pick the exact allergens Anvara should look for first. Nothing was preselected, because this needs to be yours.',
+    note: 'Start with allergies, then add an intolerance, diet choice, or goal only if it matters now.',
+  },
+  family: {
+    title: 'Start the family watchlist',
+    sub: 'Build your own list first. After setup, you can add family members and Anvara will show who each finding applies to.',
+    note: 'A family supports up to 5 profiles including you, and children count as one profile.',
+  },
+  intolerance: {
+    title: 'Choose ingredients to notice',
+    sub: 'Start with intolerances or sensitivities, then add allergies or diet choices if they matter.',
+    note: 'Intolerance matching is marked beta because ingredients can affect people differently.',
+  },
+  diet: {
+    title: 'Choose your food boundaries',
+    sub: 'Add diet choices or ingredient goals, then include allergies or intolerances if they matter.',
+    note: 'Anvara will show matches as label evidence, not as a moral verdict on the food.',
+  },
+  mixed: {
+    title: 'Build one focused watchlist',
+    sub: 'Choose up to eight items across allergies, intolerances, diet choices, and goals.',
+    note: 'The limit keeps offline matching small and the result screen easy to understand.',
+  },
+};
+
+export function OnboardingScreen({ onDone, initialProfile = null, initialSelections = [], guidedFocus = null }) {
   const { theme: t } = useTheme();
+  const guide = GUIDE_COPY[guidedFocus?.id] || GUIDE_COPY.mixed;
   const savedSelfItems = useMemo(() => profileItems(initialProfile), [initialProfile]);
   const initialIds = useMemo(() => {
     const selfIds = savedSelfItems.map((item) => item.id).filter(Boolean);
@@ -75,8 +105,8 @@ export function OnboardingScreen({ onDone, initialProfile = null, initialSelecti
   return (
     <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ padding: 18, paddingBottom: 34 }}>
       <ScreenIntro
-        title="What should Anvara watch for?"
-        sub="Pick up to eight things — the ones that matter most. Allergies stay first; intolerances, diet, and goals can sit beside them."
+        title={guide.title}
+        sub={guide.sub}
         t={t}
         right={
           <View style={{ minHeight: 30, paddingHorizontal: 11, borderRadius: 999, backgroundColor: atCap ? t.accent : t.surface,
@@ -88,9 +118,16 @@ export function OnboardingScreen({ onDone, initialProfile = null, initialSelecti
         }
       />
 
+      <Card t={t} style={{ marginBottom: 14, backgroundColor: t.accentTint, borderColor: t.accentSoft, padding: 13 }}>
+        <Text style={{ fontFamily: t.sans, fontSize: 13.3, fontWeight: '800', color: t.accentDeep,
+          lineHeight: 19 }}>
+          {guide.note}
+        </Text>
+      </Card>
+
       <View style={{ backgroundColor: t.surface, borderRadius: 14, borderWidth: 1, borderColor: t.line,
         minHeight: 50, paddingHorizontal: 14, justifyContent: 'center', marginBottom: 10 }}>
-        <TextInput value={query} onChangeText={setQuery} placeholder="Search ingredients, like whey, almonds, or dates"
+        <TextInput value={query} onChangeText={setQuery} placeholder="Search milk, whey, almonds, dates..."
           placeholderTextColor={t.ink3}
           autoCapitalize="none"
           style={{ fontFamily: t.sans, fontSize: 15, color: t.ink, minHeight: 48 }} />
@@ -169,7 +206,7 @@ export function OnboardingScreen({ onDone, initialProfile = null, initialSelecti
 
       {count > 0 ? (
         <View style={{ marginTop: 2, marginBottom: 18 }}>
-          <Overline t={t}>Your selections and severity</Overline>
+          <Overline t={t}>Your watchlist and sensitivity</Overline>
           <View style={{ gap: 10, marginTop: 12 }}>
             {Array.from(selected).map((id) => {
               const item = itemById[id] || { id, label: id, palette: 'goal' };
@@ -210,16 +247,16 @@ export function OnboardingScreen({ onDone, initialProfile = null, initialSelecti
         <View style={{ borderRadius: 14, backgroundColor: t.surfaceWarm, borderWidth: 1, borderColor: t.line,
           padding: 13, marginBottom: 12 }}>
           <Text style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: '800', color: t.ink }}>
-            That's your eight.
+            That's your focused eight.
           </Text>
           <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink2, lineHeight: 18, marginTop: 3 }}>
-            Anvara watches up to eight things — each one stores its ingredient data on your phone,
-            so the cap keeps the app small. Remove one above to add another.
+            Each choice keeps matching data ready on your phone. To keep Anvara quick and lightweight,
+            remove one above before adding another.
           </Text>
         </View>
       ) : null}
       <PrimaryButton onPress={finish} disabled={count === 0} t={t}>
-        Continue{count ? ` with ${count} of ${MAX_SELECTIONS} selected` : ''}
+        {count ? `Save my watchlist (${count}/${MAX_SELECTIONS})` : 'Choose at least one item'}
       </PrimaryButton>
     </ScrollView>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { MatchBar } from '../components/MatchBar';
@@ -16,10 +16,16 @@ const FOOTER =
 
 export function ResultScreen({ findings = [], unverified = [], product = {}, onFeedback, nextLabel, onNext }) {
   const { theme: t } = useTheme();
-  const [childMode, setChildMode] = useState(false);
+  const familyProfiles = profilesFromFindings(findings);
+  const hasChildMatch = familyProfiles.some((profile) => profile.child);
+  const [childMode, setChildMode] = useState(() => hasChildMatch);
   const [detail, setDetail] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const nothing = findings.length === 0;
+
+  useEffect(() => {
+    setChildMode(hasChildMatch);
+  }, [hasChildMatch, product?.name, product?.date]);
 
   return (
     <>
@@ -84,6 +90,22 @@ export function ResultScreen({ findings = [], unverified = [], product = {}, onF
             The ingredient database is not independently validated yet. Check the original package before acting on a result.
           </Text>
         </View>
+
+        {familyProfiles.length ? (
+          <Card t={t} style={{ marginBottom: 14, padding: 13 }}>
+            <Text style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: '900', color: t.ink }}>
+              Family profiles matched
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
+              {familyProfiles.map((profile) => (
+                <ProfileChip key={profile.id || profile.name} profile={profile} t={t} />
+              ))}
+            </View>
+            <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink2, lineHeight: 18, marginTop: 9 }}>
+              Matches may apply to only the profiles shown on each item.
+            </Text>
+          </Card>
+        ) : null}
 
         {findings.map((f, i) => (
           <MatchBar key={`${f.label}-${i}`} data={f} child={childMode} onOpen={(finding, item) => setDetail({ finding, item })} />
@@ -176,6 +198,7 @@ export function ResultScreen({ findings = [], unverified = [], product = {}, onF
 function DetailSheet({ detail, onClose, t }) {
   const item = detail?.item;
   const finding = detail?.finding;
+  const profiles = uniqueProfiles(item?.profiles || []);
 
   return (
     <Modal transparent visible={!!detail} animationType="fade" onRequestClose={onClose}>
@@ -207,8 +230,19 @@ function DetailSheet({ detail, onClose, t }) {
                     fabricated from match_class anyway (review finding). */}
               </View>
 
+              {profiles.length ? (
+                <View style={{ marginTop: 16 }}>
+                  <Text style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: '900', color: t.ink3, marginBottom: 8 }}>
+                    Applies to profile
+                  </Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                    {profiles.map((profile) => <ProfileChip key={profile.id || profile.name} profile={profile} t={t} />)}
+                  </View>
+                </View>
+              ) : null}
+
               <DetailLine label="Read as" value={item.technical || item.common} t={t} />
-              <DetailLine label="What it is" value={item.info || 'Info to be added.'} t={t} />
+              <DetailLine label="What it is" value={item.info || 'Detailed explanation pending review.'} t={t} />
               {item.info ? (
                 <Text style={{ fontFamily: t.sans, fontSize: 11.5, color: t.ink3, marginTop: 4, lineHeight: 16 }}>
                   Auto-generated from our ingredient database — full descriptions are being reviewed.
@@ -233,6 +267,44 @@ function DetailSheet({ detail, onClose, t }) {
         </Pressable>
       </Pressable>
     </Modal>
+  );
+}
+
+function profilesFromFindings(findings) {
+  return uniqueProfiles((findings || []).flatMap((finding) => (
+    (finding.items || []).flatMap((item) => item.profiles || [])
+  )));
+}
+
+function uniqueProfiles(profiles) {
+  const seen = new Set();
+  return (profiles || []).filter((profile) => {
+    const key = profile.id || profile.name;
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function ProfileChip({ profile, t }) {
+  const name = profile.name || 'Profile';
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 28,
+      paddingHorizontal: 10, paddingLeft: 7, borderRadius: 999,
+      backgroundColor: profile.child ? '#FBF1DF' : t.accentTint,
+      borderWidth: 1, borderColor: profile.child ? '#E8D2A9' : t.accentSoft }}>
+      <View style={{ width: 17, height: 17, borderRadius: 9, alignItems: 'center', justifyContent: 'center',
+        backgroundColor: profile.child ? '#E7D9C4' : t.accentSoft }}>
+        <Text style={{ fontFamily: t.sans, fontSize: 9, fontWeight: '900',
+          color: profile.child ? '#8A6B3D' : t.accentDeep }}>
+          {name.slice(0, 1)}
+        </Text>
+      </View>
+      <Text style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: '800',
+        color: profile.child ? '#7A5B31' : t.accentDeep }}>
+        {profile.child ? `${name} (child)` : name}
+      </Text>
+    </View>
   );
 }
 

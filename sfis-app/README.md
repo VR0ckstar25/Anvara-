@@ -1,8 +1,8 @@
-# Anvara — Working Prototype (vertical slice)
+# Anvara — Preproduction App
 
-The **Step 1.5 vertical slice**: one real path end-to-end —
-**onboarding → scan → real matching → result** — on the real (DRAFT) allergen data.
-Built React Native + Expo (the locked stack).
+The current preproduction path is:
+**welcome → policy acknowledgement → sign in/local use → watchlist → credibility screen → sample proof result → how it works → offline setup → Home → scan → result**.
+Built with React Native + Expo.
 
 ## Run it
 
@@ -27,23 +27,29 @@ Camera OCR and Apple sign-in require an iOS/Android development build because th
 | Matching engine (synonym graph, PAL/free-from context, OCR tolerance, false-positive guards, parens, multi-parent, dedupe) | **real**, Node-verified |
 | Result screen (Contains / May contain / Could-not-verify, minimal bars) | **real**, renders matcher output |
 | Onboarding (allergies, intolerances, goals/diet + severity UI) | **real UI**, matcher-backed for supported ids |
-| Diary + Patterns | **real local persistence**, reflects saved scans |
+| Diary + Patterns | **real local persistence**. Patterns use a local resettable neural-style scorer over real saved scans only; sample scans are ignored. |
 | Profile/family shell | **real self profile + deferred Add members state** |
 | **Camera → OCR** | **native bridge added** — Android uses on-device ML Kit text recognition, iOS uses on-device Apple Vision. Expo Go/web show an honest unavailable state. |
 | Auth + cloud sync | **Firebase scaffold wired** for email, Google token sign-in, Apple sign-in, Firestore profile/scans/feedback sync. Requires `.env` Firebase/OAuth values. |
+| Plans + ads | **commercial logic scaffolded**. Free can show internal house messages on Home; paid levels are preview-only until store billing is connected. Result/camera/detail screens stay ad-free. |
 | Cloud photo storage | deliberately **off**. Storage rules deny all uploads until a reviewed 7-day deletion job exists. |
+| App clearance tests | **real Node stress suite**. Clears simulated state across 100 normal and 50 adversarial app scenarios. |
 
 ## Flow to try
-1. **Onboarding** → choose watched items or tap **Use demo profile** → Continue.
-2. **Diary** → tap **Try a sample scan**, or open **Scan** and run the tutorial sample.
-3. **Result**: Milk + Almond show **Contains**; Peanut shows **May contain** (from the
+1. **Welcome** → accept the policy acknowledgement.
+2. **Sign in** with configured Firebase/OAuth, use explicit preproduction demo auth, or skip for local use.
+3. **Build your label watchlist** → save it → review the credibility screen, or skip quickly from the bottom.
+4. **Preview the sample proof result**: Milk + Almond show **Contains**; Peanut shows **May contain** (from the
    "may contain peanuts" PAL line); "natural flavours" sits under **Could not verify**.
    Wheat/soy are present on the label but **not shown** — they're not on the profile.
-4. Tap **Theme** to recolor the whole app live; the amber finding dot never changes.
+5. Finish the how-it-works and offline setup screens, then use **Scan** or **Diary**.
+6. Open **Profile → Plans & ads** to preview Free / Plus / Family commercial levels.
 
 ## Backend setup
 
 Use Firebase Spark for the first production slice: it has a no-cost tier without a required payment method, Firebase Auth, and Firestore sync. Copy `.env.example` to `.env` and fill the Firebase web app values. Enable Email/Password in Firebase Auth. Enable Google and Apple providers when the OAuth/app identifiers are ready.
+
+`EXPO_PUBLIC_PREPROD_AUTH=true` enables local demo auth only when Firebase keys are blank. Leave it unset or set it to `false` for production builds.
 
 Firestore paths:
 - `users/{uid}/profile/self`
@@ -54,7 +60,11 @@ Rules are user-owned only. Storage is deny-by-default because label photos shoul
 
 ## Privacy posture
 
-Default behavior is minimal retention: OCR runs on-device; label photos are not uploaded; captured label images are removed from this phone after 7 days unless the user turns on **Save label photos** in Profile. Cloud sync stores profile choices, product names, matcher results, OCR text, and feedback so Diary/Patterns can work across devices.
+Default behavior is minimal retention: OCR runs on-device; label photos are not uploaded; captured label images are removed from this phone after 7 days unless the user turns on **Save label photos** in Profile. Cloud sync stores profile choices, product names, matcher results, OCR metadata, and feedback. OCR text and label photos are stripped before cloud sync.
+
+## Commercial posture
+
+Plans are preview logic only until App Store / Play billing is connected. Free may show internal house messages on Home. Plus and Family hide those messages. Anvara intentionally does not show ads on result screens, camera/OCR, or ingredient detail sheets.
 
 ## Notes
 - Data is **DRAFT** (`src/data/allergens.json`, exported from `../database`). Nothing is
