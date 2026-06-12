@@ -12,6 +12,7 @@ export function ProfileScreen({
   settings = {},
   authUser = null,
   authReady = false,
+  preproductionAuthReady = false,
   syncStatus = '',
   onAppearance,
   onEditProfile,
@@ -21,6 +22,7 @@ export function ProfileScreen({
   onSignOut,
   onAddMember,
   onDesignPreview,
+  onVisualConcept,
   onSecurityBackup,
 }) {
   const { theme: t } = useTheme();
@@ -73,7 +75,7 @@ export function ProfileScreen({
               Account sync
             </Text>
             <Text style={{ fontFamily: t.sans, fontSize: 13, color: t.ink2, lineHeight: 19, marginTop: 4 }}>
-              {authUser?.email ? authUser.email : (authReady ? 'Not signed in' : 'Firebase keys not set')}
+              {authUser?.email ? authUser.email : (authReady ? 'Not signed in' : preproductionAuthReady ? 'Demo sign-in available' : 'Firebase keys not set')}
             </Text>
             <Text style={{ fontFamily: t.mono, fontSize: 11.5, color: t.ink3, lineHeight: 17, marginTop: 7 }}>
               {syncStatus || 'Local mode'}
@@ -123,6 +125,11 @@ export function ProfileScreen({
               <Text style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: '700', color: t.ink2 }}>
                 {m.name.split(' ')[0]}
               </Text>
+              {m.addedAt ? (
+                <Text style={{ fontFamily: t.mono, fontSize: 9.5, color: t.ink3 }}>
+                  as of {String(m.addedAt).slice(0, 10)}
+                </Text>
+              ) : null}
             </View>
           ))}
           <Pressable onPress={() => setMemberSearch(true)} accessibilityRole="button"
@@ -158,6 +165,7 @@ export function ProfileScreen({
       <SettingsGroup title="App" t={t}>
         <SettingRow label="Security, backup, offline" sub="App lock, cloud backup, local checkpoint, offline pack" value="Open" onPress={onSecurityBackup} t={t} />
         <SettingRow label="New UI preview" sub="A richer Anvara home concept to test in-app" value="View" onPress={onDesignPreview} t={t} />
+        <SettingRow label="Visual concept" sub="Bolder colors and scan-first outlook options" value="View" onPress={onVisualConcept} t={t} />
         <SettingRow label="Appearance" sub="Background and accent colors" value="Theme" onPress={onAppearance} t={t} />
         <SettingRow
           label="Save label photos"
