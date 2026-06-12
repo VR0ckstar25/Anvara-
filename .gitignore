@@ -22,3 +22,14 @@ sfis-app/.env
 
 # Expo local state
 sfis-app/.expo/
+
+# Secrets — OAuth client ids / Firebase keys live in .env (review finding)
+.env
+.env.*
+sfis-app/.env
+sfis-app/.env.*
+
+# Secrets — OAuth client IDs / Firebase keys live in .env (never commit)
+.env
+.env.*
+!.env.example
