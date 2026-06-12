@@ -47,7 +47,7 @@ export function ResultScreen({ findings = [], unverified = [], product = {}, onF
           <Text style={{ flex: 1, fontFamily: t.serif, fontSize: childMode ? 21 : 18,
             lineHeight: childMode ? 28 : 25, color: t.ink }}>
             {nothing
-              ? (childMode ? 'Nothing from your list showed up here. Still check the pack.' : 'Nothing in this product matched your profile. Always check the packaging too.')
+              ? (childMode ? 'Nothing from your list showed up in what we could read. Still check the pack.' : 'Nothing in what we could read matched your profile. Always check the packaging too.')
               : (childMode ? 'Here is what is inside that you told us about.' : 'Here is what we found that matches your profile.')}
           </Text>
           <View style={{ flexDirection: 'row', backgroundColor: t.surface, borderRadius: 999,
@@ -140,7 +140,7 @@ export function ResultScreen({ findings = [], unverified = [], product = {}, onF
           </View>
           {feedback ? (
             <Text style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink3, marginTop: 8 }}>
-              Saved locally as {feedback.toLowerCase()}.
+              Noted as {feedback.toLowerCase()} — thank you.
             </Text>
           ) : null}
         </Card>
@@ -154,7 +154,8 @@ export function ResultScreen({ findings = [], unverified = [], product = {}, onF
         <View style={{ borderTopWidth: 1, borderTopColor: t.lineSoft, paddingTop: 14, marginTop: 2 }}>
           {childMode ? (
             <Text style={{ fontFamily: t.sans, fontSize: 13, color: t.ink2, lineHeight: 19 }}>
-              We might miss things on the label, so always check the pack with a grown-up.
+              We might miss things on the label — and "may contain" warnings don't always get read.
+              Always check the pack with a grown-up.
             </Text>
           ) : (
             <Text style={{ fontFamily: t.sans, fontSize: 11.5, color: t.ink3, lineHeight: 17 }}>
@@ -198,7 +199,9 @@ function DetailSheet({ detail, onClose, t }) {
                 <Pill t={t} palette={finding?.cat || 'accent'}>
                   {item.kind === 'may' ? 'May contain' : 'Contains'}
                 </Pill>
-                {item.confidence ? <Pill t={t}>{item.confidence} confidence</Pill> : null}
+                {/* Confidence pill removed — match_semantics.md explicitly bans a
+                    confidence meter on results (Issue 6), and the value was
+                    fabricated from match_class anyway (review finding). */}
               </View>
 
               <DetailLine label="Read as" value={item.technical || item.common} t={t} />
