@@ -108,6 +108,19 @@ r = matchScan('Ingredients: honey, gelatin, salt.', ['diet.vegan'], data);
 check('diet result stays in Diet category', !!bar(r, 'diet'), JSON.stringify(r));
 check('diet result is not grouped under Goals', !bar(r, 'goal'), JSON.stringify(r));
 
+r = matchScan('Ingredients: chicken broth, rice flour.', ['diet.pescatarian'], data);
+check('pescatarian flags meat/poultry', hasKind(r, 'Meat or poultry', 'contains'), JSON.stringify(r));
+r = matchScan('Ingredients: fish oil, oats.', ['diet.pescatarian'], data);
+check('pescatarian allows fish without a diet finding', !bar(r, 'diet'), JSON.stringify(r));
+r = matchScan('Ingredients: date paste, rolled oats.', ['goal.avoid_dates'], data);
+check('avoid dates goal flags date ingredients', hasKind(r, 'Dates', 'contains'), JSON.stringify(r));
+r = matchScan('Ingredients: beef tallow, salt.', ['diet.no_red_meat'], data);
+check('no red meat flags beef', hasKind(r, 'Red meat', 'contains'), JSON.stringify(r));
+r = matchScan('Ingredients: bacon bits, potato starch.', ['diet.no_pork'], data);
+check('no pork flags bacon', hasKind(r, 'Pork', 'contains'), JSON.stringify(r));
+r = matchScan('Ingredients: turkey broth, rice.', ['diet.no_poultry'], data);
+check('no poultry flags turkey', hasKind(r, 'Poultry', 'contains'), JSON.stringify(r));
+
 // Wave 4 — negation safety (adversarial review): a free-from / "no X" claim must
 // never swallow a co-located REAL allergen in the same comma list.
 r = matchScan('contains no artificial flavors, milk powder', ['milk'], data);
@@ -132,6 +145,33 @@ check('PAL does not leak past a sentence: milk -> Contains', hasKind(r, 'Milk', 
 check('PAL still applies in its own sentence: peanuts -> May contain', hasKind(r, 'Peanuts', 'may'), JSON.stringify(r));
 r = matchScan('may contain peanuts, almonds and milk', ['peanut', 'almond', 'milk'], data);
 check('multi-allergen PAL still distributes across commas (almond may)', hasKind(r, 'Almond', 'may'), JSON.stringify(r));
+
+// Wave 6 — review-confirmed criticals: free-claims must free ONLY what they name,
+// free-lists must distribute, marketing claims are not ingredients.
+r = matchScan('lactose-free milk', ['milk'], data);
+check('W6 "lactose-free milk" still flags the MILK allergen', hasKind(r, 'Milk', 'contains'), JSON.stringify(r));
+r = matchScan('lactose free yogurt (milk)', ['milk'], data);
+check('W6 parenthetical (milk) survives a lactose-free claim', hasKind(r, 'Milk', 'contains'), JSON.stringify(r));
+r = matchScan('lactose-free milk', ['lactose'], data);
+check('W6 lactose-free frees the LACTOSE intolerance itself', !item(r, 'Lactose'), JSON.stringify(r));
+r = matchScan('Free from: milk, eggs, soy', ['milk', 'egg', 'soy'], data);
+check('W6 free-list distributes (milk)', !item(r, 'Milk'), JSON.stringify(r));
+check('W6 free-list distributes (eggs)', !item(r, 'Eggs'), JSON.stringify(r));
+check('W6 free-list distributes (soy)', !item(r, 'Soy'), JSON.stringify(r));
+r = matchScan('does not contain wheat, milk or eggs', ['wheat', 'milk', 'egg'], data);
+check('W6 "does not contain a, b or c" distributes', r.findings.length === 0, JSON.stringify(r));
+r = matchScan('free from the following: peanuts, tree nuts, sesame', ['peanut', 'almond', 'sesame'], data);
+check('W6 "free from the following:" distributes', r.findings.length === 0, JSON.stringify(r));
+r = matchScan('Free from: milk. peanut butter, sugar', ['milk', 'peanut'], data);
+check('W6 free-list ends at the sentence: peanut still flags', hasKind(r, 'Peanuts', 'contains'), JSON.stringify(r));
+r = matchScan('coconut milk, sugar', ['diet.vegan'], data);
+check('W6 coconut milk is not Animal-derived', !item(r, 'Animal-derived'), JSON.stringify(r));
+r = matchScan('milk, sugar', ['diet.vegan'], data);
+check('W6 real milk IS Animal-derived', hasKind(r, 'Animal-derived', 'contains'), JSON.stringify(r));
+r = matchScan('no sugar added, oats', ['goal.less_sugar'], data);
+check('W6 "no sugar added" claim does not fire the sugar goal', !item(r, 'Added sugars'), JSON.stringify(r));
+r = matchScan('low sodium soy sauce', ['goal.less_sodium'], data);
+check('W6 "low sodium" claim does not fire the sodium goal', !item(r, 'Sodium'), JSON.stringify(r));
 
 // DB hostile challenge corpus: production matcher should resolve MATCH rows and
 // surface OPAQUE rows under Could not verify.

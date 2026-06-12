@@ -72,10 +72,15 @@ const GOAL_KW = [
   { id: 'goal.less_sugar', cat: 'goal', common: 'Added sugars', kws: ['sugar', 'cane sugar', 'glucose', 'glucose syrup', 'corn syrup', 'fructose', 'sucrose', 'dextrose', 'honey', 'molasses', 'syrup'] },
   { id: 'goal.less_sodium', cat: 'goal', common: 'Sodium', kws: ['salt', 'sodium', 'monosodium glutamate', 'msg'] },
   { id: 'goal.less_sat_fat', cat: 'goal', common: 'Saturated fat', kws: ['palm oil', 'butter', 'coconut oil', 'lard', 'palm kernel oil'] },
+  { id: 'goal.avoid_dates', cat: 'goal', common: 'Dates', kws: ['date', 'dates', 'date paste', 'date syrup', 'date sugar', 'medjool', 'deglet noor'] },
 ];
 const DIET_KW = [
   { id: 'diet.vegan', cat: 'dietary', common: 'Animal-derived', kws: ['milk', 'butter', 'whey', 'casein', 'egg', 'eggs', 'honey', 'gelatin', 'gelatine', 'lard', 'fish', 'meat', 'beef', 'chicken', 'pork'] },
   { id: 'diet.vegetarian', cat: 'dietary', common: 'Meat or fish', kws: ['gelatin', 'gelatine', 'lard', 'fish', 'anchovy', 'meat', 'beef', 'chicken', 'pork', 'rennet'] },
+  { id: 'diet.pescatarian', cat: 'dietary', common: 'Meat or poultry', kws: ['gelatin', 'gelatine', 'lard', 'meat', 'beef', 'chicken', 'pork', 'ham', 'bacon', 'lamb', 'mutton', 'veal', 'turkey', 'duck', 'goose'] },
+  { id: 'diet.no_red_meat', cat: 'dietary', common: 'Red meat', kws: ['beef', 'lamb', 'mutton', 'veal', 'bison', 'venison'] },
+  { id: 'diet.no_pork', cat: 'dietary', common: 'Pork', kws: ['pork', 'ham', 'bacon', 'lard', 'prosciutto', 'pepperoni', 'salami'] },
+  { id: 'diet.no_poultry', cat: 'dietary', common: 'Poultry', kws: ['chicken', 'turkey', 'duck', 'goose'] },
 ];
 
 function norm(s) {
@@ -291,8 +296,18 @@ function expandTokens(text) {
   return out;
 }
 
+// A free-from claim frees ONLY the thing it literally names — a DIRECT match or
+// the group's own name. "lactose-free" frees Lactose — NEVER the milk allergen,
+// even though 'lactose' is a milk synonym: lactose-free dairy is full of milk
+// protein and a milk-allergic user must still be warned (review-confirmed FN).
 function markFree(txt, freeGroups, index) {
-  graphMatches(txt, index).forEach((m) => freeGroups.add(m.groupId));
+  const n = norm(txt);
+  graphMatches(txt, index).forEach((m) => {
+    const identity = m.matchClass === 'DIRECT'
+      || n === norm(m.parentCommon) || n === norm(m.groupLabel)
+      || wEq(n, norm(m.parentCommon)) || wEq(n, norm(m.groupLabel));
+    if (identity) freeGroups.add(m.groupId);
+  });
 }
 
 function isKnown(tok, index) {
@@ -372,14 +387,20 @@ function matchScan(rawText, profile, data) {
     });
 
     const tw = norm(tok).split(' ');
+    // Marketing claims aren't ingredients: "no sugar added" / "low sodium" must not
+    // fire goal/diet findings (adversarial review). Plant forms ("coconut milk",
+    // "almond butter") aren't animal-derived either — reuse the dairy guard.
+    const marketingClaim = /\b(?:no|low|less|reduced|zero|light|lite|free)\b/.test(norm(tok));
     GOAL_KW.forEach((g) => {
-      if (watch.selected.has(g.id) && kwHit(tw, g.kws)) {
+      if (!marketingClaim && watch.selected.has(g.id) && kwHit(tw, g.kws)) {
         identified = true;
         recs.push({ groupId: g.id, groupLabel: g.common, parent: g.id, cat: 'goal', common: g.common, token: tok, matchClass: 'DERIVED', confidence: 'MEDIUM', may: false, pal: false });
       }
     });
     DIET_KW.forEach((g) => {
-      if (watch.selected.has(g.id) && kwHit(tw, g.kws)) {
+      if (marketingClaim || !watch.selected.has(g.id)) return;
+      const hit = g.kws.some((k) => containsWords(tw, norm(k).split(' ')) && !plantDairyFalsePositive(tok, norm(k), 'milk'));
+      if (hit) {
         identified = true;
         recs.push({ groupId: g.id, groupLabel: g.common, parent: g.id, cat: 'dietary', common: g.common, token: tok, matchClass: 'DERIVED', confidence: 'MEDIUM', may: false, pal: false });
       }
@@ -390,6 +411,11 @@ function matchScan(rawText, profile, data) {
 
   sentences.forEach((sentence) => {
     let ctx = 'CONTAINS'; // resets per sentence — PAL/MAY never leaks past a period/newline
+    // A free-from claim that NAMES an allergen ("Free from: milk, …") distributes
+    // across the rest of its comma list — but only while each list item is a bare
+    // allergen term. "Contains no artificial flavors, milk powder" frees nothing
+    // (artificial flavors isn't an identity match), so milk powder still flags.
+    let freeRun = false;
     sentence.split(/[,;]+| but /i).map((p) => p.trim()).filter(Boolean).forEach((seg) => {
       let s = seg;
       const segFree = new Set(); // groups freed by a claim in THIS segment (e.g. "dairy-free cheese")
@@ -398,26 +424,40 @@ function matchScan(rawText, profile, data) {
 
       const advisory = ADVISORY_RE.test(s);
       const freeOpen = !advisory && FREE_OPEN_RE.test(s);
-      // Free-from is SEGMENT-SCOPED. MAY/PAL propagates across commas WITHIN a sentence
-      // ("may contain a, b, c") but not across sentences. A free claim → next is CONTAINS.
-      if (advisory) ctx = 'MAY';
+      if (advisory) { ctx = 'MAY'; freeRun = false; }
       else if (freeOpen) ctx = 'CONTAINS';
-      else if (CONTAINS_RE.test(s)) ctx = 'CONTAINS';
-      const segCtx = freeOpen ? 'FREE' : ctx;
+      else if (CONTAINS_RE.test(s)) { ctx = 'CONTAINS'; freeRun = false; }
+      let segCtx = freeOpen ? 'FREE' : ctx;
 
       const cleaned = s
         .replace(ADVISORY_RE, ' ')
         .replace(FREE_OPEN_RE, ' ')
         .replace(CONTAINS_RE, ' ')
-        .replace(/\b(?:the following|those|traces?|an?|of|that|with|present|sufferers|allergy|advice)\b/ig, ' ');
+        .replace(/\b(?:the following|those|traces?|an?|of|that|with|present|sufferers|allergy|advice|or|and)\b/ig, ' ');
 
-      expandTokens(cleaned).forEach((tok) => {
-        if (segCtx === 'FREE') { markFree(tok, segFree, index); return; }
+      const toks = expandTokens(cleaned);
+      // continuation of a free-list: every token is a bare graph term (≤3 words)
+      if (segCtx !== 'FREE' && freeRun && toks.length &&
+          toks.every((tk) => norm(tk).split(' ').length <= 3 && graphMatches(tk, index).length > 0)) {
+        segCtx = 'FREE';
+      }
+
+      let freedHere = 0;
+      toks.forEach((tok) => {
+        if (segCtx === 'FREE') {
+          const before = segFree.size;
+          markFree(tok, segFree, index);
+          if (segFree.size > before) freedHere++;
+          return;
+        }
         const identified = record(tok, segCtx === 'MAY', segFree);
         const n = norm(tok);
         if (index.opaque.has(n)) unverified.add(n);
         else if (segCtx === 'CONTAINS' && !identified && /[a-z]{2,}/i.test(tok)) unverified.add(n);
       });
+      // the list keeps distributing only if the free claim actually named allergens
+      if (freeOpen) freeRun = freedHere > 0 || segFree.size > 0;
+      else if (segCtx !== 'FREE') freeRun = false;
     });
   });
 
