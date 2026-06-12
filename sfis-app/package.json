@@ -8,7 +8,7 @@
     "web": "expo start --web",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "test": "node src/match/scanMatch.test.js",
+    "test": "node src/match/scanMatch.test.js && node src/profile/profileModel.test.js",
     "test:match": "node src/match/scanMatch.test.js"
   },
   "dependencies": {

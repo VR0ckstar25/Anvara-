@@ -20,9 +20,11 @@ function frequencyRows(scans) {
 
 export function PatternsScreen({ scans = [], onScan }) {
   const { theme: t } = useTheme();
-  const rows = useMemo(() => frequencyRows(scans), [scans]);
+  // Patterns must never unlock or rank from fictional sample data (review finding).
+  const realScans = useMemo(() => scans.filter((scan) => scan.source !== 'sample'), [scans]);
+  const rows = useMemo(() => frequencyRows(realScans), [realScans]);
   const max = Math.max(1, ...rows.map((row) => row.count));
-  const ready = scans.length >= 6;
+  const ready = realScans.length >= 6;
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ padding: 18, paddingBottom: 28 }}>

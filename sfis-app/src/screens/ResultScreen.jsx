@@ -59,6 +59,9 @@ export function ResultScreen({ findings = [], unverified = [], product = {}, onF
               const on = childMode === mode.key;
               return (
                 <Pressable key={String(mode.key)} onPress={() => setChildMode(mode.key)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: on }}
+                  accessibilityLabel={mode.key ? 'Kid mode: simpler words, larger type' : 'Standard mode'}
                   style={{ minWidth: 38, height: 30, borderRadius: 999, alignItems: 'center',
                     justifyContent: 'center', backgroundColor: on ? t.accent : 'transparent',
                     paddingHorizontal: 8 }}>
