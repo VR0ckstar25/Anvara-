@@ -102,8 +102,8 @@ export function MemberSearchSheet({ visible, onClose, onAdd, members = [], capRe
             )
           ) : (
             <Text style={{ fontFamily: t.sans, fontSize: 13, color: t.ink2, lineHeight: 19 }}>
-              Search for someone who already uses Anvara. Each member keeps their own watched items;
-              scans can check everyone at once. A family supports up to 5 profiles.
+              Search for someone who already uses Anvara. Each member keeps their own watched items.
+              Scans will check everyone at once when family matching ships (in progress). A family supports up to 5 profiles.
             </Text>
           )}
         </Pressable>

@@ -1,5 +1,8 @@
 # UI Architecture & Theming Baseline
 
+> **NON-AUTHORITATIVE (archive).** The production app is `sfis-app/` (React Native + Expo).
+> This document described the old HTML prototype; do not build new screens against it.
+
 > **NON-AUTHORITATIVE (archived).** The production app is `sfis-app/` (React Native + Expo).
 > This document described an early HTML prototype tree and is kept for reference only.
 
