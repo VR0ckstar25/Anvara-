@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Label photos are intentionally local-only in this build.
+    // Keep backend storage closed until a reviewed 7-day deletion job exists.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

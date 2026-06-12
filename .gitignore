@@ -19,3 +19,6 @@ sfis-android/app/src/main/assets/
 .env
 .env.*
 sfis-app/.env
+
+# Expo local state
+sfis-app/.expo/
