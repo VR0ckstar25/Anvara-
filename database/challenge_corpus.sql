@@ -27,6 +27,7 @@ INSERT INTO challenge_corpus (raw_term, expect_type, expect_parent) VALUES
   ('sodium caseinate','MATCH','milk'),('lactalbumin','MATCH','milk'),
   ('casein','MATCH','milk'),('whey','MATCH','milk'),('ghee','MATCH','milk'),
   ('paneer','MATCH','milk'),('goat milk','MATCH','milk'),
+  ('cheese','MATCH','milk'),('butter','MATCH','milk'),('cream','MATCH','milk'),
   -- EGG
   ('ovalbumin','MATCH','egg'),('albumin','MATCH','egg'),('lysozyme','MATCH','egg'),
   ('meringue','MATCH','egg'),('duck egg','MATCH','egg'),('nougat','MATCH','egg'),

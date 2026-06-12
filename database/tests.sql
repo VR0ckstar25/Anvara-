@@ -18,6 +18,12 @@ UNION ALL SELECT 'FN','semolina -> wheat',
   EXISTS(SELECT 1 FROM synonyms WHERE normalized_term='semolina' AND parent_id='wheat')
 UNION ALL SELECT 'FN','goat milk -> milk (FDA 2025 ruminant)',
   EXISTS(SELECT 1 FROM synonyms WHERE normalized_term='goat milk' AND parent_id='milk')
+UNION ALL SELECT 'FN','cheese -> milk allergen',
+  EXISTS(SELECT 1 FROM synonyms WHERE normalized_term='cheese' AND parent_id='milk')
+UNION ALL SELECT 'FN','butter -> milk allergen',
+  EXISTS(SELECT 1 FROM synonyms WHERE normalized_term='butter' AND parent_id='milk')
+UNION ALL SELECT 'FN','cream -> milk allergen',
+  EXISTS(SELECT 1 FROM synonyms WHERE normalized_term='cream' AND parent_id='milk')
 UNION ALL SELECT 'FN','duck egg -> egg (FDA 2025 fowl)',
   EXISTS(SELECT 1 FROM synonyms WHERE normalized_term='duck egg' AND parent_id='egg')
 UNION ALL SELECT 'FN','heartnut -> walnut',

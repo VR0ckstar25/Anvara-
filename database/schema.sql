@@ -1,6 +1,6 @@
 -- =============================================================================
 -- SMART FOOD INGREDIENTS SCANNER — INGREDIENT DATABASE SCHEMA
--- Source of truth: SFIS Transfer Note v3.0 §3/§4 + Amendments v3.1 (Decisions 3,4,6)
+-- Source of truth: Anvara Transfer Note v3.0 §3/§4 + Amendments v3.1 (Decisions 3,4,6)
 --                  + Ingredient Database Construction note (Session 3 of 5)
 --
 -- SAFETY-CRITICAL. A false-negative allergen match is a physical-safety failure.

@@ -1,6 +1,6 @@
-# SFIS Ingredient Database
+# Anvara Ingredient Database
 
-The safety-critical core of the Smart Food Ingredients Scanner. A false-negative
+The safety-critical ingredient core behind Anvara. A false-negative
 allergen match is a physical-safety failure — so **every row carries a documented
 source and a validation status, and nothing is trusted until it is validated.**
 

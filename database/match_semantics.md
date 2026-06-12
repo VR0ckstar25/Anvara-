@@ -95,7 +95,7 @@ mechanism and severity, and intolerance data (esp. FODMAP / histamine, which are
   confidence level and suggest confirming with a healthcare provider** for clinical
   certainty. This is the correct boundary: informational with epistemic humility,
   deferring to a professional — *not* the app issuing advice (which also keeps us on
-  the non-device side; see `intended_use_guardrails.md`).
+  the non-device side; see `docs/02_security_privacy_legal/intended_use_guardrails.md`).
 
 ## Footer — PAL addition (PENDING attorney review)
 
